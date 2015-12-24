@@ -1,0 +1,113 @@
+diff --git a/crypto/ecdh/ecdh.h b/crypto/ecdh/ecdh.h
+index 25348b3..25252ac 100644
+--- a/crypto/ecdh/ecdh.h
++++ b/crypto/ecdh/ecdh.h
+@@ -97,6 +97,8 @@ int ECDH_compute_key(void *out, size_t outlen, const EC_POINT *pub_key,
+                      EC_KEY *ecdh, void *(*KDF) (const void *in, size_t inlen,
+                                                  void *out, size_t *outlen));
+ 
++int ECDH_generate_key(EC_KEY *eckey);
++
+ int ECDH_get_ex_new_index(long argl, void *argp, CRYPTO_EX_new
+                           *new_func, CRYPTO_EX_dup *dup_func,
+                           CRYPTO_EX_free *free_func);
+diff --git a/crypto/ecdh/ech_key.c b/crypto/ecdh/ech_key.c
+index 4f14498..ab3467e 100644
+--- a/crypto/ecdh/ech_key.c
++++ b/crypto/ecdh/ech_key.c
+@@ -79,3 +79,20 @@ int ECDH_compute_key(void *out, size_t outlen, const EC_POINT *pub_key,
+         return 0;
+     return ecdh->meth->compute_key(out, outlen, pub_key, eckey, KDF);
+ }
++
++int ECDH_generate_key(EC_KEY *eckey) 
++{
++    ECDH_DATA *ecdh = ecdh_check(eckey);
++    if (ecdh == NULL) {
++        return 0;
++    }
++    if (ecdh->meth == NULL) {
++        return 0;
++    }
++    if (ecdh->meth->init == NULL) {
++        return 1; /* This is not a mandatory method, just ignore it if undefined */
++    }
++    return ecdh->meth->init(eckey);
++}
++
++
+diff --git a/crypto/ecdh/ech_locl.h b/crypto/ecdh/ech_locl.h
+index 4e66024..f8c50f9 100644
+--- a/crypto/ecdh/ech_locl.h
++++ b/crypto/ecdh/ech_locl.h
+@@ -68,7 +68,7 @@ struct ecdh_method {
+                         EC_KEY *ecdh, void *(*KDF) (const void *in,
+                                                     size_t inlen, void *out,
+                                                     size_t *outlen));
+-# if 0
++# if 1
+     int (*init) (EC_KEY *eckey);
+     int (*finish) (EC_KEY *eckey);
+ # endif
+diff --git a/ssl/s3_srvr.c b/ssl/s3_srvr.c
+index acd3b9e..d80be22 100644
+--- a/ssl/s3_srvr.c
++++ b/ssl/s3_srvr.c
+@@ -168,6 +168,9 @@
+ #ifndef OPENSSL_NO_KRB5
+ # include <openssl/krb5_asn.h>
+ #endif
++#ifndef OPENSSL_NO_ECDH
++#include "../crypto/ec/ec_lcl.h"
++#endif
+ #include <openssl/md5.h>
+ 
+ #ifndef OPENSSL_NO_SSL3_METHOD
+@@ -1757,6 +1760,12 @@ int ssl3_send_server_key_exchange(SSL *s)
+                 }
+             }
+ 
++            /* 
++             * XXX: ECDH_generate_key() should be called instead of 
++             * EC_KEY_generate_key(). Just a test for now
++             */ 
++            ECDH_generate_key(ecdh);
++
+             if (((group = EC_KEY_get0_group(ecdh)) == NULL) ||
+                 (EC_KEY_get0_public_key(ecdh) == NULL) ||
+                 (EC_KEY_get0_private_key(ecdh) == NULL)) {
+@@ -2695,6 +2704,7 @@ int ssl3_get_client_key_exchange(SSL *s)
+             SSLerr(SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE, ERR_R_ECDH_LIB);
+             goto err;
+         }
++        srvr_ecdh->flags = (int)alg_k;
+         i = ECDH_compute_key(p, (field_size + 7) / 8, clnt_ecpoint, srvr_ecdh,
+                              NULL);
+         if (i <= 0) {
+diff --git a/ssl/t1_lib.c b/ssl/t1_lib.c
+index 210a5e8..8db3b93 100644
+--- a/ssl/t1_lib.c
++++ b/ssl/t1_lib.c
+@@ -886,8 +886,10 @@ static int tls1_check_cert_param(SSL *s, X509 *x, int set_ee_md)
+         /* Check to see we have necessary signing algorithm */
+         if (curve_id[1] == TLSEXT_curve_P_256)
+             check_md = NID_ecdsa_with_SHA256;
++# ifndef OPENSSL_NO_SHA512
+         else if (curve_id[1] == TLSEXT_curve_P_384)
+             check_md = NID_ecdsa_with_SHA384;
++# endif
+         else
+             return 0;           /* Should never happen */
+         for (i = 0; i < c->shared_sigalgslen; i++)
+@@ -899,7 +901,11 @@ static int tls1_check_cert_param(SSL *s, X509 *x, int set_ee_md)
+             if (check_md == NID_ecdsa_with_SHA256)
+                 c->pkeys[SSL_PKEY_ECC].digest = EVP_sha256();
+             else
++# ifndef OPENSSL_NO_SHA512
+                 c->pkeys[SSL_PKEY_ECC].digest = EVP_sha384();
++# else
++	    return 0; 	    /* Should never happen */
++# endif
+         }
+     }
+     return rv;

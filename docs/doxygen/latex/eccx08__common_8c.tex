@@ -1,0 +1,286 @@
+\hypertarget{eccx08__common_8c}{}\section{C\+:/\+Source/\+Git\+Lab/\+Ca\+Sw/\+Open\+S\+S\+L/atmel-\/ecc/engine\+\_\+atecc/engine\+\_\+meth/eccx08\+\_\+common.c File Reference}
+\label{eccx08__common_8c}\index{C\+:/\+Source/\+Git\+Lab/\+Ca\+Sw/\+Open\+S\+S\+L/atmel-\/ecc/engine\+\_\+atecc/engine\+\_\+meth/eccx08\+\_\+common.\+c@{C\+:/\+Source/\+Git\+Lab/\+Ca\+Sw/\+Open\+S\+S\+L/atmel-\/ecc/engine\+\_\+atecc/engine\+\_\+meth/eccx08\+\_\+common.\+c}}
+
+
+Implementation of Open\+S\+S\+L E\+N\+G\+I\+N\+E callback functions for E\+C\+C See reference code in ec\+\_\+pmeth.\+c.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include $<$stdarg.\+h$>$}\\*
+{\ttfamily \#include $<$openssl/engine.\+h$>$}\\*
+{\ttfamily \#include $<$openssl/ec.\+h$>$}\\*
+{\ttfamily \#include $<$crypto/ec/ec\+\_\+lcl.\+h$>$}\\*
+{\ttfamily \#include $<$crypto/evp/evp.\+h$>$}\\*
+{\ttfamily \#include $<$crypto/evp/evp\+\_\+locl.\+h$>$}\\*
+{\ttfamily \#include $<$crypto/asn1/asn1\+\_\+locl.\+h$>$}\\*
+{\ttfamily \#include $<$crypto/ossl\+\_\+typ.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}ecc\+\_\+meth.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}platform.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{eccx08__common_8c_a5644d027c6e50b2297c5211864e90f18}{}\#define {\bfseries K\+E\+Y\+\_\+\+F\+O\+R\+M\+A\+T\+\_\+\+V\+E\+R\+S\+I\+O\+N}~(1)\label{eccx08__common_8c_a5644d027c6e50b2297c5211864e90f18}
+
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+A\+T\+C\+A\+\_\+\+S\+T\+A\+T\+U\+S \hyperlink{eccx08__common_8c_a7fe31ec23b24610e2beafa07a17b714c}{eccx08\+\_\+get\+\_\+enc\+\_\+key} (uint8\+\_\+t $\ast$enckey, int16\+\_\+t keysize)
+\begin{DoxyCompactList}\small\item\em A user defined function that fills a raw buffer (32 bytes) with the platform-\/specific encryption key. \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__common_8c_ae01593533c7e871ae3268af13ddc39e4}{eccx08\+\_\+eckey\+\_\+fill\+\_\+key} (char $\ast$ptr, int size, uint8\+\_\+t slot\+\_\+id, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Fills a raw buffer (32 bytes) with data to save into the private key structure. \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__common_8c_a8cd3d3f16d50afcab8fc48623822ac8b}{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey} (E\+C\+\_\+\+K\+E\+Y $\ast$eckey, uint8\+\_\+t slot\+\_\+id, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Converts 32 bytes from A\+T\+E\+C\+C508 format to the openssl E\+C\+\_\+\+K\+E\+Y structure. It allocates E\+C\+\_\+\+K\+E\+T structure and does not free it (must be a caller to free) \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__common_8c_ad9519bff828873b29387a58949908a77}{eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey} (E\+C\+\_\+\+K\+E\+Y $\ast$eckey, uint8\+\_\+t slot\+\_\+id, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Checks if the private key in the openssl E\+C\+\_\+\+K\+E\+Y structure corresponds to the private key in the A\+T\+E\+C\+C\+C\+X08 slot. \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__common_8c_a2674b3f15332329b9301afb3b339c498}{eccx08\+\_\+generate\+\_\+key} (E\+C\+\_\+\+K\+E\+Y $\ast$eckey, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Generates a 32-\/byte private key then replaces it with token data using the \hyperlink{eccx08__common_8c_a8cd3d3f16d50afcab8fc48623822ac8b}{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey()} call. \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__common_8c_a61387e86c6feafa5405d7acbbde27caa}{eccx08\+\_\+eckey\+\_\+convert} (E\+C\+\_\+\+K\+E\+Y $\ast$$\ast$p\+\_\+eckey, uint8\+\_\+t $\ast$raw\+\_\+pubkey, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Converts raw 64 bytes of public key (A\+T\+E\+C\+C508 format) to the openssl E\+C\+\_\+\+K\+E\+Y structure. It allocates E\+C\+\_\+\+K\+E\+Y structure and does not free it (must be a caller to free) \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__common_8c_a7f3e53b85dc2875fcfe205cdbfa18fdd}{eccx08\+\_\+\+B\+N\+\_\+encrypt} (B\+I\+G\+N\+U\+M $\ast$number, uint8\+\_\+t $\ast$iv, uint8\+\_\+t $\ast$aes\+\_\+key)
+\begin{DoxyCompactList}\small\item\em Encrypt a B\+I\+G\+N\+U\+M data using A\+E\+S-\/256 O\+F\+B mode. \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__common_8c_a347ad8df6d6c49d677671e899629aa0b}{eccx08\+\_\+\+B\+N\+\_\+decrypt} (B\+I\+G\+N\+U\+M $\ast$number, uint8\+\_\+t $\ast$iv, uint8\+\_\+t $\ast$aes\+\_\+key)
+\begin{DoxyCompactList}\small\item\em Decrypt a B\+I\+G\+N\+U\+M data using A\+E\+S-\/256 O\+F\+B mode. Assuming that data there was encrypted using the \hyperlink{eccx08__common_8c_a7f3e53b85dc2875fcfe205cdbfa18fdd}{eccx08\+\_\+\+B\+N\+\_\+encrypt()}. \end{DoxyCompactList}\item 
+\hypertarget{eccx08__common_8c_a148f6ab6e7f707a076f4b50a2e74be43}{}int {\bfseries eccx08\+\_\+debug} (const char $\ast$fmt,...)\label{eccx08__common_8c_a148f6ab6e7f707a076f4b50a2e74be43}
+
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t {\bfseries test\+\_\+priv\+\_\+key} \mbox{[}M\+E\+M\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+Z\+E\mbox{]}
+\item 
+uint8\+\_\+t {\bfseries test\+\_\+pub\+\_\+key} \mbox{[}M\+E\+M\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+Z\+E $\ast$2\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implementation of Open\+S\+S\+L E\+N\+G\+I\+N\+E callback functions for E\+C\+C See reference code in ec\+\_\+pmeth.\+c. 
+
+Copyright (c) 2015 Atmel Corporation. All rights reserved.
+
+\subsection{Function Documentation}
+\hypertarget{eccx08__common_8c_a347ad8df6d6c49d677671e899629aa0b}{}\index{eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}!eccx08\+\_\+\+B\+N\+\_\+decrypt@{eccx08\+\_\+\+B\+N\+\_\+decrypt}}
+\index{eccx08\+\_\+\+B\+N\+\_\+decrypt@{eccx08\+\_\+\+B\+N\+\_\+decrypt}!eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}}
+\subsubsection[{eccx08\+\_\+\+B\+N\+\_\+decrypt(\+B\+I\+G\+N\+U\+M $\ast$number, uint8\+\_\+t $\ast$iv, uint8\+\_\+t $\ast$aes\+\_\+key)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+\+B\+N\+\_\+decrypt (
+\begin{DoxyParamCaption}
+\item[{B\+I\+G\+N\+U\+M $\ast$}]{number, }
+\item[{uint8\+\_\+t $\ast$}]{iv, }
+\item[{uint8\+\_\+t $\ast$}]{aes\+\_\+key}
+\end{DoxyParamCaption}
+)}\label{eccx08__common_8c_a347ad8df6d6c49d677671e899629aa0b}
+
+
+Decrypt a B\+I\+G\+N\+U\+M data using A\+E\+S-\/256 O\+F\+B mode. Assuming that data there was encrypted using the \hyperlink{eccx08__common_8c_a7f3e53b85dc2875fcfe205cdbfa18fdd}{eccx08\+\_\+\+B\+N\+\_\+encrypt()}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em } & \\
+\hline
+\end{DoxyParams}
+\hypertarget{eccx08__common_8c_a7f3e53b85dc2875fcfe205cdbfa18fdd}{}\index{eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}!eccx08\+\_\+\+B\+N\+\_\+encrypt@{eccx08\+\_\+\+B\+N\+\_\+encrypt}}
+\index{eccx08\+\_\+\+B\+N\+\_\+encrypt@{eccx08\+\_\+\+B\+N\+\_\+encrypt}!eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}}
+\subsubsection[{eccx08\+\_\+\+B\+N\+\_\+encrypt(\+B\+I\+G\+N\+U\+M $\ast$number, uint8\+\_\+t $\ast$iv, uint8\+\_\+t $\ast$aes\+\_\+key)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+\+B\+N\+\_\+encrypt (
+\begin{DoxyParamCaption}
+\item[{B\+I\+G\+N\+U\+M $\ast$}]{number, }
+\item[{uint8\+\_\+t $\ast$}]{iv, }
+\item[{uint8\+\_\+t $\ast$}]{aes\+\_\+key}
+\end{DoxyParamCaption}
+)}\label{eccx08__common_8c_a7f3e53b85dc2875fcfe205cdbfa18fdd}
+
+
+Encrypt a B\+I\+G\+N\+U\+M data using A\+E\+S-\/256 O\+F\+B mode. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em } & \\
+\hline
+\end{DoxyParams}
+\hypertarget{eccx08__common_8c_ad9519bff828873b29387a58949908a77}{}\index{eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}!eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey@{eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey}}
+\index{eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey@{eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey}!eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}}
+\subsubsection[{eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey(\+E\+C\+\_\+\+K\+E\+Y $\ast$eckey, uint8\+\_\+t slot\+\_\+id, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey (
+\begin{DoxyParamCaption}
+\item[{E\+C\+\_\+\+K\+E\+Y $\ast$}]{eckey, }
+\item[{uint8\+\_\+t}]{slot\+\_\+id, }
+\item[{uint8\+\_\+t $\ast$}]{serial\+\_\+number, }
+\item[{int}]{serial\+\_\+len}
+\end{DoxyParamCaption}
+)}\label{eccx08__common_8c_ad9519bff828873b29387a58949908a77}
+
+
+Checks if the private key in the openssl E\+C\+\_\+\+K\+E\+Y structure corresponds to the private key in the A\+T\+E\+C\+C\+C\+X08 slot. 
+
+\hyperlink{eccx08__common_8c_ad9519bff828873b29387a58949908a77}{eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey()}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em eckey} & Pointer to E\+C\+\_\+\+K\+E\+Y with Private key token on success \\
+\hline
+\mbox{\tt in}  & {\em slot\+\_\+id} & A\+T\+E\+C\+C\+X08 slot I\+D \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+number} & 9 bytes of A\+T\+E\+C\+C\+X08 serial number \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+len} & Size of the A\+T\+E\+C\+C\+X08 serial number buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on error 
+\end{DoxyReturn}
+\hypertarget{eccx08__common_8c_a61387e86c6feafa5405d7acbbde27caa}{}\index{eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}!eccx08\+\_\+eckey\+\_\+convert@{eccx08\+\_\+eckey\+\_\+convert}}
+\index{eccx08\+\_\+eckey\+\_\+convert@{eccx08\+\_\+eckey\+\_\+convert}!eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}}
+\subsubsection[{eccx08\+\_\+eckey\+\_\+convert(\+E\+C\+\_\+\+K\+E\+Y $\ast$$\ast$p\+\_\+eckey, uint8\+\_\+t $\ast$raw\+\_\+pubkey, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+eckey\+\_\+convert (
+\begin{DoxyParamCaption}
+\item[{E\+C\+\_\+\+K\+E\+Y $\ast$$\ast$}]{p\+\_\+eckey, }
+\item[{uint8\+\_\+t $\ast$}]{raw\+\_\+pubkey, }
+\item[{uint8\+\_\+t $\ast$}]{serial\+\_\+number, }
+\item[{int}]{serial\+\_\+len}
+\end{DoxyParamCaption}
+)}\label{eccx08__common_8c_a61387e86c6feafa5405d7acbbde27caa}
+
+
+Converts raw 64 bytes of public key (A\+T\+E\+C\+C508 format) to the openssl E\+C\+\_\+\+K\+E\+Y structure. It allocates E\+C\+\_\+\+K\+E\+Y structure and does not free it (must be a caller to free) 
+
+\hyperlink{eccx08__common_8c_a61387e86c6feafa5405d7acbbde27caa}{eccx08\+\_\+eckey\+\_\+convert()}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em p\+\_\+eckey} & Pointer to E\+C\+\_\+\+K\+E\+Y with Public Key on success \\
+\hline
+\mbox{\tt in}  & {\em raw\+\_\+pubkey} & Raw public key, 64 bytes length 32-\/byte X following with 32-\/byte Y \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+number} & 9 bytes of A\+T\+E\+C\+C\+X08 serial number \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+len} & Size of the A\+T\+E\+C\+C\+X08 serial number buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on error 
+\end{DoxyReturn}
+\hypertarget{eccx08__common_8c_a8cd3d3f16d50afcab8fc48623822ac8b}{}\index{eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}!eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey@{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey}}
+\index{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey@{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey}!eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}}
+\subsubsection[{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey(\+E\+C\+\_\+\+K\+E\+Y $\ast$eckey, uint8\+\_\+t slot\+\_\+id, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey (
+\begin{DoxyParamCaption}
+\item[{E\+C\+\_\+\+K\+E\+Y $\ast$}]{eckey, }
+\item[{uint8\+\_\+t}]{slot\+\_\+id, }
+\item[{uint8\+\_\+t $\ast$}]{serial\+\_\+number, }
+\item[{int}]{serial\+\_\+len}
+\end{DoxyParamCaption}
+)}\label{eccx08__common_8c_a8cd3d3f16d50afcab8fc48623822ac8b}
+
+
+Converts 32 bytes from A\+T\+E\+C\+C508 format to the openssl E\+C\+\_\+\+K\+E\+Y structure. It allocates E\+C\+\_\+\+K\+E\+T structure and does not free it (must be a caller to free) 
+
+\hyperlink{eccx08__common_8c_a8cd3d3f16d50afcab8fc48623822ac8b}{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey()}
+
+
+\begin{DoxyParams}{Parameters}
+{\em } & \\
+\hline
+\end{DoxyParams}
+\hypertarget{eccx08__common_8c_ae01593533c7e871ae3268af13ddc39e4}{}\index{eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}!eccx08\+\_\+eckey\+\_\+fill\+\_\+key@{eccx08\+\_\+eckey\+\_\+fill\+\_\+key}}
+\index{eccx08\+\_\+eckey\+\_\+fill\+\_\+key@{eccx08\+\_\+eckey\+\_\+fill\+\_\+key}!eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}}
+\subsubsection[{eccx08\+\_\+eckey\+\_\+fill\+\_\+key(char $\ast$ptr, int size, uint8\+\_\+t slot\+\_\+id, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+eckey\+\_\+fill\+\_\+key (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{ptr, }
+\item[{int}]{size, }
+\item[{uint8\+\_\+t}]{slot\+\_\+id, }
+\item[{uint8\+\_\+t $\ast$}]{serial\+\_\+number, }
+\item[{int}]{serial\+\_\+len}
+\end{DoxyParamCaption}
+)}\label{eccx08__common_8c_ae01593533c7e871ae3268af13ddc39e4}
+
+
+Fills a raw buffer (32 bytes) with data to save into the private key structure. 
+
+\hyperlink{eccx08__common_8c_ae01593533c7e871ae3268af13ddc39e4}{eccx08\+\_\+eckey\+\_\+fill\+\_\+key()}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em ptr} & Pointer to a buffer to fill the key data \\
+\hline
+\mbox{\tt in}  & {\em slot\+\_\+id} & A\+T\+E\+C\+C\+X08 slot I\+D \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+number} & 9 bytes of A\+T\+E\+C\+C\+X08 serial number \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+len} & Size of the A\+T\+E\+C\+C\+X08 serial number buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on error 
+\end{DoxyReturn}
+\hypertarget{eccx08__common_8c_a2674b3f15332329b9301afb3b339c498}{}\index{eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}!eccx08\+\_\+generate\+\_\+key@{eccx08\+\_\+generate\+\_\+key}}
+\index{eccx08\+\_\+generate\+\_\+key@{eccx08\+\_\+generate\+\_\+key}!eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}}
+\subsubsection[{eccx08\+\_\+generate\+\_\+key(\+E\+C\+\_\+\+K\+E\+Y $\ast$eckey, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+generate\+\_\+key (
+\begin{DoxyParamCaption}
+\item[{E\+C\+\_\+\+K\+E\+Y $\ast$}]{eckey, }
+\item[{uint8\+\_\+t $\ast$}]{serial\+\_\+number, }
+\item[{int}]{serial\+\_\+len}
+\end{DoxyParamCaption}
+)}\label{eccx08__common_8c_a2674b3f15332329b9301afb3b339c498}
+
+
+Generates a 32-\/byte private key then replaces it with token data using the \hyperlink{eccx08__common_8c_a8cd3d3f16d50afcab8fc48623822ac8b}{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey()} call. 
+
+\hyperlink{eccx08__common_8c_a2674b3f15332329b9301afb3b339c498}{eccx08\+\_\+generate\+\_\+key()}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em p\+\_\+eckey} & Pointer to E\+C\+\_\+\+K\+E\+Y with Public Key on success \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+number} & 9 bytes of A\+T\+E\+C\+C\+X08 serial number \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+len} & Size of the A\+T\+E\+C\+C\+X08 serial number buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on error 
+\end{DoxyReturn}
+\hypertarget{eccx08__common_8c_a7fe31ec23b24610e2beafa07a17b714c}{}\index{eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}!eccx08\+\_\+get\+\_\+enc\+\_\+key@{eccx08\+\_\+get\+\_\+enc\+\_\+key}}
+\index{eccx08\+\_\+get\+\_\+enc\+\_\+key@{eccx08\+\_\+get\+\_\+enc\+\_\+key}!eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}}
+\subsubsection[{eccx08\+\_\+get\+\_\+enc\+\_\+key(uint8\+\_\+t $\ast$enckey, int16\+\_\+t keysize)}]{\setlength{\rightskip}{0pt plus 5cm}A\+T\+C\+A\+\_\+\+S\+T\+A\+T\+U\+S eccx08\+\_\+get\+\_\+enc\+\_\+key (
+\begin{DoxyParamCaption}
+\item[{uint8\+\_\+t $\ast$}]{enckey, }
+\item[{int16\+\_\+t}]{keysize}
+\end{DoxyParamCaption}
+)}\label{eccx08__common_8c_a7fe31ec23b24610e2beafa07a17b714c}
+
+
+A user defined function that fills a raw buffer (32 bytes) with the platform-\/specific encryption key. 
+
+U\+S\+E\+R\+: Platform needs to to provide secure storage for this encryption key
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em enckey} & Pointer to a buffer to fill with the encryption key data \\
+\hline
+\mbox{\tt in}  & {\em keysize} & The size of the enckey buffer (number of bytes should be M\+E\+M\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+Z\+E) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on error 
+\end{DoxyReturn}
+
+
+\subsection{Variable Documentation}
+\hypertarget{eccx08__common_8c_a5482733e3446fabc37f106d2ac71c3b4}{}\index{eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}!test\+\_\+priv\+\_\+key@{test\+\_\+priv\+\_\+key}}
+\index{test\+\_\+priv\+\_\+key@{test\+\_\+priv\+\_\+key}!eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}}
+\subsubsection[{test\+\_\+priv\+\_\+key}]{\setlength{\rightskip}{0pt plus 5cm}uint8\+\_\+t test\+\_\+priv\+\_\+key\mbox{[}M\+E\+M\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+Z\+E\mbox{]}}\label{eccx08__common_8c_a5482733e3446fabc37f106d2ac71c3b4}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+    0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26,
+    0x27, 0x28, 0x29, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x40, 0x41, 0x42,
+\}
+\end{DoxyCode}
+\hypertarget{eccx08__common_8c_af92abbafbd33d6e3a0ff9b6db9aa10ee}{}\index{eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}!test\+\_\+pub\+\_\+key@{test\+\_\+pub\+\_\+key}}
+\index{test\+\_\+pub\+\_\+key@{test\+\_\+pub\+\_\+key}!eccx08\+\_\+common.\+c@{eccx08\+\_\+common.\+c}}
+\subsubsection[{test\+\_\+pub\+\_\+key}]{\setlength{\rightskip}{0pt plus 5cm}uint8\+\_\+t test\+\_\+pub\+\_\+key\mbox{[}M\+E\+M\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+Z\+E $\ast$2\mbox{]}}\label{eccx08__common_8c_af92abbafbd33d6e3a0ff9b6db9aa10ee}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+    0xe9, 0xb8, 0x91, 0x9f, 0x3d, 0x76, 0x4a, 0x26, 0xa4, 0xa8, 0xf6, 0x2b, 0x53, 0xbe, 0xd7, 0xe3,
+    0x14, 0x46, 0x33, 0xdd, 0xf2, 0x64, 0x98, 0xd0, 0xe9, 0x85, 0x70, 0xab, 0xe5, 0xb3, 0x06, 0xfd,
+    0xdf, 0x91, 0x63, 0x84, 0x71, 0x7d, 0xdc, 0x68, 0x05, 0x79, 0x12, 0x86, 0x30, 0x73, 0xc5, 0x77,
+    0xc5, 0xb3, 0x73, 0x95, 0x8b, 0x95, 0xaf, 0xd5, 0x49, 0x1f, 0x9f, 0x82, 0xe4, 0xeb, 0x77, 0x86,
+\}
+\end{DoxyCode}

@@ -1,0 +1,46 @@
+\hypertarget{exchange-tls12_8c}{}\section{C\+:/\+Source/\+Git\+Lab/\+Ca\+Sw/\+Open\+S\+S\+L/atmel-\/ecc/client-\/server/exchange-\/tls12.c File Reference}
+\label{exchange-tls12_8c}\index{C\+:/\+Source/\+Git\+Lab/\+Ca\+Sw/\+Open\+S\+S\+L/atmel-\/ecc/client-\/server/exchange-\/tls12.\+c@{C\+:/\+Source/\+Git\+Lab/\+Ca\+Sw/\+Open\+S\+S\+L/atmel-\/ecc/client-\/server/exchange-\/tls12.\+c}}
+
+
+T\+L\+S1.\+2 client/server exchange utility. It is an example of the programmatic use of the ateccx08 engine for T\+L\+S1.\+2 exchange. This file is the main entry point. Call \char`\"{}./exchange-\/tls12 -\/h\char`\"{} for help. For details see \href{https://wiki.openssl.org/index.php/SSL/TLS_Client}{\tt https\+://wiki.\+openssl.\+org/index.\+php/\+S\+S\+L/\+T\+L\+S\+\_\+\+Client} and \href{https://wiki.openssl.org/index.php/Simple_TLS_Server}{\tt https\+://wiki.\+openssl.\+org/index.\+php/\+Simple\+\_\+\+T\+L\+S\+\_\+\+Server}.  
+
+
+{\ttfamily \#include \char`\"{}tlsutil.\+h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{exchange-tls12_8c_ae8605e2b78cd4a81b6c6b5c30cb7366a}{}void \hyperlink{exchange-tls12_8c_ae8605e2b78cd4a81b6c6b5c30cb7366a}{usage} (void)\label{exchange-tls12_8c_ae8605e2b78cd4a81b6c6b5c30cb7366a}
+
+\begin{DoxyCompactList}\small\item\em Print a short help on \char`\"{}./exchange-\/tls12 -\/h\char`\"{}, \char`\"{}./exchange-\/tls12 -\/?\char`\"{}, or for an invalid arguments. \end{DoxyCompactList}\item 
+int \hyperlink{exchange-tls12_8c_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Main exchange-\/tls12 function. For help on arguments see the \hyperlink{exchange-tls12_8c_ae8605e2b78cd4a81b6c6b5c30cb7366a}{usage()} above. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+T\+L\+S1.\+2 client/server exchange utility. It is an example of the programmatic use of the ateccx08 engine for T\+L\+S1.\+2 exchange. This file is the main entry point. Call \char`\"{}./exchange-\/tls12 -\/h\char`\"{} for help. For details see \href{https://wiki.openssl.org/index.php/SSL/TLS_Client}{\tt https\+://wiki.\+openssl.\+org/index.\+php/\+S\+S\+L/\+T\+L\+S\+\_\+\+Client} and \href{https://wiki.openssl.org/index.php/Simple_TLS_Server}{\tt https\+://wiki.\+openssl.\+org/index.\+php/\+Simple\+\_\+\+T\+L\+S\+\_\+\+Server}. 
+
+Copyright (c) 2015 Atmel Corporation. All rights reserved.
+
+\subsection{Function Documentation}
+\hypertarget{exchange-tls12_8c_a0ddf1224851353fc92bfbff6f499fa97}{}\index{exchange-\/tls12.\+c@{exchange-\/tls12.\+c}!main@{main}}
+\index{main@{main}!exchange-\/tls12.\+c@{exchange-\/tls12.\+c}}
+\subsubsection[{main(int argc, char $\ast$argv[])}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}\label{exchange-tls12_8c_a0ddf1224851353fc92bfbff6f499fa97}
+
+
+Main exchange-\/tls12 function. For help on arguments see the \hyperlink{exchange-tls12_8c_ae8605e2b78cd4a81b6c6b5c30cb7366a}{usage()} above. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em argc} & -\/ the number of arguments passed into the command line \\
+\hline
+\mbox{\tt in}  & {\em argv} & -\/ a pointer to the array of arguments \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 for success 
+\end{DoxyReturn}

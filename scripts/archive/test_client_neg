@@ -1,0 +1,11 @@
+#!/bin/bash
+set -x
+set -e
+cd $(dirname $0)
+TREE_TOP=../..
+cd $TREE_TOP/certstore
+cp -f privkeys/homut_client.key privkeys/homut_client_eccx08.key
+#./run_cert_client
+#./run_cert_serv
+cd -
+./run_client_eng

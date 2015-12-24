@@ -1,0 +1,70 @@
+#!/bin/bash
+set -e
+set -x
+cd $(dirname $0)
+TREE_TOP=..
+export LD_LIBRARY_PATH=$TREE_TOP/install_dir/lib
+export LD_PRELOAD=/lib/x86_64-linux-gnu/libpthread.so.0
+PORT=49917
+
+# Certificate names
+TMP_CERT_DIR=/tmp
+DEVICE_CERT=${TMP_CERT_DIR}/dev_cert
+SIGNER_CERT=${TMP_CERT_DIR}/signer_cert
+ROOT_CERT=${TMP_CERT_DIR}/root_cert
+SIGNER_BUNDLE=${TMP_CERT_DIR}/signer_bundle
+
+if [ -z "$USE_ENGINE" ]; then
+    USE_ENGINE=0
+fi
+
+if [ $USE_ENGINE = "0" ]; then
+ENGINE=
+else
+ENGINE="-engine ateccx08"
+fi
+
+#TARGET="dh"
+if [ -z "$TARGET" ]; then
+  if [ $USE_ENGINE = "0" ]; then
+    TARGET="server"
+  else
+    TARGET="server_eccx08"
+  fi
+fi
+
+BUNDLE=bundle
+
+if [ -z "$RSA" ]; then
+  RSA=
+fi
+
+#No need to specify cipher on server - it will pick correct one
+#export SSL_CIPHER=ECDHE-ECDSA-AES128-GCM-SHA256 # define RSA to nothing on both client and server
+#export SSL_CIPHER=ECDH-ECDSA-AES128-GCM-SHA256 # define RSA to nothing on both client and server
+#export SSL_CIPHER=ECDHE-RSA-AES128-SHA # define RSA=rsa_ on both client and server
+#export SSL_CIPHER=ECDHE-RSA-AES128-SHA256 # define RSA=rsa_ on both client and server
+
+#export SSL_CIPHER=ECDH-RSA-AES128-SHA256 # - dropped from SOW
+#export SSL_CIPHER=DH-RSA-AES256-SHA256  # requires TARGET="dh" - not required by SOW
+
+# Call TLS client with engine
+
+CMD=../install_dir/bin/openssl
+#CMD=../cmd_openssl gdb 
+CMD_GDB=../install_dir/bin/openssl
+#CMD_GDB="gdb --args ../install_dir/bin/openssl"
+
+set +e
+# Convert Signer and Root certificates from DER to PEM format and put them into the bundle
+${CMD} x509 -inform DER -outform PEM -in ${SIGNER_CERT}.der -out ${SIGNER_CERT}.pem
+${CMD} x509 -inform DER -outform PEM -in ${ROOT_CERT}.der -out ${ROOT_CERT}.pem
+cat ${SIGNER_CERT}.pem ${ROOT_CERT}.pem > ${SIGNER_BUNDLE}.pem
+
+${CMD_GDB} s_server ${ENGINE} -accept ${PORT} -Verify 4 \
+   -certform DER -cert ${DEVICE_CERT}.der -key privkeys/homut_${RSA}${TARGET}.key \
+   -CApath /tmp -CAfile ${SIGNER_BUNDLE}.pem
+STATUS=$?
+echo "EXIT STATUS: ${STATUS}"
+exit ${STATUS}
+

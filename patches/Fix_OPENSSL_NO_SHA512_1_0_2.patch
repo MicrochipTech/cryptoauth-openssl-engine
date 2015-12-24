@@ -1,0 +1,39 @@
+From 235d61e3b8d1c0635d18216384c72cdeded3c961 Mon Sep 17 00:00:00 2001
+From: John Peck <peck@bay2sierra.com>
+Date: Fri, 9 Oct 2015 09:29:08 -0700
+Subject: [PATCH] Fixed compile error when OPENSSL_NO_SHA512 is defined
+
+---
+ ssl/t1_lib.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/ssl/t1_lib.c b/ssl/t1_lib.c
+index 210a5e8..8db3b93 100644
+--- a/ssl/t1_lib.c
++++ b/ssl/t1_lib.c
+@@ -886,8 +886,10 @@ static int tls1_check_cert_param(SSL *s, X509 *x, int set_ee_md)
+         /* Check to see we have necessary signing algorithm */
+         if (curve_id[1] == TLSEXT_curve_P_256)
+             check_md = NID_ecdsa_with_SHA256;
++# ifndef OPENSSL_NO_SHA512
+         else if (curve_id[1] == TLSEXT_curve_P_384)
+             check_md = NID_ecdsa_with_SHA384;
++# endif
+         else
+             return 0;           /* Should never happen */
+         for (i = 0; i < c->shared_sigalgslen; i++)
+@@ -899,7 +901,11 @@ static int tls1_check_cert_param(SSL *s, X509 *x, int set_ee_md)
+             if (check_md == NID_ecdsa_with_SHA256)
+                 c->pkeys[SSL_PKEY_ECC].digest = EVP_sha256();
+             else
++# ifndef OPENSSL_NO_SHA512
+                 c->pkeys[SSL_PKEY_ECC].digest = EVP_sha384();
++# else
++	    return 0; 	    /* Should never happen */
++# endif
+         }
+     }
+     return rv;
+-- 
+1.9.1
+

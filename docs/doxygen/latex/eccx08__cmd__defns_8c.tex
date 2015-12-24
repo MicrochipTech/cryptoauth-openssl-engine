@@ -1,0 +1,236 @@
+\hypertarget{eccx08__cmd__defns_8c}{}\section{C\+:/\+Source/\+Git\+Lab/\+Ca\+Sw/\+Open\+S\+S\+L/atmel-\/ecc/engine\+\_\+atecc/engine\+\_\+meth/eccx08\+\_\+cmd\+\_\+defns.c File Reference}
+\label{eccx08__cmd__defns_8c}\index{C\+:/\+Source/\+Git\+Lab/\+Ca\+Sw/\+Open\+S\+S\+L/atmel-\/ecc/engine\+\_\+atecc/engine\+\_\+meth/eccx08\+\_\+cmd\+\_\+defns.\+c@{C\+:/\+Source/\+Git\+Lab/\+Ca\+Sw/\+Open\+S\+S\+L/atmel-\/ecc/engine\+\_\+atecc/engine\+\_\+meth/eccx08\+\_\+cmd\+\_\+defns.\+c}}
+
+
+Implementation of Open\+S\+S\+L E\+N\+G\+I\+N\+E callback functions for certificate handling.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$openssl/crypto.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$limits.\+h$>$}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include $<$openssl/engine.\+h$>$}\\*
+{\ttfamily \#include $<$openssl/pem.\+h$>$}\\*
+{\ttfamily \#include $<$openssl/x509v3.\+h$>$}\\*
+{\ttfamily \#include $<$crypto/ec/ec\+\_\+lcl.\+h$>$}\\*
+{\ttfamily \#include $<$crypto/ecdh/ech\+\_\+locl.\+h$>$}\\*
+{\ttfamily \#include $<$crypto/ecdsa/ecs\+\_\+locl.\+h$>$}\\*
+{\ttfamily \#include $<$err.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}ecc\+\_\+meth.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}platform.\+h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{eccx08__cmd__defns_8c_adffc4fa1141b53facaa726027e6e3547}{get\+\_\+device\+\_\+cert} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves pre-\/programmed certificates from A\+T\+E\+C\+C\+X08 chip and saves them into temporary files as defined in the dev\+\_\+cert\+\_\+fname, signer\+\_\+cert\+\_\+fname, and root\+\_\+cert\+\_\+fname variables. \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__cmd__defns_8c_a77e94282c1b9c9b8dc785f686a50f871}{get\+\_\+public\+\_\+key} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves the signer public key from A\+T\+E\+C\+C\+X08 chip and saves them into a global signer\+Pubkey buffer. \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__cmd__defns_8c_a3f0266578738be78d798b144e6262169}{get\+\_\+signer\+\_\+cert} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves pre-\/programmed signer certificate from A\+T\+E\+C\+C\+X08 chip and saves it into a global signer\+Cert buffer. \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__cmd__defns_8c_aae217a42334bdcfcfa942d9fc4cdb099}{verify\+\_\+signer\+\_\+cert} (void)
+\begin{DoxyCompactList}\small\item\em Verifies the signer certificate using the A\+T\+E\+C\+C\+X08 chip hardware and data in ca\+Pubkey buffer (C\+A root key). \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__cmd__defns_8c_a5af7c257defb33ecc34433b4c0263d5b}{verify\+\_\+device\+\_\+cert} (void)
+\begin{DoxyCompactList}\small\item\em Verifies the device certificate using the A\+T\+E\+C\+C\+X08 chip hardware and data in signer\+Pubkey buffer. \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__cmd__defns_8c_aa9a2f8768f02f3e82c901157fde9eccd}{get\+\_\+root\+\_\+cert} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves pre-\/programmed C\+A certificate (the root) from A\+T\+E\+C\+C\+X08 chip and saves it into a global root\+Cert buffer. \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__cmd__defns_8c_a707f101b472aeb0e21336f3ca3932fb5}{extract\+\_\+all\+\_\+certs} (void)
+\begin{DoxyCompactList}\small\item\em Retrieves all pre-\/programmed certificates from A\+T\+E\+C\+C\+X08 chip and saves it into a global buffers. Calls functions to verify them. \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__cmd__defns_8c_a1b6d80f21687a19c864c1233aa69f1ac}{eccx08\+\_\+cmd\+\_\+ctrl} (E\+N\+G\+I\+N\+E $\ast$e, int cmd, long i, void $\ast$p, void($\ast$f)(void))
+\begin{DoxyCompactList}\small\item\em Call a function of the ateccx08 engine depending on provided command. This is an extension of Open\+S\+S\+L\+: there is no openssl cli command to call this function. See \hyperlink{tlsutil_8c_a138afb41094f19e261ca1519585f6a30}{run\+\_\+engine\+\_\+cmds()} function from the tlsutils.\+c file for details. \end{DoxyCompactList}\item 
+int \hyperlink{eccx08__cmd__defns_8c_adba5c7361d5aa76f1231f4d741afc330}{eccx08\+\_\+cmd\+\_\+defn\+\_\+init} (E\+N\+G\+I\+N\+E $\ast$e)
+\begin{DoxyCompactList}\small\item\em Initialize the C\+M\+D method for ateccx08 engine. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{eccx08__cmd__defns_8c_ab9fc66b4c9fb60c4691734b7ac6e4aaa}{}uint8\+\_\+t {\bfseries signer\+Pubkey} \mbox{[}64\mbox{]} = \{ 0 \}\label{eccx08__cmd__defns_8c_ab9fc66b4c9fb60c4691734b7ac6e4aaa}
+
+\item 
+\hypertarget{eccx08__cmd__defns_8c_a001c3eeab87aad8b1c9f98a0a3e6dee4}{}uint8\+\_\+t {\bfseries ca\+Pubkey} \mbox{[}64\mbox{]} = \{ 0 \}\label{eccx08__cmd__defns_8c_a001c3eeab87aad8b1c9f98a0a3e6dee4}
+
+\item 
+\hypertarget{eccx08__cmd__defns_8c_a5a35e02a21efcab91738ee448bf875c1}{}uint8\+\_\+t {\bfseries root\+Cert} \mbox{[}1024\mbox{]} = \{ 0 \}\label{eccx08__cmd__defns_8c_a5a35e02a21efcab91738ee448bf875c1}
+
+\item 
+\hypertarget{eccx08__cmd__defns_8c_a78814382939e8cfcc93189043aa21847}{}uint8\+\_\+t {\bfseries signer\+Cert} \mbox{[}1024\mbox{]} = \{ 0 \}\label{eccx08__cmd__defns_8c_a78814382939e8cfcc93189043aa21847}
+
+\item 
+\hypertarget{eccx08__cmd__defns_8c_a47d749a26a94086fc9418a502704aee6}{}uint8\+\_\+t {\bfseries device\+Cert} \mbox{[}1024\mbox{]} = \{ 0 \}\label{eccx08__cmd__defns_8c_a47d749a26a94086fc9418a502704aee6}
+
+\item 
+\hypertarget{eccx08__cmd__defns_8c_a2a3c2e71adcc730e107bc8b7ebcd34d4}{}size\+\_\+t {\bfseries root\+Cert\+Size} = 1024\label{eccx08__cmd__defns_8c_a2a3c2e71adcc730e107bc8b7ebcd34d4}
+
+\item 
+\hypertarget{eccx08__cmd__defns_8c_ae476f6d5aee32629c68f7c412fe8e7b3}{}size\+\_\+t {\bfseries signer\+Cert\+Size} = 1024\label{eccx08__cmd__defns_8c_ae476f6d5aee32629c68f7c412fe8e7b3}
+
+\item 
+\hypertarget{eccx08__cmd__defns_8c_af9237934057bc89425f5d2d3686693e4}{}size\+\_\+t {\bfseries device\+Cert\+Size} = 1024\label{eccx08__cmd__defns_8c_af9237934057bc89425f5d2d3686693e4}
+
+\item 
+\hypertarget{eccx08__cmd__defns_8c_ae40e7f6f973e09a21b80ef83a5ecc732}{}char $\ast$ {\bfseries dev\+\_\+cert\+\_\+fname} = \char`\"{}/tmp/dev\+\_\+cert.\+der\char`\"{}\label{eccx08__cmd__defns_8c_ae40e7f6f973e09a21b80ef83a5ecc732}
+
+\item 
+\hypertarget{eccx08__cmd__defns_8c_a8d4f4dc055adafeba82ca9167d53755e}{}char $\ast$ {\bfseries signer\+\_\+cert\+\_\+fname} = \char`\"{}/tmp/signer\+\_\+cert.\+der\char`\"{}\label{eccx08__cmd__defns_8c_a8d4f4dc055adafeba82ca9167d53755e}
+
+\item 
+\hypertarget{eccx08__cmd__defns_8c_a21b7469379f4c70fb02fe2199f6093d5}{}char $\ast$ {\bfseries root\+\_\+cert\+\_\+fname} = \char`\"{}/tmp/root\+\_\+cert.\+der\char`\"{}\label{eccx08__cmd__defns_8c_a21b7469379f4c70fb02fe2199f6093d5}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implementation of Open\+S\+S\+L E\+N\+G\+I\+N\+E callback functions for certificate handling. 
+
+Copyright (c) 2015 Atmel Corporation. All rights reserved.
+
+\subsection{Function Documentation}
+\hypertarget{eccx08__cmd__defns_8c_a1b6d80f21687a19c864c1233aa69f1ac}{}\index{eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}!eccx08\+\_\+cmd\+\_\+ctrl@{eccx08\+\_\+cmd\+\_\+ctrl}}
+\index{eccx08\+\_\+cmd\+\_\+ctrl@{eccx08\+\_\+cmd\+\_\+ctrl}!eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}}
+\subsubsection[{eccx08\+\_\+cmd\+\_\+ctrl(\+E\+N\+G\+I\+N\+E $\ast$e, int cmd, long i, void $\ast$p, void($\ast$f)(void))}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+cmd\+\_\+ctrl (
+\begin{DoxyParamCaption}
+\item[{E\+N\+G\+I\+N\+E $\ast$}]{e, }
+\item[{int}]{cmd, }
+\item[{long}]{i, }
+\item[{void $\ast$}]{p, }
+\item[{void($\ast$)(void)}]{f}
+\end{DoxyParamCaption}
+)}\label{eccx08__cmd__defns_8c_a1b6d80f21687a19c864c1233aa69f1ac}
+
+
+Call a function of the ateccx08 engine depending on provided command. This is an extension of Open\+S\+S\+L\+: there is no openssl cli command to call this function. See \hyperlink{tlsutil_8c_a138afb41094f19e261ca1519585f6a30}{run\+\_\+engine\+\_\+cmds()} function from the tlsutils.\+c file for details. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em e} & a pointer to the E\+N\+G\+I\+N\+E structure \\
+\hline
+\mbox{\tt in}  & {\em cmd} & a command to execute. For the full list of commands see E\+C\+C\+X08\+\_\+\+C\+M\+D\+\_\+$\ast$ defines in the \hyperlink{ecc__meth_8h}{ecc\+\_\+meth.\+h} file \\
+\hline
+\mbox{\tt in}  & {\em i} & an integer parameter of the command \\
+\hline
+\mbox{\tt in}  & {\em p} & a string parameter of the command \\
+\hline
+\mbox{\tt in}  & {\em p} & a function pointer parameter of the command \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 for success 
+\end{DoxyReturn}
+\hypertarget{eccx08__cmd__defns_8c_adba5c7361d5aa76f1231f4d741afc330}{}\index{eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}!eccx08\+\_\+cmd\+\_\+defn\+\_\+init@{eccx08\+\_\+cmd\+\_\+defn\+\_\+init}}
+\index{eccx08\+\_\+cmd\+\_\+defn\+\_\+init@{eccx08\+\_\+cmd\+\_\+defn\+\_\+init}!eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}}
+\subsubsection[{eccx08\+\_\+cmd\+\_\+defn\+\_\+init(\+E\+N\+G\+I\+N\+E $\ast$e)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+cmd\+\_\+defn\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{E\+N\+G\+I\+N\+E $\ast$}]{e}
+\end{DoxyParamCaption}
+)}\label{eccx08__cmd__defns_8c_adba5c7361d5aa76f1231f4d741afc330}
+
+
+Initialize the C\+M\+D method for ateccx08 engine. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em e} & a pointer to the E\+N\+G\+I\+N\+E structure \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 for success 
+\end{DoxyReturn}
+\hypertarget{eccx08__cmd__defns_8c_a707f101b472aeb0e21336f3ca3932fb5}{}\index{eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}!extract\+\_\+all\+\_\+certs@{extract\+\_\+all\+\_\+certs}}
+\index{extract\+\_\+all\+\_\+certs@{extract\+\_\+all\+\_\+certs}!eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}}
+\subsubsection[{extract\+\_\+all\+\_\+certs(void)}]{\setlength{\rightskip}{0pt plus 5cm}int extract\+\_\+all\+\_\+certs (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{eccx08__cmd__defns_8c_a707f101b472aeb0e21336f3ca3932fb5}
+
+
+Retrieves all pre-\/programmed certificates from A\+T\+E\+C\+C\+X08 chip and saves it into a global buffers. Calls functions to verify them. 
+
+\begin{DoxyReturn}{Returns}
+A\+T\+C\+A\+\_\+\+S\+U\+C\+C\+E\+S\+S for success 
+\end{DoxyReturn}
+\hypertarget{eccx08__cmd__defns_8c_adffc4fa1141b53facaa726027e6e3547}{}\index{eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}!get\+\_\+device\+\_\+cert@{get\+\_\+device\+\_\+cert}}
+\index{get\+\_\+device\+\_\+cert@{get\+\_\+device\+\_\+cert}!eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}}
+\subsubsection[{get\+\_\+device\+\_\+cert(void)}]{\setlength{\rightskip}{0pt plus 5cm}int get\+\_\+device\+\_\+cert (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{eccx08__cmd__defns_8c_adffc4fa1141b53facaa726027e6e3547}
+
+
+Retrieves pre-\/programmed certificates from A\+T\+E\+C\+C\+X08 chip and saves them into temporary files as defined in the dev\+\_\+cert\+\_\+fname, signer\+\_\+cert\+\_\+fname, and root\+\_\+cert\+\_\+fname variables. 
+
+\begin{DoxyReturn}{Returns}
+A\+T\+C\+A\+\_\+\+S\+U\+C\+C\+E\+S\+S for success 
+\end{DoxyReturn}
+\hypertarget{eccx08__cmd__defns_8c_a77e94282c1b9c9b8dc785f686a50f871}{}\index{eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}!get\+\_\+public\+\_\+key@{get\+\_\+public\+\_\+key}}
+\index{get\+\_\+public\+\_\+key@{get\+\_\+public\+\_\+key}!eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}}
+\subsubsection[{get\+\_\+public\+\_\+key(void)}]{\setlength{\rightskip}{0pt plus 5cm}int get\+\_\+public\+\_\+key (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{eccx08__cmd__defns_8c_a77e94282c1b9c9b8dc785f686a50f871}
+
+
+Retrieves the signer public key from A\+T\+E\+C\+C\+X08 chip and saves them into a global signer\+Pubkey buffer. 
+
+\begin{DoxyReturn}{Returns}
+A\+T\+C\+A\+\_\+\+S\+U\+C\+C\+E\+S\+S for success 
+\end{DoxyReturn}
+\hypertarget{eccx08__cmd__defns_8c_aa9a2f8768f02f3e82c901157fde9eccd}{}\index{eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}!get\+\_\+root\+\_\+cert@{get\+\_\+root\+\_\+cert}}
+\index{get\+\_\+root\+\_\+cert@{get\+\_\+root\+\_\+cert}!eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}}
+\subsubsection[{get\+\_\+root\+\_\+cert(void)}]{\setlength{\rightskip}{0pt plus 5cm}int get\+\_\+root\+\_\+cert (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{eccx08__cmd__defns_8c_aa9a2f8768f02f3e82c901157fde9eccd}
+
+
+Retrieves pre-\/programmed C\+A certificate (the root) from A\+T\+E\+C\+C\+X08 chip and saves it into a global root\+Cert buffer. 
+
+\begin{DoxyReturn}{Returns}
+A\+T\+C\+A\+\_\+\+S\+U\+C\+C\+E\+S\+S for success 
+\end{DoxyReturn}
+\hypertarget{eccx08__cmd__defns_8c_a3f0266578738be78d798b144e6262169}{}\index{eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}!get\+\_\+signer\+\_\+cert@{get\+\_\+signer\+\_\+cert}}
+\index{get\+\_\+signer\+\_\+cert@{get\+\_\+signer\+\_\+cert}!eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}}
+\subsubsection[{get\+\_\+signer\+\_\+cert(void)}]{\setlength{\rightskip}{0pt plus 5cm}int get\+\_\+signer\+\_\+cert (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{eccx08__cmd__defns_8c_a3f0266578738be78d798b144e6262169}
+
+
+Retrieves pre-\/programmed signer certificate from A\+T\+E\+C\+C\+X08 chip and saves it into a global signer\+Cert buffer. 
+
+\begin{DoxyReturn}{Returns}
+A\+T\+C\+A\+\_\+\+S\+U\+C\+C\+E\+S\+S for success 
+\end{DoxyReturn}
+\hypertarget{eccx08__cmd__defns_8c_a5af7c257defb33ecc34433b4c0263d5b}{}\index{eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}!verify\+\_\+device\+\_\+cert@{verify\+\_\+device\+\_\+cert}}
+\index{verify\+\_\+device\+\_\+cert@{verify\+\_\+device\+\_\+cert}!eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}}
+\subsubsection[{verify\+\_\+device\+\_\+cert(void)}]{\setlength{\rightskip}{0pt plus 5cm}int verify\+\_\+device\+\_\+cert (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{eccx08__cmd__defns_8c_a5af7c257defb33ecc34433b4c0263d5b}
+
+
+Verifies the device certificate using the A\+T\+E\+C\+C\+X08 chip hardware and data in signer\+Pubkey buffer. 
+
+\begin{DoxyReturn}{Returns}
+A\+T\+C\+A\+\_\+\+S\+U\+C\+C\+E\+S\+S for success 
+\end{DoxyReturn}
+\hypertarget{eccx08__cmd__defns_8c_aae217a42334bdcfcfa942d9fc4cdb099}{}\index{eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}!verify\+\_\+signer\+\_\+cert@{verify\+\_\+signer\+\_\+cert}}
+\index{verify\+\_\+signer\+\_\+cert@{verify\+\_\+signer\+\_\+cert}!eccx08\+\_\+cmd\+\_\+defns.\+c@{eccx08\+\_\+cmd\+\_\+defns.\+c}}
+\subsubsection[{verify\+\_\+signer\+\_\+cert(void)}]{\setlength{\rightskip}{0pt plus 5cm}int verify\+\_\+signer\+\_\+cert (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{eccx08__cmd__defns_8c_aae217a42334bdcfcfa942d9fc4cdb099}
+
+
+Verifies the signer certificate using the A\+T\+E\+C\+C\+X08 chip hardware and data in ca\+Pubkey buffer (C\+A root key). 
+
+\begin{DoxyReturn}{Returns}
+A\+T\+C\+A\+\_\+\+S\+U\+C\+C\+E\+S\+S for success 
+\end{DoxyReturn}

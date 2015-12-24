@@ -1,0 +1,85 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 9470250 (0x90812a)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=US, ST=CA, O=Homut LLC, CN=Homut RSA Intermediate
+        Validity
+            Not Before: Nov  1 18:14:32 2015 GMT
+            Not After : Oct 31 18:14:32 2016 GMT
+        Subject: C=US, ST=CA, O=Homut LLC, CN=Homut RSA Server
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:9b:d8:92:d1:09:ac:d0:ba:b9:8f:59:af:27:bf:
+                    77:04:6f:93:b5:61:96:8a:91:0e:b7:7d:8f:7b:35:
+                    24:16:c0:f3:58:c2:b7:25:13:19:8d:df:0f:5b:67:
+                    a4:ba:5a:2f:6c:29:f2:f3:28:62:e2:4b:a8:6e:44:
+                    5d:bd:99:a7:cb:b0:1e:d9:0c:ea:46:a3:b3:69:d9:
+                    a6:53:08:8e:be:52:dd:0b:26:47:cf:f1:ff:74:80:
+                    f1:f8:bf:6a:a9:ca:4b:8a:4b:a5:4a:d2:75:58:23:
+                    a5:fd:b8:2a:41:ca:f3:9e:76:95:7a:82:cd:d6:de:
+                    8f:18:83:32:86:ff:d7:ea:c1:46:7c:c7:5e:a5:4d:
+                    df:ba:3c:ff:41:b8:3d:43:f1:a6:5e:1c:93:5b:ed:
+                    2a:b5:ba:45:aa:de:1b:55:8e:d8:20:c2:f9:92:4e:
+                    c7:ee:d6:d3:75:3f:70:51:49:7b:5d:99:24:a6:d5:
+                    78:f6:26:ae:c6:87:f7:94:f1:16:e8:47:16:58:ca:
+                    1c:f4:c2:5f:b7:6f:e7:2b:b5:f6:12:b4:ae:27:00:
+                    b2:96:e7:35:99:c9:5e:a3:d1:42:5f:ae:2d:33:2a:
+                    e4:a2:9d:1e:2f:45:31:1c:be:13:47:d8:e3:90:97:
+                    fd:6c:2b:cf:0e:1e:ea:bf:63:a4:c0:76:b0:ac:a3:
+                    ff:4d
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Subject Key Identifier: 
+                1F:C0:B9:09:AF:C6:F0:42:37:B6:25:DF:AA:2E:77:6B:56:E3:99:2D
+            X509v3 Authority Key Identifier: 
+                keyid:5C:CD:7C:48:5B:F1:6E:CF:D4:F4:44:6A:28:CD:AB:0A:0E:CE:20:CA
+                DirName:/C=US/ST=CA/O=Homut LLC/CN=Homut RSA Root
+                serial:90:81:29
+
+            X509v3 Basic Constraints: 
+                CA:TRUE
+            X509v3 Subject Alternative Name: 
+                <EMPTY>
+
+    Signature Algorithm: sha256WithRSAEncryption
+         38:e5:8a:e6:8b:15:d3:d9:d5:7c:64:62:1a:3c:64:5c:4c:ef:
+         53:45:73:ed:8e:65:da:64:7e:47:d2:50:2a:dd:25:2d:97:49:
+         ee:a5:e3:36:9f:95:86:3c:ac:b5:b6:8f:a6:b4:4a:05:1a:e2:
+         07:25:4f:2a:d1:59:0c:f7:6c:3f:b4:2d:2a:b4:47:ff:5d:19:
+         ff:3d:68:cb:2b:47:d5:a0:35:f4:85:ee:90:4e:47:a6:1f:95:
+         07:1e:47:75:02:62:be:9e:82:6a:81:4a:fa:de:dd:83:2e:7f:
+         6a:3c:3f:19:8f:f1:56:1f:13:eb:1c:90:fe:3a:0f:ef:63:5a:
+         f9:1e:95:fc:9f:58:be:14:9f:9a:cb:70:1c:37:d3:5e:9b:e9:
+         96:bd:91:10:78:ea:f8:ee:56:de:d8:49:14:3b:94:79:89:9c:
+         91:39:b6:c6:f4:83:bf:7b:c8:9c:52:6a:a5:b1:54:90:f4:95:
+         fc:90:a0:0e:39:6b:d3:71:eb:64:78:53:ca:fe:d5:dd:b8:7a:
+         8b:2a:3d:59:e7:47:f3:21:5f:1b:ec:54:cf:61:10:45:b9:e4:
+         e3:46:f3:38:5d:9f:7e:68:d5:71:e2:c4:54:da:d9:ce:2e:7a:
+         98:d6:81:e6:a9:91:86:7a:b6:fb:76:8d:04:f4:91:13:9e:95:
+         32:5c:eb:c8
+-----BEGIN CERTIFICATE-----
+MIIDxjCCAq6gAwIBAgIEAJCBKjANBgkqhkiG9w0BAQsFADBPMQswCQYDVQQGEwJV
+UzELMAkGA1UECAwCQ0ExEjAQBgNVBAoMCUhvbXV0IExMQzEfMB0GA1UEAwwWSG9t
+dXQgUlNBIEludGVybWVkaWF0ZTAeFw0xNTExMDExODE0MzJaFw0xNjEwMzExODE0
+MzJaMEkxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTESMBAGA1UECgwJSG9tdXQg
+TExDMRkwFwYDVQQDDBBIb211dCBSU0EgU2VydmVyMIIBIjANBgkqhkiG9w0BAQEF
+AAOCAQ8AMIIBCgKCAQEAm9iS0Qms0Lq5j1mvJ793BG+TtWGWipEOt32PezUkFsDz
+WMK3JRMZjd8PW2ekulovbCny8yhi4kuobkRdvZmny7Ae2QzqRqOzadmmUwiOvlLd
+CyZHz/H/dIDx+L9qqcpLikulStJ1WCOl/bgqQcrznnaVeoLN1t6PGIMyhv/X6sFG
+fMdepU3fujz/Qbg9Q/GmXhyTW+0qtbpFqt4bVY7YIML5kk7H7tbTdT9wUUl7XZkk
+ptV49iauxof3lPEW6EcWWMoc9MJft2/nK7X2ErSuJwCyluc1mcleo9FCX64tMyrk
+op0eL0UxHL4TR9jjkJf9bCvPDh7qv2OkwHawrKP/TQIDAQABo4GvMIGsMB0GA1Ud
+DgQWBBQfwLkJr8bwQje2Jd+qLndrVuOZLTByBgNVHSMEazBpgBRczXxIW/Fuz9T0
+RGoozasKDs4gyqFLpEkwRzELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAkNBMRIwEAYD
+VQQKDAlIb211dCBMTEMxFzAVBgNVBAMMDkhvbXV0IFJTQSBSb290ggQAkIEpMAwG
+A1UdEwQFMAMBAf8wCQYDVR0RBAIwADANBgkqhkiG9w0BAQsFAAOCAQEAOOWK5osV
+09nVfGRiGjxkXEzvU0Vz7Y5l2mR+R9JQKt0lLZdJ7qXjNp+VhjystbaPprRKBRri
+ByVPKtFZDPdsP7QtKrRH/10Z/z1oyytH1aA19IXukE5Hph+VBx5HdQJivp6CaoFK
++t7dgy5/ajw/GY/xVh8T6xyQ/joP72Na+R6V/J9YvhSfmstwHDfTXpvplr2REHjq
++O5W3thJFDuUeYmckTm2xvSDv3vInFJqpbFUkPSV/JCgDjlr03HrZHhTyv7V3bh6
+iyo9WedH8yFfG+xUz2EQRbnk40bzOF2ffmjVceLEVNrZzi56mNaB5qmRhnq2+3aN
+BPSRE56VMlzryA==
+-----END CERTIFICATE-----

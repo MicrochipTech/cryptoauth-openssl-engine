@@ -1,0 +1,675 @@
+\hypertarget{ecc__meth_8h}{}\section{C\+:/\+Source/\+Git\+Lab/\+Ca\+Sw/\+Open\+S\+S\+L/atmel-\/ecc/engine\+\_\+atecc/engine\+\_\+meth/ecc\+\_\+meth.h File Reference}
+\label{ecc__meth_8h}\index{C\+:/\+Source/\+Git\+Lab/\+Ca\+Sw/\+Open\+S\+S\+L/atmel-\/ecc/engine\+\_\+atecc/engine\+\_\+meth/ecc\+\_\+meth.\+h@{C\+:/\+Source/\+Git\+Lab/\+Ca\+Sw/\+Open\+S\+S\+L/atmel-\/ecc/engine\+\_\+atecc/engine\+\_\+meth/ecc\+\_\+meth.\+h}}
+
+
+Function definitions used in Open\+S\+S\+L E\+N\+G\+I\+N\+E.  
+
+
+{\ttfamily \#include $<$openssl/engine.\+h$>$}\\*
+{\ttfamily \#include $<$openssl/ossl\+\_\+typ.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}atca\+\_\+status.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}atcatls\+\_\+cfg.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}atcatls.\+h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{ecc__meth_8h_a8f404d28dc37223f968287389b1b4d7f}{}\#define {\bfseries E\+C\+C\+X08\+\_\+\+E\+N\+G\+I\+N\+E\+\_\+\+V\+E\+R\+S\+I\+O\+N}~\char`\"{}01.\+00.\+00\char`\"{}\label{ecc__meth_8h_a8f404d28dc37223f968287389b1b4d7f}
+
+\item 
+\hypertarget{ecc__meth_8h_aa3d1bd3aa40cfd9e4d010076e56bb6dd}{}\#define {\bfseries N\+I\+D\+\_\+id\+\_\+\+A\+T\+E\+C\+C\+X08}~(1001)\label{ecc__meth_8h_aa3d1bd3aa40cfd9e4d010076e56bb6dd}
+
+\item 
+\hypertarget{ecc__meth_8h_a506bfda2c263c8cbcb0e1204d028cf62}{}\#define {\bfseries T\+O\+K\+E\+N\+\_\+\+F\+I\+L\+E\+\_\+\+V\+E\+R\+S\+I\+O\+N}~(0x0)\label{ecc__meth_8h_a506bfda2c263c8cbcb0e1204d028cf62}
+
+\item 
+\hypertarget{ecc__meth_8h_a00b3d85450b991cb746d2ea78887d077}{}\#define {\bfseries P\+R\+I\+V\+A\+T\+E\+\_\+\+K\+E\+Y\+\_\+\+I\+D}~(0x1)\label{ecc__meth_8h_a00b3d85450b991cb746d2ea78887d077}
+
+\item 
+\hypertarget{ecc__meth_8h_af9ca01951ebe455f15f23e41f03bc3ed}{}\#define {\bfseries P\+U\+B\+L\+I\+C\+\_\+\+K\+E\+Y\+\_\+\+I\+D}~(0x2)\label{ecc__meth_8h_af9ca01951ebe455f15f23e41f03bc3ed}
+
+\item 
+\hypertarget{ecc__meth_8h_a0248cf38415d198a88b4edb21ebb9d8a}{}\#define {\bfseries K\+E\+Y\+\_\+\+L\+I\+M\+I\+T\+S\+\_\+\+L\+O\+C\+K\+E\+D}~(0x1)\label{ecc__meth_8h_a0248cf38415d198a88b4edb21ebb9d8a}
+
+\item 
+\hypertarget{ecc__meth_8h_ac524d27f370a5996b4f7c7b33da2ed94}{}\#define {\bfseries K\+E\+Y\+\_\+\+L\+I\+M\+I\+T\+S\+\_\+\+U\+N\+L\+O\+C\+K\+E\+D}~(0x2)\label{ecc__meth_8h_ac524d27f370a5996b4f7c7b33da2ed94}
+
+\item 
+\hypertarget{ecc__meth_8h_adc1c6495d689e8851c728ce8c3742096}{}\#define {\bfseries K\+E\+Y\+\_\+\+L\+I\+M\+I\+T\+S\+\_\+\+C\+O\+U\+N\+T\+E\+D}~(0x3)\label{ecc__meth_8h_adc1c6495d689e8851c728ce8c3742096}
+
+\item 
+\hypertarget{ecc__meth_8h_a25f8bfff551a9df4ea468f399a72490f}{}\#define {\bfseries E\+C\+C\+X08\+\_\+\+C\+M\+D\+\_\+\+G\+E\+T\+\_\+\+V\+E\+R\+S\+I\+O\+N}~(E\+N\+G\+I\+N\+E\+\_\+\+C\+M\+D\+\_\+\+B\+A\+S\+E)\label{ecc__meth_8h_a25f8bfff551a9df4ea468f399a72490f}
+
+\item 
+\hypertarget{ecc__meth_8h_a663c0e12006f71fe59dae85390f43510}{}\#define {\bfseries E\+C\+C\+X08\+\_\+\+C\+M\+D\+\_\+\+G\+E\+T\+\_\+\+S\+I\+G\+N\+E\+R\+\_\+\+C\+E\+R\+T}~(E\+N\+G\+I\+N\+E\+\_\+\+C\+M\+D\+\_\+\+B\+A\+S\+E + 1)\label{ecc__meth_8h_a663c0e12006f71fe59dae85390f43510}
+
+\item 
+\hypertarget{ecc__meth_8h_afa9a0d02448a11952965de7e6df6d65c}{}\#define {\bfseries E\+C\+C\+X08\+\_\+\+C\+M\+D\+\_\+\+G\+E\+T\+\_\+\+P\+U\+B\+\_\+\+K\+E\+Y}~(E\+N\+G\+I\+N\+E\+\_\+\+C\+M\+D\+\_\+\+B\+A\+S\+E + 2)\label{ecc__meth_8h_afa9a0d02448a11952965de7e6df6d65c}
+
+\item 
+\hypertarget{ecc__meth_8h_a44b98e4c8c41b53d01258fe55c4b25a1}{}\#define {\bfseries E\+C\+C\+X08\+\_\+\+C\+M\+D\+\_\+\+G\+E\+T\+\_\+\+D\+E\+V\+I\+C\+E\+\_\+\+C\+E\+R\+T}~(E\+N\+G\+I\+N\+E\+\_\+\+C\+M\+D\+\_\+\+B\+A\+S\+E + 3)\label{ecc__meth_8h_a44b98e4c8c41b53d01258fe55c4b25a1}
+
+\item 
+\hypertarget{ecc__meth_8h_a85a3ae9627cbb0366c7cc5a42b3d06e8}{}\#define {\bfseries E\+C\+C\+X08\+\_\+\+C\+M\+D\+\_\+\+V\+E\+R\+I\+F\+Y\+\_\+\+S\+I\+G\+N\+E\+R\+\_\+\+C\+E\+R\+T}~(E\+N\+G\+I\+N\+E\+\_\+\+C\+M\+D\+\_\+\+B\+A\+S\+E + 4)\label{ecc__meth_8h_a85a3ae9627cbb0366c7cc5a42b3d06e8}
+
+\item 
+\hypertarget{ecc__meth_8h_aeaf6495c162c8a7aacda7c54a663bd3e}{}\#define {\bfseries E\+C\+C\+X08\+\_\+\+C\+M\+D\+\_\+\+V\+E\+R\+I\+F\+Y\+\_\+\+D\+E\+V\+I\+C\+E\+\_\+\+C\+E\+R\+T}~(E\+N\+G\+I\+N\+E\+\_\+\+C\+M\+D\+\_\+\+B\+A\+S\+E + 5)\label{ecc__meth_8h_aeaf6495c162c8a7aacda7c54a663bd3e}
+
+\item 
+\hypertarget{ecc__meth_8h_a368276a05773516727f8ff19bedf7e1c}{}\#define {\bfseries E\+C\+C\+X08\+\_\+\+C\+M\+D\+\_\+\+G\+E\+T\+\_\+\+R\+O\+O\+T\+\_\+\+C\+E\+R\+T}~(E\+N\+G\+I\+N\+E\+\_\+\+C\+M\+D\+\_\+\+B\+A\+S\+E + 6)\label{ecc__meth_8h_a368276a05773516727f8ff19bedf7e1c}
+
+\item 
+\hypertarget{ecc__meth_8h_ada575503693d2739c56cdef62f074f52}{}\#define {\bfseries E\+C\+C\+X08\+\_\+\+C\+M\+D\+\_\+\+E\+X\+T\+R\+A\+C\+T\+\_\+\+A\+L\+L\+\_\+\+C\+E\+R\+T\+S}~(E\+N\+G\+I\+N\+E\+\_\+\+C\+M\+D\+\_\+\+B\+A\+S\+E + 7)\label{ecc__meth_8h_ada575503693d2739c56cdef62f074f52}
+
+\item 
+\hypertarget{ecc__meth_8h_a3f87f0f3e381ef49b05ac168281f684e}{}\#define {\bfseries E\+C\+C\+X08\+\_\+\+C\+M\+D\+\_\+\+G\+E\+T\+\_\+\+P\+R\+I\+V\+\_\+\+K\+E\+Y}~(E\+N\+G\+I\+N\+E\+\_\+\+C\+M\+D\+\_\+\+B\+A\+S\+E + 8)\label{ecc__meth_8h_a3f87f0f3e381ef49b05ac168281f684e}
+
+\item 
+\hypertarget{ecc__meth_8h_ab90ec1ae45287de6de45457b292777aa}{}\#define {\bfseries E\+C\+C\+X08\+\_\+\+S\+L\+O\+T8\+\_\+\+E\+N\+C\+\_\+\+S\+T\+O\+R\+E\+\_\+\+L\+E\+N}~(416)\label{ecc__meth_8h_ab90ec1ae45287de6de45457b292777aa}
+
+\item 
+\hypertarget{ecc__meth_8h_a2a8da265b82e7935bd778f11d1482575}{}\#define {\bfseries M\+A\+X\+\_\+\+R\+A\+N\+D\+\_\+\+B\+Y\+T\+E\+S}~(10037)\label{ecc__meth_8h_a2a8da265b82e7935bd778f11d1482575}
+
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{ecc__meth_8h_a148f6ab6e7f707a076f4b50a2e74be43}{}int {\bfseries eccx08\+\_\+debug} (const char $\ast$fmt,...)\label{ecc__meth_8h_a148f6ab6e7f707a076f4b50a2e74be43}
+
+\item 
+A\+T\+C\+A\+\_\+\+S\+T\+A\+T\+U\+S \hyperlink{ecc__meth_8h_a7fe31ec23b24610e2beafa07a17b714c}{eccx08\+\_\+get\+\_\+enc\+\_\+key} (uint8\+\_\+t $\ast$enckey, int16\+\_\+t keysize)
+\begin{DoxyCompactList}\small\item\em A user defined function that fills a raw buffer (32 bytes) with the platform-\/specific encryption key. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_aa5a6b44ea3b640e445d6d1549137eee8}{eccx08\+\_\+pkey\+\_\+meth\+\_\+f} (E\+N\+G\+I\+N\+E $\ast$e, E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+M\+E\+T\+H\+O\+D $\ast$$\ast$pkey\+\_\+meth, const int $\ast$$\ast$nids, int nid)
+\begin{DoxyCompactList}\small\item\em Initialize the E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+M\+E\+T\+H\+O\+D method callback for ateccx08 engine. Just returns a pointer to E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+M\+E\+T\+H\+O\+D eccx08\+\_\+pkey\+\_\+meth. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a45df11b76e5be6743735c28714f57d1a}{eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+f} (E\+N\+G\+I\+N\+E $\ast$e, E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+A\+S\+N1\+\_\+\+M\+E\+T\+H\+O\+D $\ast$$\ast$pkey\+\_\+meth, const int $\ast$$\ast$nids, int nid)
+\begin{DoxyCompactList}\small\item\em Initialize the E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+A\+S\+N1\+\_\+\+M\+E\+T\+H\+O\+D method callback for ateccx08 engine. Just returns a pointer to E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+M\+E\+T\+H\+O\+D eccx08\+\_\+pkey\+\_\+meth. \end{DoxyCompactList}\item 
+E\+V\+P\+\_\+\+P\+K\+E\+Y $\ast$ \hyperlink{ecc__meth_8h_a1b3b7942f7b891ce7eff0bc93c6a6c22}{eccx08\+\_\+load\+\_\+privkey} (E\+N\+G\+I\+N\+E $\ast$e, const char $\ast$key\+\_\+id, U\+I\+\_\+\+M\+E\+T\+H\+O\+D $\ast$ui\+\_\+method, void $\ast$callback\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Allocates the E\+V\+P\+\_\+\+P\+K\+E\+Y structure, decrypt the R\+S\+A private key, and load it to the allocated E\+V\+P\+\_\+\+P\+K\+E\+Y structure. The encryption key is retrieved from the E\+C\+C\+X08 chip. See the eccx08\+\_\+rsa\+\_\+keygen() function from the \hyperlink{eccx08__rsa__meth_8c}{eccx08\+\_\+rsa\+\_\+meth.\+c} file for details. \end{DoxyCompactList}\item 
+E\+V\+P\+\_\+\+P\+K\+E\+Y $\ast$ \hyperlink{ecc__meth_8h_a254de9850cd87bae1f98220f5570ec7a}{eccx08\+\_\+load\+\_\+pubkey} (E\+N\+G\+I\+N\+E $\ast$e, const char $\ast$key\+\_\+id, U\+I\+\_\+\+M\+E\+T\+H\+O\+D $\ast$ui\+\_\+method, void $\ast$callback\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Allocates the E\+V\+P\+\_\+\+P\+K\+E\+Y structure and load there an E\+C\+C public key returned by the E\+C\+C\+X08 chip. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_ae05eaf2b669857d9a6f79455c203c94b}{eccx08\+\_\+destroy} (E\+N\+G\+I\+N\+E $\ast$e)
+\begin{DoxyCompactList}\small\item\em Deinitialize the ateccx08 engine. Destructor (complements the \char`\"{}\+E\+N\+G\+I\+N\+E\+\_\+ateccx08()\char`\"{} constructor) \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a93e00664df466e3b3cc222ac0c62e9e6}{eccx08\+\_\+init} (E\+N\+G\+I\+N\+E $\ast$e)
+\begin{DoxyCompactList}\small\item\em Initialization the ateccx08 engine. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a31308429cdb16ff0c9890a2fe707e40c}{eccx08\+\_\+finish} (E\+N\+G\+I\+N\+E $\ast$e)
+\begin{DoxyCompactList}\small\item\em Complete all functions before deinitialization of the ateccx08 engine. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a1e9e86045aa56f66a2385be84a612a23}{eccx08\+\_\+ctrl} (E\+N\+G\+I\+N\+E $\ast$e, int cmd, long i, void $\ast$p, void($\ast$f)())
+\begin{DoxyCompactList}\small\item\em Call a function of the ateccx08 engine depending on provided command. This is an extension of Open\+S\+S\+L\+: there is no openssl cli command to call this function. See \hyperlink{tlsutil_8c_a138afb41094f19e261ca1519585f6a30}{run\+\_\+engine\+\_\+cmds()} function from the tlsutils.\+c file for details. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a13766248ff2788d3004a278742b55b8e}{eccx08\+\_\+rand\+\_\+init} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the R\+A\+N\+D method for ateccx08 engine. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a54dafadc94aa3a1120734bbb4a8b06d6}{eccx08\+\_\+pkey\+\_\+meth\+\_\+init} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+M\+E\+T\+H\+O\+D method for ateccx08 engine. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a6ea72a82f48a7750297d61a2af7bcc63}{eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+init} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+A\+S\+N1\+\_\+\+M\+E\+T\+H\+O\+D method for ateccx08 engine. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a616e8f0be3fa429d38229854a5b2e4f0}{eccx08\+\_\+ecdh\+\_\+init} (uint32\+\_\+t use\+\_\+software)
+\begin{DoxyCompactList}\small\item\em Initialize the E\+C\+D\+H method for ateccx08 engine. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_adba5c7361d5aa76f1231f4d741afc330}{eccx08\+\_\+cmd\+\_\+defn\+\_\+init} (E\+N\+G\+I\+N\+E $\ast$e)
+\begin{DoxyCompactList}\small\item\em Initialize the C\+M\+D method for ateccx08 engine. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a1b6d80f21687a19c864c1233aa69f1ac}{eccx08\+\_\+cmd\+\_\+ctrl} (E\+N\+G\+I\+N\+E $\ast$e, int cmd, long i, void $\ast$p, void($\ast$f)(void))
+\begin{DoxyCompactList}\small\item\em Call a function of the ateccx08 engine depending on provided command. This is an extension of Open\+S\+S\+L\+: there is no openssl cli command to call this function. See \hyperlink{tlsutil_8c_a138afb41094f19e261ca1519585f6a30}{run\+\_\+engine\+\_\+cmds()} function from the tlsutils.\+c file for details. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_ae01593533c7e871ae3268af13ddc39e4}{eccx08\+\_\+eckey\+\_\+fill\+\_\+key} (char $\ast$ptr, int size, uint8\+\_\+t slot\+\_\+id, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Fills a raw buffer (32 bytes) with data to save into the private key structure. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a8cd3d3f16d50afcab8fc48623822ac8b}{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey} (E\+C\+\_\+\+K\+E\+Y $\ast$eckey, uint8\+\_\+t slot\+\_\+id, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Converts 32 bytes from A\+T\+E\+C\+C508 format to the openssl E\+C\+\_\+\+K\+E\+Y structure. It allocates E\+C\+\_\+\+K\+E\+T structure and does not free it (must be a caller to free) \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_ad9519bff828873b29387a58949908a77}{eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey} (E\+C\+\_\+\+K\+E\+Y $\ast$eckey, uint8\+\_\+t slot\+\_\+id, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Checks if the private key in the openssl E\+C\+\_\+\+K\+E\+Y structure corresponds to the private key in the A\+T\+E\+C\+C\+C\+X08 slot. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a2674b3f15332329b9301afb3b339c498}{eccx08\+\_\+generate\+\_\+key} (E\+C\+\_\+\+K\+E\+Y $\ast$eckey, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Generates a 32-\/byte private key then replaces it with token data using the \hyperlink{eccx08__common_8c_a8cd3d3f16d50afcab8fc48623822ac8b}{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey()} call. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a61387e86c6feafa5405d7acbbde27caa}{eccx08\+\_\+eckey\+\_\+convert} (E\+C\+\_\+\+K\+E\+Y $\ast$$\ast$p\+\_\+eckey, uint8\+\_\+t $\ast$raw\+\_\+pubkey, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Converts raw 64 bytes of public key (A\+T\+E\+C\+C508 format) to the openssl E\+C\+\_\+\+K\+E\+Y structure. It allocates E\+C\+\_\+\+K\+E\+Y structure and does not free it (must be a caller to free) \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a7f3e53b85dc2875fcfe205cdbfa18fdd}{eccx08\+\_\+\+B\+N\+\_\+encrypt} (B\+I\+G\+N\+U\+M $\ast$number, uint8\+\_\+t $\ast$iv, uint8\+\_\+t $\ast$aes\+\_\+key)
+\begin{DoxyCompactList}\small\item\em Encrypt a B\+I\+G\+N\+U\+M data using A\+E\+S-\/256 O\+F\+B mode. \end{DoxyCompactList}\item 
+int \hyperlink{ecc__meth_8h_a347ad8df6d6c49d677671e899629aa0b}{eccx08\+\_\+\+B\+N\+\_\+decrypt} (B\+I\+G\+N\+U\+M $\ast$number, uint8\+\_\+t $\ast$iv, uint8\+\_\+t $\ast$aes\+\_\+key)
+\begin{DoxyCompactList}\small\item\em Decrypt a B\+I\+G\+N\+U\+M data using A\+E\+S-\/256 O\+F\+B mode. Assuming that data there was encrypted using the \hyperlink{eccx08__common_8c_a7f3e53b85dc2875fcfe205cdbfa18fdd}{eccx08\+\_\+\+B\+N\+\_\+encrypt()}. \end{DoxyCompactList}\item 
+const R\+S\+A\+\_\+\+M\+E\+T\+H\+O\+D $\ast$ \hyperlink{ecc__meth_8h_a8e41d2b7edc71a4ece7fa2ed3b51d6c4}{E\+C\+C\+X08\+\_\+\+R\+S\+A\+\_\+meth} (void)
+\begin{DoxyCompactList}\small\item\em Returns a pointer to eccx08 R\+S\+A method implementation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{ecc__meth_8h_a8858e99eb0b118f4d99f800b1c9d122d}{}E\+C\+D\+H\+\_\+\+M\+E\+T\+H\+O\+D \hyperlink{ecc__meth_8h_a8858e99eb0b118f4d99f800b1c9d122d}{eccx08\+\_\+ecdh}\label{ecc__meth_8h_a8858e99eb0b118f4d99f800b1c9d122d}
+
+\begin{DoxyCompactList}\small\item\em eccx08\+\_\+ecdh is an Open\+S\+S\+L E\+C\+D\+H\+\_\+\+M\+E\+T\+H\+O\+D structure specific to the ateccx08 engine. See the crypto/ecdh/ech\+\_\+locl.\+h file for details on the E\+C\+D\+H\+\_\+\+M\+E\+T\+H\+O\+D structure. Note that E\+C\+D\+H method requires a patch to be applied to the openssl code. \end{DoxyCompactList}\item 
+\hypertarget{ecc__meth_8h_a192002bf5d697397d28a96308a65e135}{}R\+A\+N\+D\+\_\+\+M\+E\+T\+H\+O\+D \hyperlink{ecc__meth_8h_a192002bf5d697397d28a96308a65e135}{eccx08\+\_\+rand}\label{ecc__meth_8h_a192002bf5d697397d28a96308a65e135}
+
+\begin{DoxyCompactList}\small\item\em eccx08\+\_\+rand is an Open\+S\+S\+L R\+A\+N\+D\+\_\+\+M\+E\+T\+H\+O\+D structure specific to the ateccx08 engine. See the crypto/rand/rand.\+h file for details on the struct rand\+\_\+meth\+\_\+st \end{DoxyCompactList}\item 
+\hypertarget{ecc__meth_8h_af4d1077c81308b0e41808bf251388a4f}{}E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+A\+S\+N1\+\_\+\+M\+E\+T\+H\+O\+D \hyperlink{ecc__meth_8h_af4d1077c81308b0e41808bf251388a4f}{eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth}\label{ecc__meth_8h_af4d1077c81308b0e41808bf251388a4f}
+
+\begin{DoxyCompactList}\small\item\em eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth is an Open\+S\+S\+L E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+A\+S\+N1\+\_\+\+M\+E\+T\+H\+O\+D structure specific to the ateccx08 engine. See the crypto/asn1/asn1\+\_\+locl.\+h file for details on the struct evp\+\_\+pkey\+\_\+asn1\+\_\+method\+\_\+st \end{DoxyCompactList}\item 
+\hypertarget{ecc__meth_8h_a6d4e9ff3a84bb9db7cb7a7549e2507d2}{}E\+C\+D\+S\+A\+\_\+\+M\+E\+T\+H\+O\+D \hyperlink{ecc__meth_8h_a6d4e9ff3a84bb9db7cb7a7549e2507d2}{eccx08\+\_\+ecdsa}\label{ecc__meth_8h_a6d4e9ff3a84bb9db7cb7a7549e2507d2}
+
+\begin{DoxyCompactList}\small\item\em eccx08\+\_\+ecdsa is an Open\+S\+S\+L E\+C\+D\+S\+A\+\_\+\+M\+E\+T\+H\+O\+D structure specific to the ateccx08 engine. See the crypto/ecdsa/ecs\+\_\+locl.\+h file for details on the E\+C\+D\+S\+A\+\_\+\+M\+E\+T\+H\+O\+D structure \end{DoxyCompactList}\item 
+\hypertarget{ecc__meth_8h_a9112461570a95c80e89980412a485a8f}{}A\+T\+C\+A\+Iface\+Cfg $\ast$ {\bfseries p\+Cfg}\label{ecc__meth_8h_a9112461570a95c80e89980412a485a8f}
+
+\item 
+\hypertarget{ecc__meth_8h_a5482733e3446fabc37f106d2ac71c3b4}{}uint8\+\_\+t {\bfseries test\+\_\+priv\+\_\+key} \mbox{[}M\+E\+M\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+Z\+E\mbox{]}\label{ecc__meth_8h_a5482733e3446fabc37f106d2ac71c3b4}
+
+\item 
+\hypertarget{ecc__meth_8h_af92abbafbd33d6e3a0ff9b6db9aa10ee}{}uint8\+\_\+t {\bfseries test\+\_\+pub\+\_\+key} \mbox{[}M\+E\+M\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+Z\+E $\ast$2\mbox{]}\label{ecc__meth_8h_af92abbafbd33d6e3a0ff9b6db9aa10ee}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Function definitions used in Open\+S\+S\+L E\+N\+G\+I\+N\+E. 
+
+Copyright (c) 2015 Atmel Corporation. All rights reserved.
+
+\subsection{Function Documentation}
+\hypertarget{ecc__meth_8h_a347ad8df6d6c49d677671e899629aa0b}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+\+B\+N\+\_\+decrypt@{eccx08\+\_\+\+B\+N\+\_\+decrypt}}
+\index{eccx08\+\_\+\+B\+N\+\_\+decrypt@{eccx08\+\_\+\+B\+N\+\_\+decrypt}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+\+B\+N\+\_\+decrypt(\+B\+I\+G\+N\+U\+M $\ast$number, uint8\+\_\+t $\ast$iv, uint8\+\_\+t $\ast$aes\+\_\+key)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+\+B\+N\+\_\+decrypt (
+\begin{DoxyParamCaption}
+\item[{B\+I\+G\+N\+U\+M $\ast$}]{number, }
+\item[{uint8\+\_\+t $\ast$}]{iv, }
+\item[{uint8\+\_\+t $\ast$}]{aes\+\_\+key}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a347ad8df6d6c49d677671e899629aa0b}
+
+
+Decrypt a B\+I\+G\+N\+U\+M data using A\+E\+S-\/256 O\+F\+B mode. Assuming that data there was encrypted using the \hyperlink{eccx08__common_8c_a7f3e53b85dc2875fcfe205cdbfa18fdd}{eccx08\+\_\+\+B\+N\+\_\+encrypt()}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em } & \\
+\hline
+\end{DoxyParams}
+\hypertarget{ecc__meth_8h_a7f3e53b85dc2875fcfe205cdbfa18fdd}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+\+B\+N\+\_\+encrypt@{eccx08\+\_\+\+B\+N\+\_\+encrypt}}
+\index{eccx08\+\_\+\+B\+N\+\_\+encrypt@{eccx08\+\_\+\+B\+N\+\_\+encrypt}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+\+B\+N\+\_\+encrypt(\+B\+I\+G\+N\+U\+M $\ast$number, uint8\+\_\+t $\ast$iv, uint8\+\_\+t $\ast$aes\+\_\+key)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+\+B\+N\+\_\+encrypt (
+\begin{DoxyParamCaption}
+\item[{B\+I\+G\+N\+U\+M $\ast$}]{number, }
+\item[{uint8\+\_\+t $\ast$}]{iv, }
+\item[{uint8\+\_\+t $\ast$}]{aes\+\_\+key}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a7f3e53b85dc2875fcfe205cdbfa18fdd}
+
+
+Encrypt a B\+I\+G\+N\+U\+M data using A\+E\+S-\/256 O\+F\+B mode. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em } & \\
+\hline
+\end{DoxyParams}
+\hypertarget{ecc__meth_8h_a1b6d80f21687a19c864c1233aa69f1ac}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+cmd\+\_\+ctrl@{eccx08\+\_\+cmd\+\_\+ctrl}}
+\index{eccx08\+\_\+cmd\+\_\+ctrl@{eccx08\+\_\+cmd\+\_\+ctrl}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+cmd\+\_\+ctrl(\+E\+N\+G\+I\+N\+E $\ast$e, int cmd, long i, void $\ast$p, void($\ast$f)(void))}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+cmd\+\_\+ctrl (
+\begin{DoxyParamCaption}
+\item[{E\+N\+G\+I\+N\+E $\ast$}]{e, }
+\item[{int}]{cmd, }
+\item[{long}]{i, }
+\item[{void $\ast$}]{p, }
+\item[{void($\ast$)(void)}]{f}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a1b6d80f21687a19c864c1233aa69f1ac}
+
+
+Call a function of the ateccx08 engine depending on provided command. This is an extension of Open\+S\+S\+L\+: there is no openssl cli command to call this function. See \hyperlink{tlsutil_8c_a138afb41094f19e261ca1519585f6a30}{run\+\_\+engine\+\_\+cmds()} function from the tlsutils.\+c file for details. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em e} & a pointer to the E\+N\+G\+I\+N\+E structure \\
+\hline
+\mbox{\tt in}  & {\em cmd} & a command to execute. For the full list of commands see E\+C\+C\+X08\+\_\+\+C\+M\+D\+\_\+$\ast$ defines in the \hyperlink{ecc__meth_8h}{ecc\+\_\+meth.\+h} file \\
+\hline
+\mbox{\tt in}  & {\em i} & an integer parameter of the command \\
+\hline
+\mbox{\tt in}  & {\em p} & a string parameter of the command \\
+\hline
+\mbox{\tt in}  & {\em p} & a function pointer parameter of the command \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 for success 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_adba5c7361d5aa76f1231f4d741afc330}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+cmd\+\_\+defn\+\_\+init@{eccx08\+\_\+cmd\+\_\+defn\+\_\+init}}
+\index{eccx08\+\_\+cmd\+\_\+defn\+\_\+init@{eccx08\+\_\+cmd\+\_\+defn\+\_\+init}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+cmd\+\_\+defn\+\_\+init(\+E\+N\+G\+I\+N\+E $\ast$e)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+cmd\+\_\+defn\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{E\+N\+G\+I\+N\+E $\ast$}]{e}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_adba5c7361d5aa76f1231f4d741afc330}
+
+
+Initialize the C\+M\+D method for ateccx08 engine. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em e} & a pointer to the E\+N\+G\+I\+N\+E structure \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 for success 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a1e9e86045aa56f66a2385be84a612a23}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+ctrl@{eccx08\+\_\+ctrl}}
+\index{eccx08\+\_\+ctrl@{eccx08\+\_\+ctrl}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+ctrl(\+E\+N\+G\+I\+N\+E $\ast$e, int cmd, long i, void $\ast$p, void($\ast$f)())}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+ctrl (
+\begin{DoxyParamCaption}
+\item[{E\+N\+G\+I\+N\+E $\ast$}]{e, }
+\item[{int}]{cmd, }
+\item[{long}]{i, }
+\item[{void $\ast$}]{p, }
+\item[{void($\ast$)()}]{f}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a1e9e86045aa56f66a2385be84a612a23}
+
+
+Call a function of the ateccx08 engine depending on provided command. This is an extension of Open\+S\+S\+L\+: there is no openssl cli command to call this function. See \hyperlink{tlsutil_8c_a138afb41094f19e261ca1519585f6a30}{run\+\_\+engine\+\_\+cmds()} function from the tlsutils.\+c file for details. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em e} & A pointer to the E\+N\+G\+I\+N\+E structure \\
+\hline
+\mbox{\tt in}  & {\em cmd} & A command to execute. For the full list of commands see E\+C\+C\+X08\+\_\+\+C\+M\+D\+\_\+$\ast$ defines in the \hyperlink{ecc__meth_8h}{ecc\+\_\+meth.\+h} file \\
+\hline
+\mbox{\tt in}  & {\em i} & An integer parameter of the command \\
+\hline
+\mbox{\tt in}  & {\em p} & A string parameter of the command \\
+\hline
+\mbox{\tt in}  & {\em p} & A function pointer parameter of the command \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A\+T\+C\+A\+\_\+\+S\+U\+C\+C\+E\+S\+S for success 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_ae05eaf2b669857d9a6f79455c203c94b}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+destroy@{eccx08\+\_\+destroy}}
+\index{eccx08\+\_\+destroy@{eccx08\+\_\+destroy}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+destroy(\+E\+N\+G\+I\+N\+E $\ast$e)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+destroy (
+\begin{DoxyParamCaption}
+\item[{E\+N\+G\+I\+N\+E $\ast$}]{e}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_ae05eaf2b669857d9a6f79455c203c94b}
+
+
+Deinitialize the ateccx08 engine. Destructor (complements the \char`\"{}\+E\+N\+G\+I\+N\+E\+\_\+ateccx08()\char`\"{} constructor) 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em e} & A pointer to Engine structure that completely describes the engine \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+For success return 1 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a616e8f0be3fa429d38229854a5b2e4f0}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+ecdh\+\_\+init@{eccx08\+\_\+ecdh\+\_\+init}}
+\index{eccx08\+\_\+ecdh\+\_\+init@{eccx08\+\_\+ecdh\+\_\+init}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+ecdh\+\_\+init(uint32\+\_\+t use\+\_\+software)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+ecdh\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{uint32\+\_\+t}]{use\+\_\+software}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a616e8f0be3fa429d38229854a5b2e4f0}
+
+
+Initialize the E\+C\+D\+H method for ateccx08 engine. 
+
+\begin{DoxyReturn}{Returns}
+1 for success 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_ad9519bff828873b29387a58949908a77}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey@{eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey}}
+\index{eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey@{eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey(\+E\+C\+\_\+\+K\+E\+Y $\ast$eckey, uint8\+\_\+t slot\+\_\+id, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey (
+\begin{DoxyParamCaption}
+\item[{E\+C\+\_\+\+K\+E\+Y $\ast$}]{eckey, }
+\item[{uint8\+\_\+t}]{slot\+\_\+id, }
+\item[{uint8\+\_\+t $\ast$}]{serial\+\_\+number, }
+\item[{int}]{serial\+\_\+len}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_ad9519bff828873b29387a58949908a77}
+
+
+Checks if the private key in the openssl E\+C\+\_\+\+K\+E\+Y structure corresponds to the private key in the A\+T\+E\+C\+C\+C\+X08 slot. 
+
+\hyperlink{eccx08__common_8c_ad9519bff828873b29387a58949908a77}{eccx08\+\_\+eckey\+\_\+compare\+\_\+privkey()}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em eckey} & Pointer to E\+C\+\_\+\+K\+E\+Y with Private key token on success \\
+\hline
+\mbox{\tt in}  & {\em slot\+\_\+id} & A\+T\+E\+C\+C\+X08 slot I\+D \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+number} & 9 bytes of A\+T\+E\+C\+C\+X08 serial number \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+len} & Size of the A\+T\+E\+C\+C\+X08 serial number buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on error 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a61387e86c6feafa5405d7acbbde27caa}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+eckey\+\_\+convert@{eccx08\+\_\+eckey\+\_\+convert}}
+\index{eccx08\+\_\+eckey\+\_\+convert@{eccx08\+\_\+eckey\+\_\+convert}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+eckey\+\_\+convert(\+E\+C\+\_\+\+K\+E\+Y $\ast$$\ast$p\+\_\+eckey, uint8\+\_\+t $\ast$raw\+\_\+pubkey, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+eckey\+\_\+convert (
+\begin{DoxyParamCaption}
+\item[{E\+C\+\_\+\+K\+E\+Y $\ast$$\ast$}]{p\+\_\+eckey, }
+\item[{uint8\+\_\+t $\ast$}]{raw\+\_\+pubkey, }
+\item[{uint8\+\_\+t $\ast$}]{serial\+\_\+number, }
+\item[{int}]{serial\+\_\+len}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a61387e86c6feafa5405d7acbbde27caa}
+
+
+Converts raw 64 bytes of public key (A\+T\+E\+C\+C508 format) to the openssl E\+C\+\_\+\+K\+E\+Y structure. It allocates E\+C\+\_\+\+K\+E\+Y structure and does not free it (must be a caller to free) 
+
+\hyperlink{eccx08__common_8c_a61387e86c6feafa5405d7acbbde27caa}{eccx08\+\_\+eckey\+\_\+convert()}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em p\+\_\+eckey} & Pointer to E\+C\+\_\+\+K\+E\+Y with Public Key on success \\
+\hline
+\mbox{\tt in}  & {\em raw\+\_\+pubkey} & Raw public key, 64 bytes length 32-\/byte X following with 32-\/byte Y \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+number} & 9 bytes of A\+T\+E\+C\+C\+X08 serial number \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+len} & Size of the A\+T\+E\+C\+C\+X08 serial number buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on error 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a8cd3d3f16d50afcab8fc48623822ac8b}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey@{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey}}
+\index{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey@{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey(\+E\+C\+\_\+\+K\+E\+Y $\ast$eckey, uint8\+\_\+t slot\+\_\+id, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey (
+\begin{DoxyParamCaption}
+\item[{E\+C\+\_\+\+K\+E\+Y $\ast$}]{eckey, }
+\item[{uint8\+\_\+t}]{slot\+\_\+id, }
+\item[{uint8\+\_\+t $\ast$}]{serial\+\_\+number, }
+\item[{int}]{serial\+\_\+len}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a8cd3d3f16d50afcab8fc48623822ac8b}
+
+
+Converts 32 bytes from A\+T\+E\+C\+C508 format to the openssl E\+C\+\_\+\+K\+E\+Y structure. It allocates E\+C\+\_\+\+K\+E\+T structure and does not free it (must be a caller to free) 
+
+\hyperlink{eccx08__common_8c_a8cd3d3f16d50afcab8fc48623822ac8b}{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey()}
+
+
+\begin{DoxyParams}{Parameters}
+{\em } & \\
+\hline
+\end{DoxyParams}
+\hypertarget{ecc__meth_8h_ae01593533c7e871ae3268af13ddc39e4}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+eckey\+\_\+fill\+\_\+key@{eccx08\+\_\+eckey\+\_\+fill\+\_\+key}}
+\index{eccx08\+\_\+eckey\+\_\+fill\+\_\+key@{eccx08\+\_\+eckey\+\_\+fill\+\_\+key}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+eckey\+\_\+fill\+\_\+key(char $\ast$ptr, int size, uint8\+\_\+t slot\+\_\+id, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+eckey\+\_\+fill\+\_\+key (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{ptr, }
+\item[{int}]{size, }
+\item[{uint8\+\_\+t}]{slot\+\_\+id, }
+\item[{uint8\+\_\+t $\ast$}]{serial\+\_\+number, }
+\item[{int}]{serial\+\_\+len}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_ae01593533c7e871ae3268af13ddc39e4}
+
+
+Fills a raw buffer (32 bytes) with data to save into the private key structure. 
+
+\hyperlink{eccx08__common_8c_ae01593533c7e871ae3268af13ddc39e4}{eccx08\+\_\+eckey\+\_\+fill\+\_\+key()}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em ptr} & Pointer to a buffer to fill the key data \\
+\hline
+\mbox{\tt in}  & {\em slot\+\_\+id} & A\+T\+E\+C\+C\+X08 slot I\+D \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+number} & 9 bytes of A\+T\+E\+C\+C\+X08 serial number \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+len} & Size of the A\+T\+E\+C\+C\+X08 serial number buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on error 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a31308429cdb16ff0c9890a2fe707e40c}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+finish@{eccx08\+\_\+finish}}
+\index{eccx08\+\_\+finish@{eccx08\+\_\+finish}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+finish(\+E\+N\+G\+I\+N\+E $\ast$e)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+finish (
+\begin{DoxyParamCaption}
+\item[{E\+N\+G\+I\+N\+E $\ast$}]{e}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a31308429cdb16ff0c9890a2fe707e40c}
+
+
+Complete all functions before deinitialization of the ateccx08 engine. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em e} & A pointer to Engine structure that completely describes the engine \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 for success 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a2674b3f15332329b9301afb3b339c498}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+generate\+\_\+key@{eccx08\+\_\+generate\+\_\+key}}
+\index{eccx08\+\_\+generate\+\_\+key@{eccx08\+\_\+generate\+\_\+key}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+generate\+\_\+key(\+E\+C\+\_\+\+K\+E\+Y $\ast$eckey, uint8\+\_\+t $\ast$serial\+\_\+number, int serial\+\_\+len)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+generate\+\_\+key (
+\begin{DoxyParamCaption}
+\item[{E\+C\+\_\+\+K\+E\+Y $\ast$}]{eckey, }
+\item[{uint8\+\_\+t $\ast$}]{serial\+\_\+number, }
+\item[{int}]{serial\+\_\+len}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a2674b3f15332329b9301afb3b339c498}
+
+
+Generates a 32-\/byte private key then replaces it with token data using the \hyperlink{eccx08__common_8c_a8cd3d3f16d50afcab8fc48623822ac8b}{eccx08\+\_\+eckey\+\_\+encode\+\_\+in\+\_\+privkey()} call. 
+
+\hyperlink{eccx08__common_8c_a2674b3f15332329b9301afb3b339c498}{eccx08\+\_\+generate\+\_\+key()}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt out}  & {\em p\+\_\+eckey} & Pointer to E\+C\+\_\+\+K\+E\+Y with Public Key on success \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+number} & 9 bytes of A\+T\+E\+C\+C\+X08 serial number \\
+\hline
+\mbox{\tt in}  & {\em serial\+\_\+len} & Size of the A\+T\+E\+C\+C\+X08 serial number buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on error 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a7fe31ec23b24610e2beafa07a17b714c}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+get\+\_\+enc\+\_\+key@{eccx08\+\_\+get\+\_\+enc\+\_\+key}}
+\index{eccx08\+\_\+get\+\_\+enc\+\_\+key@{eccx08\+\_\+get\+\_\+enc\+\_\+key}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+get\+\_\+enc\+\_\+key(uint8\+\_\+t $\ast$enckey, int16\+\_\+t keysize)}]{\setlength{\rightskip}{0pt plus 5cm}A\+T\+C\+A\+\_\+\+S\+T\+A\+T\+U\+S eccx08\+\_\+get\+\_\+enc\+\_\+key (
+\begin{DoxyParamCaption}
+\item[{uint8\+\_\+t $\ast$}]{enckey, }
+\item[{int16\+\_\+t}]{keysize}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a7fe31ec23b24610e2beafa07a17b714c}
+
+
+A user defined function that fills a raw buffer (32 bytes) with the platform-\/specific encryption key. 
+
+U\+S\+E\+R\+: Platform needs to to provide secure storage for this encryption key
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in,out}  & {\em enckey} & Pointer to a buffer to fill with the encryption key data \\
+\hline
+\mbox{\tt in}  & {\em keysize} & The size of the enckey buffer (number of bytes should be M\+E\+M\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+Z\+E) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on error 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a93e00664df466e3b3cc222ac0c62e9e6}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+init@{eccx08\+\_\+init}}
+\index{eccx08\+\_\+init@{eccx08\+\_\+init}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+init(\+E\+N\+G\+I\+N\+E $\ast$e)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{E\+N\+G\+I\+N\+E $\ast$}]{e}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a93e00664df466e3b3cc222ac0c62e9e6}
+
+
+Initialization the ateccx08 engine. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em e} & A pointer to Engine structure that completely describes the engine \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+For success return 1 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a1b3b7942f7b891ce7eff0bc93c6a6c22}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+load\+\_\+privkey@{eccx08\+\_\+load\+\_\+privkey}}
+\index{eccx08\+\_\+load\+\_\+privkey@{eccx08\+\_\+load\+\_\+privkey}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+load\+\_\+privkey(\+E\+N\+G\+I\+N\+E $\ast$e, const char $\ast$key\+\_\+id, U\+I\+\_\+\+M\+E\+T\+H\+O\+D $\ast$ui\+\_\+method, void $\ast$callback\+\_\+data)}]{\setlength{\rightskip}{0pt plus 5cm}E\+V\+P\+\_\+\+P\+K\+E\+Y$\ast$ eccx08\+\_\+load\+\_\+privkey (
+\begin{DoxyParamCaption}
+\item[{E\+N\+G\+I\+N\+E $\ast$}]{e, }
+\item[{const char $\ast$}]{file, }
+\item[{U\+I\+\_\+\+M\+E\+T\+H\+O\+D $\ast$}]{ui\+\_\+method, }
+\item[{void $\ast$}]{callback\+\_\+data}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a1b3b7942f7b891ce7eff0bc93c6a6c22}
+
+
+Allocates the E\+V\+P\+\_\+\+P\+K\+E\+Y structure, decrypt the R\+S\+A private key, and load it to the allocated E\+V\+P\+\_\+\+P\+K\+E\+Y structure. The encryption key is retrieved from the E\+C\+C\+X08 chip. See the eccx08\+\_\+rsa\+\_\+keygen() function from the \hyperlink{eccx08__rsa__meth_8c}{eccx08\+\_\+rsa\+\_\+meth.\+c} file for details. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em e} & -\/ a pointer to the engine (ateccx08 in our case). \\
+\hline
+\mbox{\tt in}  & {\em file} & -\/ the file name associated with the private key \\
+\hline
+\mbox{\tt in}  & {\em ui\+\_\+method} & -\/ a pointer to the U\+I\+\_\+\+M\+E\+T\+H\+O\+D structure (not used by the ateccx08 engine) \\
+\hline
+\mbox{\tt in}  & {\em callback\+\_\+data} & -\/ an optional parameter to provide the callback data (not used by the ateccx08 engine) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+V\+P\+\_\+\+P\+K\+E\+Y for success, N\+U\+L\+L otherwise 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a254de9850cd87bae1f98220f5570ec7a}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+load\+\_\+pubkey@{eccx08\+\_\+load\+\_\+pubkey}}
+\index{eccx08\+\_\+load\+\_\+pubkey@{eccx08\+\_\+load\+\_\+pubkey}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+load\+\_\+pubkey(\+E\+N\+G\+I\+N\+E $\ast$e, const char $\ast$key\+\_\+id, U\+I\+\_\+\+M\+E\+T\+H\+O\+D $\ast$ui\+\_\+method, void $\ast$callback\+\_\+data)}]{\setlength{\rightskip}{0pt plus 5cm}E\+V\+P\+\_\+\+P\+K\+E\+Y$\ast$ eccx08\+\_\+load\+\_\+pubkey (
+\begin{DoxyParamCaption}
+\item[{E\+N\+G\+I\+N\+E $\ast$}]{e, }
+\item[{const char $\ast$}]{key\+\_\+id, }
+\item[{U\+I\+\_\+\+M\+E\+T\+H\+O\+D $\ast$}]{ui\+\_\+method, }
+\item[{void $\ast$}]{callback\+\_\+data}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a254de9850cd87bae1f98220f5570ec7a}
+
+
+Allocates the E\+V\+P\+\_\+\+P\+K\+E\+Y structure and load there an E\+C\+C public key returned by the E\+C\+C\+X08 chip. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em e} & -\/ a pointer to the engine (ateccx08 in our case). \\
+\hline
+\mbox{\tt in}  & {\em key\+\_\+id} & -\/ a string for key I\+D (not used by the ateccx08 engine) \\
+\hline
+\mbox{\tt in}  & {\em ui\+\_\+method} & -\/ a pointer to the U\+I\+\_\+\+M\+E\+T\+H\+O\+D structure (not used by the ateccx08 engine) \\
+\hline
+\mbox{\tt in}  & {\em callback\+\_\+data} & -\/ an optional parameter to provide the callback data (not used by the ateccx08 engine) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+V\+P\+\_\+\+P\+K\+E\+Y for success, N\+U\+L\+L otherwise 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a45df11b76e5be6743735c28714f57d1a}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+f@{eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+f}}
+\index{eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+f@{eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+f}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+f(\+E\+N\+G\+I\+N\+E $\ast$e, E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+A\+S\+N1\+\_\+\+M\+E\+T\+H\+O\+D $\ast$$\ast$pkey\+\_\+meth, const int $\ast$$\ast$nids, int nid)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+f (
+\begin{DoxyParamCaption}
+\item[{E\+N\+G\+I\+N\+E $\ast$}]{e, }
+\item[{E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+A\+S\+N1\+\_\+\+M\+E\+T\+H\+O\+D $\ast$$\ast$}]{pkey\+\_\+asn1\+\_\+meth, }
+\item[{const int $\ast$$\ast$}]{nids, }
+\item[{int}]{nid}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a45df11b76e5be6743735c28714f57d1a}
+
+
+Initialize the E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+A\+S\+N1\+\_\+\+M\+E\+T\+H\+O\+D method callback for ateccx08 engine. Just returns a pointer to E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+M\+E\+T\+H\+O\+D eccx08\+\_\+pkey\+\_\+meth. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em e} & -\/ a pointer to the engine (ateccx08 in our case). \\
+\hline
+\mbox{\tt out}  & {\em pkey\+\_\+asn1\+\_\+meth} & -\/ a double pointer to E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+A\+S\+N1\+\_\+\+M\+E\+T\+H\+O\+D to return the E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+A\+S\+N1\+\_\+\+M\+E\+T\+H\+O\+D eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth \\
+\hline
+\mbox{\tt out}  & {\em nids} & -\/ a double pointer to return an array of nid\textquotesingle{}s (we return 0) \\
+\hline
+\mbox{\tt in}  & {\em nid} & -\/ a number of expected nid\textquotesingle{}s (we ignore this parameter) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 for success 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a6ea72a82f48a7750297d61a2af7bcc63}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+init@{eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+init}}
+\index{eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+init@{eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+init}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+init(void)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+pkey\+\_\+asn1\+\_\+meth\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a6ea72a82f48a7750297d61a2af7bcc63}
+
+
+Initialize the E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+A\+S\+N1\+\_\+\+M\+E\+T\+H\+O\+D method for ateccx08 engine. 
+
+\begin{DoxyReturn}{Returns}
+1 for success 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_aa5a6b44ea3b640e445d6d1549137eee8}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+pkey\+\_\+meth\+\_\+f@{eccx08\+\_\+pkey\+\_\+meth\+\_\+f}}
+\index{eccx08\+\_\+pkey\+\_\+meth\+\_\+f@{eccx08\+\_\+pkey\+\_\+meth\+\_\+f}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+pkey\+\_\+meth\+\_\+f(\+E\+N\+G\+I\+N\+E $\ast$e, E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+M\+E\+T\+H\+O\+D $\ast$$\ast$pkey\+\_\+meth, const int $\ast$$\ast$nids, int nid)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+pkey\+\_\+meth\+\_\+f (
+\begin{DoxyParamCaption}
+\item[{E\+N\+G\+I\+N\+E $\ast$}]{e, }
+\item[{E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+M\+E\+T\+H\+O\+D $\ast$$\ast$}]{pkey\+\_\+meth, }
+\item[{const int $\ast$$\ast$}]{nids, }
+\item[{int}]{nid}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_aa5a6b44ea3b640e445d6d1549137eee8}
+
+
+Initialize the E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+M\+E\+T\+H\+O\+D method callback for ateccx08 engine. Just returns a pointer to E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+M\+E\+T\+H\+O\+D eccx08\+\_\+pkey\+\_\+meth. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em e} & -\/ a pointer to the engine (ateccx08 in our case). \\
+\hline
+\mbox{\tt out}  & {\em pkey\+\_\+meth} & -\/ a double pointer to E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+M\+E\+T\+H\+O\+D to return the E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+M\+E\+T\+H\+O\+D eccx08\+\_\+pkey\+\_\+meth \\
+\hline
+\mbox{\tt out}  & {\em nids} & -\/ a double pointer to return an array of nid\textquotesingle{}s (we return 0) \\
+\hline
+\mbox{\tt in}  & {\em nid} & -\/ a number of expected nid\textquotesingle{}s (we ignore this parameter) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 for success 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a54dafadc94aa3a1120734bbb4a8b06d6}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+pkey\+\_\+meth\+\_\+init@{eccx08\+\_\+pkey\+\_\+meth\+\_\+init}}
+\index{eccx08\+\_\+pkey\+\_\+meth\+\_\+init@{eccx08\+\_\+pkey\+\_\+meth\+\_\+init}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+pkey\+\_\+meth\+\_\+init(void)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+pkey\+\_\+meth\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a54dafadc94aa3a1120734bbb4a8b06d6}
+
+
+Initialize the E\+V\+P\+\_\+\+P\+K\+E\+Y\+\_\+\+M\+E\+T\+H\+O\+D method for ateccx08 engine. 
+
+\begin{DoxyReturn}{Returns}
+1 for success 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a13766248ff2788d3004a278742b55b8e}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!eccx08\+\_\+rand\+\_\+init@{eccx08\+\_\+rand\+\_\+init}}
+\index{eccx08\+\_\+rand\+\_\+init@{eccx08\+\_\+rand\+\_\+init}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{eccx08\+\_\+rand\+\_\+init(void)}]{\setlength{\rightskip}{0pt plus 5cm}int eccx08\+\_\+rand\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a13766248ff2788d3004a278742b55b8e}
+
+
+Initialize the R\+A\+N\+D method for ateccx08 engine. 
+
+\begin{DoxyReturn}{Returns}
+1 for success 
+\end{DoxyReturn}
+\hypertarget{ecc__meth_8h_a8e41d2b7edc71a4ece7fa2ed3b51d6c4}{}\index{ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}!E\+C\+C\+X08\+\_\+\+R\+S\+A\+\_\+meth@{E\+C\+C\+X08\+\_\+\+R\+S\+A\+\_\+meth}}
+\index{E\+C\+C\+X08\+\_\+\+R\+S\+A\+\_\+meth@{E\+C\+C\+X08\+\_\+\+R\+S\+A\+\_\+meth}!ecc\+\_\+meth.\+h@{ecc\+\_\+meth.\+h}}
+\subsubsection[{E\+C\+C\+X08\+\_\+\+R\+S\+A\+\_\+meth(void)}]{\setlength{\rightskip}{0pt plus 5cm}const R\+S\+A\+\_\+\+M\+E\+T\+H\+O\+D$\ast$ E\+C\+C\+X08\+\_\+\+R\+S\+A\+\_\+meth (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{ecc__meth_8h_a8e41d2b7edc71a4ece7fa2ed3b51d6c4}
+
+
+Returns a pointer to eccx08 R\+S\+A method implementation. 
+
+\begin{DoxyReturn}{Returns}
+a pointer to R\+S\+A\+\_\+\+M\+E\+T\+H\+O\+D structure 
+\end{DoxyReturn}

@@ -1,0 +1,17 @@
+#!/bin/bash
+cd $(dirname $0)
+cd ..
+TREE_TOP=${PWD}
+CERTSTORE=$TREE_TOP/certstore
+SCRIPTS=$TREE_TOP/scripts
+BIN_DIR=$TREE_TOP/install_dir/bin
+EX_DIR=$TREE_TOP/client-server
+
+export LD_LIBRARY_PATH=$TREE_TOP/install_dir/lib
+export LD_PRELOAD=/lib/x86_64-linux-gnu/libpthread.so.0
+
+CMD_EX="${EX_DIR}/exchange-tls12"
+
+${CMD_EX} -C $1 -e ateccx08
+#gdb --args ${CMD_EX} -C $1 -e ateccx08
+

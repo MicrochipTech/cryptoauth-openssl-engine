@@ -1,0 +1,11 @@
+#!/bin/bash
+set -x
+set -e
+cd $(dirname $0)
+TREE_TOP=../..
+cd $TREE_TOP/certstore
+#./run_cert_client
+#./run_cert_serv
+cd -
+./run_server
+

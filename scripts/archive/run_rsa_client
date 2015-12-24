@@ -1,0 +1,10 @@
+#!/bin/bash
+cd $(dirname $0)
+TREE_TOP=../..
+export LD_LIBRARY_PATH=$TREE_TOP/install_dir/lib
+# -c may specify many ciphers; just first available will be run
+./exchange-tls12 -c "ECDHE-RSA-AES256-GCM-SHA384:DH-RSA-AES128-SHA:DH-RSA-AES128-SHA256" \
+ -p $TREE_TOP/certstore/trusted \
+ -b $TREE_TOP/certstore/trusted/homut_rsa_bundle.crt \
+ -f $TREE_TOP/certstore/personal/homut_rsa_client.crt \
+ -k $TREE_TOP/certstore/privkeys/homut_rsa_client.key

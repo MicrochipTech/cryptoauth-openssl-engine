@@ -1,0 +1,48 @@
+To create the CA use the following commands:
+
+cd ./atmel-ecc/certstore
+../install_dir/bin/openssl ecparam -out privkeys/homut_root.key -name prime256v1 -genkey
+../install_dir/bin/openssl req -new -key privkeys/homut_root.key -out csr/homut_root.csr -sha256 -config openssl.cnf -subj "/C=US/ST=CA/L=Sunnyvale/O=Homut LLC/CN=Homut Root/" -verify
+../install_dir/bin/openssl ca -create_serial -out trusted/homut_root.crt -days 1000 -selfsign -extensions v3_ca_has_san -config openssl.cnf -keyfile privkeys/homut_root.key -infiles csr/homut_root.csr
+
+../install_dir/bin/openssl ecparam -out privkeys/homut_intermediate.key -name prime256v1 -genkey
+../install_dir/bin/openssl req -new -key privkeys/homut_intermediate.key -out csr/homut_intermediate.csr -sha256 -config openssl.cnf -subj "/C=US/ST=CA/L=Sunnyvale/O=Homut LLC/CN=homut_intermediate/" -verify
+../install_dir/bin/openssl ca -config openssl.cnf -extensions v3_ca -days 365 -in csr/homut_intermediate.csr -cert trusted/homut_root.crt -keyfile privkeys/homut_root.key -out trusted/homut_intermediate.crt
+
+cat trusted/homut_root.crt trusted/homut_intermediate.crt > trusted/homut_bundle.crt
+
+../install_dir/bin/openssl ecparam -out privkeys/homut_server.key -name prime256v1 -genkey
+../install_dir/bin/openssl req -new -key privkeys/homut_server.key -out csr/homut_server.csr -sha256 -config openssl.cnf -subj "/C=US/ST=CA/L=Sunnyvale/O=Homut LLC/CN=homut_server/" -verify
+../install_dir/bin/openssl ca -config openssl.cnf -extensions v3_ca -days 365 -in csr/homut_server.csr -cert trusted/homut_intermediate.crt -keyfile privkeys/homut_intermediate.key -out personal/homut_server.crt
+
+../install_dir/bin/openssl ecparam -out privkeys/homut_client.key -name prime256v1 -genkey
+../install_dir/bin/openssl req -new -key privkeys/homut_client.key -out csr/homut_client.csr -sha256 -config openssl.cnf -subj "/C=US/ST=CA/L=Sunnyvale/O=Homut LLC/CN=homut_client/" -verify
+../install_dir/bin/openssl ca -config openssl.cnf -extensions v3_ca -days 365 -in csr/homut_client.csr -cert trusted/homut_intermediate.crt -keyfile privkeys/homut_intermediate.key -out personal/homut_client.crt
+
+#################################################################################
+
+If you commit a new certificate to git then also commit the following files: serial, index.txt, index.txt.attr
+
+
+##################################################################################
+
+To verify certificates:
+
+../install_dir/bin/openssl verify -CApath trusted -CAfile trusted/homut_root.crt -untrusted trusted/homut_intermediate.crt personal/homut_client.crt
+../install_dir/bin/openssl verify -CApath trusted -CAfile trusted/homut_root.crt -untrusted trusted/homut_intermediate.crt personal/homut_server.crt
+
+##################################################################################
+
+To test TLS connection on the base of generated certificates with calls to the eccx08 engine:
+
+cd ./atmel-ecc/certstore
+export LD_LIBRARY_PATH=../install_dir/lib/
+../install_dir/bin/openssl s_server -engine ateccx08 -accept 49917 -Verify 4 -cert personal/homut_server.crt -key privkeys/homut_server.key -CApath trusted -CAfile trusted/homut_bundle.crt
+
+In a separate terminal
+cd ./atmel-ecc/certstore
+export LD_LIBRARY_PATH=../install_dir/lib/
+../install_dir/bin/openssl s_client -engine ateccx08 -connect localhost:49917 -cert personal/homut_client.crt -key privkeys/homut_client.key -showcerts -CApath trusted -CAfile trusted/homut_bundle.crt
+
+Once communication is established, type any message in either terminal and hit <CR>. The second terminal should respond with this message.
+

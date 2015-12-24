@@ -1,0 +1,53 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 9470242 (0x908122)
+    Signature Algorithm: ecdsa-with-SHA256
+        Issuer: C=US, ST=CA, O=Homut LLC, CN=Homut Root
+        Validity
+            Not Before: Aug 15 21:22:55 2015 GMT
+            Not After : Aug 14 21:22:55 2016 GMT
+        Subject: C=US, ST=CA, O=Homut LLC, CN=homut_intermediate
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub: 
+                    04:52:f5:64:5c:95:4d:e9:af:76:0e:8e:8c:c7:70:
+                    17:24:2d:cc:c4:1d:eb:57:ef:8e:66:b2:28:93:39:
+                    45:b1:ce:8e:22:07:6c:c8:4a:00:a0:a3:69:26:bf:
+                    0b:0d:d9:c0:52:34:29:8e:c2:be:42:43:41:3c:6b:
+                    68:d7:52:d6:6e
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+        X509v3 extensions:
+            X509v3 Subject Key Identifier: 
+                48:AD:13:D9:B9:44:56:46:FC:D2:9B:57:04:4D:5E:1D:D9:86:30:F5
+            X509v3 Authority Key Identifier: 
+                keyid:89:6D:BB:6D:EA:10:4D:81:8B:E7:29:32:13:C9:5E:67:0C:CA:96:44
+                DirName:/C=US/ST=CA/O=Homut LLC/CN=Homut Root
+                serial:90:81:1A
+
+            X509v3 Basic Constraints: 
+                CA:TRUE
+            X509v3 Subject Alternative Name: 
+                <EMPTY>
+
+    Signature Algorithm: ecdsa-with-SHA256
+         30:45:02:20:1e:42:b1:2f:a2:1a:81:c3:36:3d:7d:e3:83:ab:
+         e7:12:be:5e:ab:36:cb:65:b6:10:64:17:f8:db:80:d3:c9:f9:
+         02:21:00:88:20:e0:8c:33:1f:e7:b7:46:9b:fc:48:9f:ca:7c:
+         08:df:51:12:37:c4:a2:bd:c7:1b:9e:1b:69:ea:2a:04:d2
+-----BEGIN CERTIFICATE-----
+MIICLDCCAdKgAwIBAgIEAJCBIjAKBggqhkjOPQQDAjBDMQswCQYDVQQGEwJVUzEL
+MAkGA1UECAwCQ0ExEjAQBgNVBAoMCUhvbXV0IExMQzETMBEGA1UEAwwKSG9tdXQg
+Um9vdDAeFw0xNTA4MTUyMTIyNTVaFw0xNjA4MTQyMTIyNTVaMEsxCzAJBgNVBAYT
+AlVTMQswCQYDVQQIDAJDQTESMBAGA1UECgwJSG9tdXQgTExDMRswGQYDVQQDDBJo
+b211dF9pbnRlcm1lZGlhdGUwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARS9WRc
+lU3pr3YOjozHcBckLczEHetX745msiiTOUWxzo4iB2zISgCgo2kmvwsN2cBSNCmO
+wr5CQ0E8a2jXUtZuo4GrMIGoMB0GA1UdDgQWBBRIrRPZuURWRvzSm1cETV4d2YYw
+9TBuBgNVHSMEZzBlgBSJbbtt6hBNgYvnKTITyV5nDMqWRKFHpEUwQzELMAkGA1UE
+BhMCVVMxCzAJBgNVBAgMAkNBMRIwEAYDVQQKDAlIb211dCBMTEMxEzARBgNVBAMM
+CkhvbXV0IFJvb3SCBACQgRowDAYDVR0TBAUwAwEB/zAJBgNVHREEAjAAMAoGCCqG
+SM49BAMCA0gAMEUCIB5CsS+iGoHDNj1944Or5xK+Xqs2y2W2EGQX+NuA08n5AiEA
+iCDgjDMf57dGm/xIn8p8CN9REjfEor3HG54baeoqBNI=
+-----END CERTIFICATE-----
