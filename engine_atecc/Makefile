@@ -41,19 +41,15 @@ tgt_cryptoauthlib:
 tgt_engine_meth:
 	make -w -C engine_meth HW='$(HW)' CFLAGS_EXT='$(CFLAGS_EXT)'
 
-tgt_unity:
-	make -w -C ../unity HW='$(HW)' gnu
-
 # CHANGE
-ecc-test: tgt_engine_meth tgt_cryptoauthlib tgt_unity Makefile
+ecc-test: tgt_engine_meth tgt_cryptoauthlib Makefile
 	$(CC) -c ecc-test-main.c $(CFLAGS) -I./cryptoauthlib -I. -I..
-	$(CC) -o ecc-test-main ecc-test-main.o cryptoauthlib/test/tls/atcatls_tests.o -Lengine_meth -Lcryptoauthlib/lib -leccx08_meth -lcryptoauth  -L../unity -lunity -lm -lc -lrt
+	$(CC) -o ecc-test-main ecc-test-main.o cryptoauthlib/test/tls/atcatls_tests.o -Lengine_meth -Lcryptoauthlib/lib -leccx08_meth -lcryptoauth  -Lcryptoauthlib/test -lunity -lm -lc -lrt
 
 clean:
 	rm -f *.o *.a ecc-test-main *.so* *.exp
 	make -w -C engine_meth clean
 	make -w -C cryptoauthlib clean
-	make -w -C ../unity clean
 
 install:
 	cp -f $(SHLIB) ../install_dir/lib/engines

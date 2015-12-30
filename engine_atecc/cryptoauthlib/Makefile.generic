@@ -6,11 +6,11 @@ CC=	gcc
 DIRECTORIES=	$(shell find . -maxdepth 1 ! -path . -type d)
 SUBDIRS=	$(DIRECTORIES)
 
-.PHONY:	clean
+.PHONY:	clean tgt_local
 
 MODULES=	$(patsubst %.c,%.o,$(SRC))
 
-all:	$(MODULES)
+all:	$(MODULES) tgt_local
 	$(foreach subdir,$(basename $(SUBDIRS)),$(MAKE) -w -C $(subdir);)
 
 %.o: %.c

@@ -1,1 +1,1 @@
-../../../Makefile.generic
+include ../../../Makefile.generic
