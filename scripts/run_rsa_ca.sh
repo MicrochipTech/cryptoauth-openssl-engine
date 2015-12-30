@@ -18,36 +18,50 @@ if [ -z "$COMPANY" ]; then
     COMPANY="homut"
 fi
 
-##
-## Root cert
-##
-${CMD} genrsa -out ${CERTSTORE}/privkeys/${COMPANY}_rsa_root.key 2048
-${CMD} req -new -key ${CERTSTORE}/privkeys/${COMPANY}_rsa_root.key \
- -out ${CERTSTORE}/csr/${COMPANY}_rsa_root.csr -sha256 \
- -config ${CERTSTORE}/openssl.cnf \
- -subj "/C=US/ST=CA/L=Sunnyvale/O=Homut LLC/CN=Homut RSA Root/" \
- -verify
-${CMD} ca -batch -create_serial \
- -out ${CERTSTORE}/trusted/${COMPANY}_rsa_root.crt -days 1000 \
- -selfsign -extensions v3_ca_has_san -config openssl.cnf \
- -keyfile ${CERTSTORE}/privkeys/${COMPANY}_rsa_root.key \
- -infiles ${CERTSTORE}/csr/${COMPANY}_rsa_root.csr
+if [ -z "$NEW_ROOT" ]; then
+    NEW_ROOT=0
+fi
 
-##
-## Intermediate cert
-##
-${CMD} genrsa -out ${CERTSTORE}/privkeys/${COMPANY}_rsa_intermediate.key 2048
-${CMD} req -new -key ${CERTSTORE}/privkeys/${COMPANY}_rsa_intermediate.key \
- -out ${CERTSTORE}/csr/${COMPANY}_rsa_intermediate.csr -sha256 \
- -config ${CERTSTORE}/openssl.cnf \
- -subj "/C=US/ST=CA/L=Sunnyvale/O=Homut LLC/CN=Homut RSA Intermediate/" \
- -verify
-${CMD} ca -batch -config ${CERTSTORE}/openssl.cnf \
- -extensions v3_ca -days 365 \
- -in ${CERTSTORE}/csr/${COMPANY}_rsa_intermediate.csr \
- -cert ${CERTSTORE}/trusted/${COMPANY}_rsa_root.crt \
- -keyfile ${CERTSTORE}/privkeys/${COMPANY}_rsa_root.key \
- -out ${CERTSTORE}/trusted/${COMPANY}_rsa_intermediate.crt
+if [ $NEW_ROOT = "1" ]; then
+    ##
+    ## Root cert
+    ##
+    ${CMD} genrsa -out ${CERTSTORE}/privkeys/${COMPANY}_rsa_root.key 2048
+    ${CMD} req -new -key ${CERTSTORE}/privkeys/${COMPANY}_rsa_root.key \
+     -out ${CERTSTORE}/csr/${COMPANY}_rsa_root.csr -sha256 \
+     -config ${CERTSTORE}/openssl.cnf \
+     -subj "/C=US/ST=CA/L=Sunnyvale/O=Homut LLC/CN=Homut RSA Root/" \
+     -verify
+    ${CMD} ca -batch -create_serial \
+     -out ${CERTSTORE}/trusted/${COMPANY}_rsa_root.crt -days 1000 \
+     -selfsign -extensions v3_ca_has_san -config openssl.cnf \
+     -keyfile ${CERTSTORE}/privkeys/${COMPANY}_rsa_root.key \
+     -infiles ${CERTSTORE}/csr/${COMPANY}_rsa_root.csr
+
+    ##
+    ## Intermediate cert
+    ##
+    ${CMD} genrsa -out ${CERTSTORE}/privkeys/${COMPANY}_rsa_intermediate.key 2048
+    ${CMD} req -new -key ${CERTSTORE}/privkeys/${COMPANY}_rsa_intermediate.key \
+     -out ${CERTSTORE}/csr/${COMPANY}_rsa_intermediate.csr -sha256 \
+     -config ${CERTSTORE}/openssl.cnf \
+     -subj "/C=US/ST=CA/L=Sunnyvale/O=Homut LLC/CN=Homut RSA Intermediate/" \
+     -verify
+    ${CMD} ca -batch -config ${CERTSTORE}/openssl.cnf \
+     -extensions v3_ca -days 365 \
+     -in ${CERTSTORE}/csr/${COMPANY}_rsa_intermediate.csr \
+     -cert ${CERTSTORE}/trusted/${COMPANY}_rsa_root.crt \
+     -keyfile ${CERTSTORE}/privkeys/${COMPANY}_rsa_root.key \
+     -out ${CERTSTORE}/trusted/${COMPANY}_rsa_intermediate.crt
+
+    ##
+    ## Create cert bundle
+    ##
+    cat ${CERTSTORE}/trusted/${COMPANY}_rsa_root.crt \
+     ${CERTSTORE}/trusted/${COMPANY}_rsa_intermediate.crt > \
+     ${CERTSTORE}/trusted/${COMPANY}_rsa_bundle.crt
+
+fi
 
 ## 
 ## Server cert
@@ -114,13 +128,6 @@ ${CMD} ca -batch -config ${CERTSTORE}/openssl.cnf \
  -cert ${CERTSTORE}/trusted/${COMPANY}_rsa_intermediate.crt \
  -keyfile ${CERTSTORE}/privkeys/${COMPANY}_rsa_intermediate.key \
  -out ${CERTSTORE}/personal/${COMPANY}_rsa_server_eccx08.crt
-
-##
-## Create cert bundle
-##
-cat ${CERTSTORE}/trusted/${COMPANY}_rsa_root.crt \
- ${CERTSTORE}/trusted/${COMPANY}_rsa_intermediate.crt > \
- ${CERTSTORE}/trusted/${COMPANY}_rsa_bundle.crt
 
 ##
 ## Debug

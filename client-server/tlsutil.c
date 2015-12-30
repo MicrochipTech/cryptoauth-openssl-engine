@@ -161,9 +161,6 @@ int configure_context(SSL_CTX *ctx, const char *ca_path, const char *chain_file,
         goto done;
     }
 
-    /* Enable server certificate verification. Enable before accepting connections. */
-    SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT |
-                       SSL_VERIFY_CLIENT_ONCE, 0);
     rc = 1;
 done:
     return (rc);

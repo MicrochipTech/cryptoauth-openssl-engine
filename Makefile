@@ -52,7 +52,10 @@ install: install_openssl install_engine_atecc
 init_openssl:
 	@echo "initializing OpenSSL"
 	@echo $(UNAME_S)
-	cd $(OPENSSL);./Configure $(OPENSSL_OS) --shared --openssldir=$(CWD)/install_dir -DTLS_DEBUG -DSSL_DEBUG -DKSSL_DEBUG -DCIPHER_DEBUG -DOPENSSL_ALGORITHM_DEFINES -DOPENSSL_NO_SHA512; sed -i'' -e 's/\-O0 -g/\-O0 -g/g' Makefile; cd -
+	cd $(OPENSSL);./Configure $(OPENSSL_OS) --shared --openssldir=$(CWD)/install_dir -DTLS_DEBUG -DSSL_DEBUG -DKSSL_DEBUG -DCIPHER_DEBUG -DOPENSSL_ALGORITHM_DEFINES -DOPENSSL_NO_SHA512; cd -
+ifeq ($(findstring ECC_DEBUG,$(HW)),ECC_DEBUG)
+	cd $(OPENSSL); sed -i'' -e 's/\-O0 -g/\-O0 -g/g' Makefile; cd -
+endif
 
 patch_openssl:
 	@echo "Patching OpenSSL"

@@ -84,6 +84,9 @@ int connect_server(const char *engine_id, const char *ca_path, const char *chain
         return 11;
     }
 
+    /* Do not verify client certificate. */
+    SSL_CTX_set_verify(ctx, SSL_VERIFY_NONE, 0);
+
     err = load_private_key(engine_id, ctx, key_file);
     if (err == 0) {
         return 13;

@@ -90,6 +90,10 @@ int connect_client(const char *engine_id, const char *ca_path, const char *chain
         return 11;
     }
 
+    /* Enable server certificate verification. Enable before accepting connections. */
+    SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT |
+                       SSL_VERIFY_CLIENT_ONCE, 0);
+
     err = load_private_key(engine_id, ctx, key_file);
     if (err == 0) {
         return 13;
