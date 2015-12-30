@@ -32,24 +32,21 @@ endif
 endif
 
 .PHONY:	init_submodule \
-	tgt_openssl tgt_engine_atecc tgt_unity \
+	tgt_openssl tgt_engine_atecc \
 	init_openssl patch_openssl build_openssl install_openssl clean_openssl dclean_openssl test_openssl \
 	build_engine_atecc clean_engine_atecc install_engine_atecc \
-	build_unity clean_unity install_unity \
 	tgt_tlsdemo clean_tlsdemo 
 
-all:	init_submodule tgt_openssl tgt_unity tgt_engine_atecc tgt_tlsdemo
+all:	init_submodule tgt_openssl tgt_engine_atecc tgt_tlsdemo
 
 tgt_engine_atecc:	build_engine_atecc install_engine_atecc
 
-tgt_unity:	build_unity install_unity
-
 tgt_openssl:	init_openssl patch_openssl build_openssl install_openssl
 
-clean:	clean_openssl clean_engine_atecc clean_unity clean_tlsdemo
+clean:	clean_openssl clean_engine_atecc clean_tlsdemo
 dclean:	dclean_openssl 
 test:	test_openssl
-install: install_openssl install_engine_atecc install_unity
+install: install_openssl install_engine_atecc
 
 # OpenSSL
 init_openssl:
@@ -108,16 +105,6 @@ clean_engine_atecc:
 
 install_engine_atecc:
 	make -w -C engine_atecc install
-
-# UNITY
-build_unity:
-	make -w -C unity OPENSSL_VER=$(OPENSSL_VER) HW='$(HW)' gnu
-
-clean_unity:
-	make -w -C unity clean
-
-install_unity:
-	make -w -C unity install
 
 # TLS demo client/server
 tgt_tlsdemo:
