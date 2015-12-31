@@ -43,6 +43,11 @@
 
 #include "tlsutil.h"
 
+int verify_depth = 0;
+int verify_quiet = 0;
+int verify_error = X509_V_OK;
+int verify_return_error = 0;
+
 /**
  *
  * \brief setup OpenSSL engine by engine ID
@@ -246,6 +251,75 @@ int config_args_ssl_call(SSL_CTX *ctx, SSL_CONF_CTX *cctx)
     }
     return 1;
 }
+
+/**
+ *
+ * \brief A modification of the verify_callback()
+ * function from the openssl aps/s_cb.c file
+ *
+ * \param[in] ok a parameter allowint to exit from the callback
+ *       immediately
+ * \param[in, out] ctx X509_STORE_CTX
+ * \return 0 for success
+ */
+int verify_callback(int ok, X509_STORE_CTX *ctx)
+{
+    X509 *err_cert;
+    int err;
+    int depth;
+    char *str;
+
+    err_cert = X509_STORE_CTX_get_current_cert(ctx);
+    err = X509_STORE_CTX_get_error(ctx);
+    depth = X509_STORE_CTX_get_error_depth(ctx);
+
+    if (!ok) {
+        fprintf(stderr, "depth=%d ", depth);
+        if (err_cert) {
+            str = X509_NAME_oneline(X509_get_subject_name(err_cert), 0, 0);
+            CHK_NULL(str);
+            fprintf(stderr, "\t Subject: %s\n", str);
+            OPENSSL_free(str);
+        } else fprintf(stderr, "<no cert>\n");
+    }
+    if (!ok) {
+        fprintf(stderr, "verify error:num=%d:%s\n", err,
+                X509_verify_cert_error_string(err));
+        if (verify_depth >= depth) {
+            if (!verify_return_error) ok = 1;
+            verify_error = X509_V_OK;
+        } else {
+            ok = 0;
+            verify_error = X509_V_ERR_CERT_CHAIN_TOO_LONG;
+        }
+    }
+    switch (err) {
+        case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
+            str = X509_NAME_oneline(X509_get_issuer_name(err_cert), 0, 0);
+            CHK_NULL(str);
+            fprintf(stderr, "\t Issuer: %s\n", str);
+            OPENSSL_free(str);
+            break;
+        case X509_V_ERR_CERT_NOT_YET_VALID:
+        case X509_V_ERR_ERROR_IN_CERT_NOT_BEFORE_FIELD:
+            fprintf(stderr, "notBefore invalid\n");
+            break;
+        case X509_V_ERR_CERT_HAS_EXPIRED:
+        case X509_V_ERR_ERROR_IN_CERT_NOT_AFTER_FIELD:
+            fprintf(stderr, "notAfter invalid\n");
+            break;
+        case X509_V_ERR_NO_EXPLICIT_POLICY:
+            if (!verify_quiet) {
+                fprintf(stderr, "No explicit policy\n\n");
+            }
+            break;
+    }
+    if (ok && !verify_quiet) {
+        fprintf(stderr, "verify return:%d\n", ok);
+    }
+    return (ok);
+}
+
 
 /**
  *

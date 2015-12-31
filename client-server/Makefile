@@ -11,9 +11,9 @@ CFLAGS  += 	-g -O0 -ggdb -Wall \
 		-I$(CWD)/../install_dir/include \
 		-I$(CWD)/../$(OPENSSL)/crypto \
 		-I$(CWD)/../$(OPENSSL)/crypto/bn \
-        -I$(CWD)/../engine_atecc/cryptoauthlib \
-        -I$(CWD)/../engine_atecc/cryptoauthlib/lib \
-	    -I$(CWD)/../engine_atecc/cryptoauthlib/lib/tls \
+		-I$(CWD)/../engine_atecc/cryptoauthlib \
+		-I$(CWD)/../engine_atecc/cryptoauthlib/lib \
+		-I$(CWD)/../engine_atecc/cryptoauthlib/lib/tls \
 		${HW}
 
 LDFLAGS += -L$(CWD)/../install_dir/lib -lssl -lcrypto

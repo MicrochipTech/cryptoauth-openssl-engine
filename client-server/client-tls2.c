@@ -67,6 +67,7 @@ int connect_client(const char *engine_id, const char *ca_path, const char *chain
     int sd;
     struct sockaddr_in sa;
     char *str;
+    int verify = SSL_VERIFY_PEER;
     char *message = "Clent sends Hello to Server!";
     char buf[1024 * 8];
 
@@ -85,13 +86,7 @@ int connect_client(const char *engine_id, const char *ca_path, const char *chain
         return 10;
     }
 
-    /* By the TLS standard we need to enable server certificate verification.
-       But the openssl cli default is SSL_VERIFY_NONE - just follow the pattern */
-#if 0
-    SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, 0);
-#else
-    SSL_CTX_set_verify(ctx, SSL_VERIFY_NONE, 0);
-#endif
+    SSL_CTX_set_verify(ctx, verify, verify_callback);
 
     err = configure_context(ctx, ca_path, chain_file, cert_file);
     if (err == 0) {

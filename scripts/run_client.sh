@@ -43,6 +43,7 @@ fi
 set +e
 if [ $USE_EXAMPLE = "0" ]; then
     ${CMD}  s_client ${ENGINE} -connect localhost:${PORT} \
+    -verify 2 \
     -cert ${DEVICE_CERT_PEM} ${KEYFORM} \
     -key ${DEVICE_KEY} \
     -CApath ${SIGNER_PATH} \
@@ -51,6 +52,7 @@ if [ $USE_EXAMPLE = "0" ]; then
 #    -showcerts 
 else
     ${CMD_EX} ${ENGINE_EX} \
+    -d 2 \
     -c ${SSL_CIPHER} \
     -p ${SIGNER_PATH} \
     -b ${SIGNER_BUNDLE} \

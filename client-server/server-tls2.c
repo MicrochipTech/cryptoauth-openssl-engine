@@ -66,6 +66,7 @@ int connect_server(const char *engine_id, const char *ca_path, const char *chain
     struct sockaddr_in sa_s;  //server
     struct sockaddr_in sa_c;  //client
     socklen_t client_len;
+    int verify = SSL_VERIFY_PEER | SSL_VERIFY_CLIENT_ONCE;
     char *str;
     char *message = "Thank you, my lovely Client!";
     char buf[1024 * 8];
@@ -79,19 +80,12 @@ int connect_server(const char *engine_id, const char *ca_path, const char *chain
         return 9;
     }
 
+    SSL_CTX_set_verify(ctx, verify, verify_callback);
+
     err = configure_context(ctx, ca_path, chain_file, cert_file);
     if (err == 0) {
         return 11;
     }
-
-    /* It is desired to enable the client certificate verification.
-       But the openssl cli default is SSL_VERIFY_NONE - just follow the pattern */
-#if 0
-    SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT |
-                       SSL_VERIFY_CLIENT_ONCE, 0);
-#else
-    SSL_CTX_set_verify(ctx, SSL_VERIFY_NONE, 0);
-#endif
 
     err = load_private_key(engine_id, ctx, key_file);
     if (err == 0) {

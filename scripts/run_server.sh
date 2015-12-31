@@ -49,13 +49,14 @@ fi
 
 set +e
 if [ $USE_EXAMPLE = "0" ]; then
-    ${CMD} s_server ${ENGINE} -accept ${PORT} -Verify 4 \
+    ${CMD} s_server ${ENGINE} -accept ${PORT} -verify 2 \
     -cert ${DEVICE_CERT_PEM} ${KEYFORM} \
     -key ${DEVICE_KEY} \
     -CApath ${SIGNER_PATH} \
     -CAfile ${SIGNER_BUNDLE}
 else
     ${CMD_EX} -s ${ENGINE_EX} \
+    -d 2 \
     -p ${SIGNER_PATH} \
     -b ${SIGNER_BUNDLE} \
     -f ${DEVICE_CERT_PEM} \

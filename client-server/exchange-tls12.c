@@ -44,6 +44,9 @@
 
 #include "tlsutil.h"
 
+/* Defined in the tlsutil.c following an example in the openssl/apps/s_cb.c file */
+extern int verify_depth;
+
 /**
  *
  * \brief Print a short help on "./exchange-tls12 -h",
@@ -56,7 +59,8 @@ void usage(void)
            "\t./exchange-tls12 -s -c <cipher_list> "
            "-p <ca_path> -b <chain_file>"
            "-f <cert_file> -k <key_file>"
-           " -C <cmd> -E [-e ateccx08]");
+           "-C <cmd> -E [-e ateccx08]"
+           "-d <depth> [-v] [h|?]");
     printf("\n\nWhere:\n");
     printf("\t-C <cmd> - run a command through the engine. Commands are:\n"
            "\t\tECCX08_CMD_GET_VERSION:\t\t %d\n"
@@ -85,6 +89,7 @@ void usage(void)
     printf("\t-f <cert_file> - Certificate File Name\n");
     printf("\t-k <key_file> - Private Key File Name\n");
     printf("\t-e <engine ID> Use utility with an engine (supported ateccx08 only)\n");
+    printf("\t-d <depth> - the maximum length of the server certificate chain\n");
     printf("\t-v \t- print the utility version\n"
            "\t-h \t- This message\n"
            "\t-? \t- This message\n"
@@ -118,7 +123,9 @@ int main(int argc, char *argv[])
     char cmd_buffer[128];
     int buf_len = 128;
 
-    while ((ch = getopt(argc, argv, "C:Ec:sp:b:f:k:e:vh?")) != (char)-1) {
+    verify_depth = 0;
+
+    while ((ch = getopt(argc, argv, "C:Ec:sp:b:f:k:e:d:vh?")) != (char)-1) {
         switch (ch) {
             case 'C':
                 cmd = strtol(optarg, NULL, 0);
@@ -147,6 +154,9 @@ int main(int argc, char *argv[])
                 break;
             case 'e':
                 engine_id = strdup(optarg);
+                break;
+            case 'd':
+                verify_depth = strtol(optarg, NULL, 0);
                 break;
             case 'v':
                 printf("Exchange version = %s\n", EXCHANGE_VERSION);

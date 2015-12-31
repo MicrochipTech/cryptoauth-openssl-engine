@@ -77,6 +77,7 @@ SSL_CTX* create_context(uint32_t is_server);
 int config_args_ssl_call(SSL_CTX *ctx, SSL_CONF_CTX *cctx);
 int configure_context(SSL_CTX *ctx, const char *ca_path, const char *chain_file,
                       const char *cert_file);
+int verify_callback(int ok, X509_STORE_CTX *ctx);
 int load_private_key(const char *engine_id, SSL_CTX *ctx, const char *key_file);
 void cleanup_openssl(void);
 
