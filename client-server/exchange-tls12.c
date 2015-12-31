@@ -120,10 +120,19 @@ int main(int argc, char *argv[])
     char *key_file = NULL;
     char *engine_id = NULL;
     char *cipher_list = NULL;
-    char cmd_buffer[128];
+    char cwd[200];
+    char cmd_buffer[256];
     int buf_len = 128;
 
     verify_depth = 0;
+
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        fprintf(stderr, "Current working dir: %s\n", cwd);
+    } else {
+        fprintf(stderr, "getcwd() error");
+        return 100;
+    }
+    snprintf(cmd_buffer, 256, "%s/certstore", cwd);
 
     while ((ch = getopt(argc, argv, "C:Ec:sp:b:f:k:e:d:vh?")) != (char)-1) {
         switch (ch) {

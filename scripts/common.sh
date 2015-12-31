@@ -10,14 +10,13 @@ export BIN_DIR=$TREE_TOP/install_dir/bin
 export EX_DIR=$TREE_TOP/client-server
 
 # Certificate names
-export TMP_CERT_DIR=/tmp
-export DEVICE_CERT=${TMP_CERT_DIR}/dev_cert
-export DEVICE_KEY=${TMP_CERT_DIR}/dev_key.pem
-export DEVICE_CSR=${TMP_CERT_DIR}/dev_csr.pem
-export SIGNER_CERT=${TMP_CERT_DIR}/signer_cert
-export SIGNER_PATH=${TMP_CERT_DIR}
-export ROOT_CERT=${TMP_CERT_DIR}/root_cert
-export SIGNER_BUNDLE=${TMP_CERT_DIR}/signer_bundle.pem
+export DEVICE_CERT=${CERTSTORE}/personal/AT_device
+export DEVICE_KEY=${CERTSTORE}/privkeys/AT_device.key
+export DEVICE_CSR=${CERTSTORE}/csr/AT_device.csr
+export SIGNER_CERT=${CERTSTORE}/trusted/AT_signer
+export SIGNER_PATH=${CERTSTORE}/trusted
+export ROOT_CERT=${CERTSTORE}/trusted/AT_root
+export SIGNER_BUNDLE=${CERTSTORE}/trusted/AT_bundle.crt
 
 export LD_LIBRARY_PATH=$TREE_TOP/install_dir/lib
 export LD_PRELOAD=/lib/x86_64-linux-gnu/libpthread.so.0

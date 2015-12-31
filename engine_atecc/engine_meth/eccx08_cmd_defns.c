@@ -94,17 +94,13 @@ size_t rootCertSize = 1024;
 size_t signerCertSize = 1024;
 size_t deviceCertSize = 1024;
 
-char *dev_cert_fname = "/tmp/dev_cert.der";
-char *signer_cert_fname = "/tmp/signer_cert.der";
-char *root_cert_fname = "/tmp/root_cert.der";
-
-int get_device_cert(void);
+int get_device_cert(char *path);
 int get_public_key(void);
-int get_signer_cert(void);
+int get_signer_cert(char *path);
 int verify_signer_cert(void);
 int verify_device_cert(void);
-int get_root_cert(void);
-int extract_all_certs(void);
+int get_root_cert(char *path);
+int extract_all_certs(char *path);
 
 /**
  *
@@ -113,12 +109,17 @@ int extract_all_certs(void);
  *        the dev_cert_fname, signer_cert_fname, and
  *        root_cert_fname variables.
  *
+ * \param[in] path a pointer to a buffer with a path to the
+ *       certstore
  * \return ATCA_SUCCESS for success
  */
-int get_device_cert(void)
+int get_device_cert(char *path)
 {
     ATCA_STATUS status = ATCA_GEN_FAIL;
     int len = 0;
+    char dev_cert_fname[300];
+
+    snprintf(dev_cert_fname, 300, "%s/personal/AT_device.der", path);
 
     eccx08_debug(" eccx08_cmd_ctrl(ECCX08_CMD_GET_DEVICE_CERT)\n");
     // Get the device certificate
@@ -170,12 +171,17 @@ err:
  *        ATECCX08 chip and saves it into a global signerCert
  *        buffer.
  *
+ * \param[in] path a pointer to a buffer with a path to the
+ *       certstore
  * \return ATCA_SUCCESS for success
  */
-int get_signer_cert(void)
+int get_signer_cert(char *path)
 {
     ATCA_STATUS status = ATCA_GEN_FAIL;
     int len = 0;
+    char signer_cert_fname[300];
+
+    snprintf(signer_cert_fname, 300, "%s/trusted/AT_signer.der", path);
 
     eccx08_debug(" eccx08_cmd_ctrl(ECCX08_CMD_GET_SIGNER_CERT)\n");
     // Get the signer certificate
@@ -250,12 +256,17 @@ err:
  *        from ATECCX08 chip and saves it into a global rootCert
  *        buffer.
  *
+ * \param[in] path a pointer to a buffer with a path to the
+ *       certstore
  * \return ATCA_SUCCESS for success
  */
-int get_root_cert(void)
+int get_root_cert(char *path)
 {
     ATCA_STATUS status = ATCA_GEN_FAIL;
     int len = 0;
+    char root_cert_fname[300];
+
+    snprintf(root_cert_fname, 300, "%s/trusted/AT_root.der", path);
 
     eccx08_debug(" eccx08_cmd_ctrl(ECCX08_CMD_GET_ROOT_CERT)\n");
     // Get root certificate
@@ -285,9 +296,11 @@ err:
  *        ATECCX08 chip and saves it into a global buffers.
  *        Calls functions to verify them.
  *
+ * \param[in] path a pointer to a buffer with a path to the
+ *       certstore
  * \return ATCA_SUCCESS for success
  */
-int extract_all_certs(void)
+int extract_all_certs(char *path)
 {
     ATCA_STATUS status = ATCA_GEN_FAIL;
 
@@ -295,7 +308,7 @@ int extract_all_certs(void)
     // Get the CA public key
     memcpy(caPubkey, g_signer_1_ca_public_key_t, sizeof(caPubkey));
 
-    status = get_signer_cert();
+    status = get_signer_cert(path);
     if (status != ATCA_SUCCESS) {
         goto err;
     }
@@ -303,7 +316,7 @@ int extract_all_certs(void)
     if (status != ATCA_SUCCESS) {
         goto err;
     }
-    status = get_device_cert();
+    status = get_device_cert(path);
     if (status != ATCA_SUCCESS) {
         goto err;
     }
@@ -315,7 +328,7 @@ int extract_all_certs(void)
     if (status != ATCA_SUCCESS) {
         goto err;
     }
-    status = get_root_cert();
+    status = get_root_cert(path);
     if (status != ATCA_SUCCESS) {
         goto err;
     }
@@ -336,16 +349,18 @@ err:
  *       commands see ECCX08_CMD_* defines in the ecc_meth.h
  *       file
  * \param[in] i an integer parameter of the command
- * \param[in] p a string parameter of the command
- * \param[in] p a function pointer parameter of the command
+ * \param[in,out] p a string parameter of the command
+ * \param[in] f a function pointer parameter of the command
  * \return 1 for success
  */
 int eccx08_cmd_ctrl(ENGINE *e, int cmd, long i, void *p, void (*f)(void))
 {
     int ret = 1;
     ATCA_STATUS status = ATCA_GEN_FAIL;
+    char path[256];
     char *cmd_buf = (char *)p;
 
+    strncpy(path, p, 256);
     //ctx = ENGINE_get_ex_data(e, capi_idx);
     status = atcatls_init(&cfg_ecc508_kitcdc_default);
     if (status != ATCA_SUCCESS) {
@@ -364,13 +379,13 @@ int eccx08_cmd_ctrl(ENGINE *e, int cmd, long i, void *p, void (*f)(void))
             }
             break;
         case ECCX08_CMD_GET_SIGNER_CERT:
-            status = get_signer_cert();
+            status = get_signer_cert(path);
             break;
         case ECCX08_CMD_GET_PUB_KEY:
             status = get_public_key();
             break;
         case ECCX08_CMD_GET_DEVICE_CERT:
-            status = get_device_cert();
+            status = get_device_cert(path);
             break;
         case ECCX08_CMD_VERIFY_SIGNER_CERT:
             status = verify_signer_cert();
@@ -379,10 +394,10 @@ int eccx08_cmd_ctrl(ENGINE *e, int cmd, long i, void *p, void (*f)(void))
             status = verify_device_cert();
             break;
         case ECCX08_CMD_GET_ROOT_CERT:
-            status = get_root_cert();
+            status = get_root_cert(path);
             break;
         case ECCX08_CMD_EXTRACT_ALL_CERTS:
-            status = extract_all_certs();
+            status = extract_all_certs(path);
             break;
         case ECCX08_CMD_GET_PRIV_KEY:
             eccx08_debug(" eccx08_cmd_ctrl(ECCX08_CMD_GET_PRIV_KEY)\n");

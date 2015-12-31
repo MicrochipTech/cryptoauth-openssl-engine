@@ -49,6 +49,7 @@ if [ $USE_EXAMPLE = "0" ]; then
     -CApath ${SIGNER_PATH} \
     -CAfile ${SIGNER_BUNDLE} \
     -cipher ${SSL_CIPHER} \
+    -no_ssl2 -no_ssl3 -no_tls1 -no_tls1_1 \
 #    -showcerts 
 else
     ${CMD_EX} ${ENGINE_EX} \

@@ -231,8 +231,8 @@ int eccx08_finish(ENGINE *e)
  *       commands see ECCX08_CMD_* defines in the ecc_meth.h
  *       file
  * \param[in] i An integer parameter of the command
- * \param[in] p A string parameter of the command
- * \param[in] p A function pointer parameter of the command
+ * \param[in, out] p A string parameter of the command
+ * \param[in] f A function pointer parameter of the command
  * \return ATCA_SUCCESS for success
  */
 int eccx08_ctrl(ENGINE *e, int cmd, long i, void *p, void (*f)())

@@ -53,7 +53,8 @@ if [ $USE_EXAMPLE = "0" ]; then
     -cert ${DEVICE_CERT_PEM} ${KEYFORM} \
     -key ${DEVICE_KEY} \
     -CApath ${SIGNER_PATH} \
-    -CAfile ${SIGNER_BUNDLE}
+    -CAfile ${SIGNER_BUNDLE} \
+    -no_ssl2 -no_ssl3 -no_tls1 -no_tls1_1
 else
     ${CMD_EX} -s ${ENGINE_EX} \
     -d 2 \
