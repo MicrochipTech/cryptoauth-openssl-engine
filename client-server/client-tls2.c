@@ -85,14 +85,18 @@ int connect_client(const char *engine_id, const char *ca_path, const char *chain
         return 10;
     }
 
+    /* By the TLS standard we need to enable server certificate verification.
+       But the openssl cli default is SSL_VERIFY_NONE - just follow the pattern */
+#if 0
+    SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, 0);
+#else
+    SSL_CTX_set_verify(ctx, SSL_VERIFY_NONE, 0);
+#endif
+
     err = configure_context(ctx, ca_path, chain_file, cert_file);
     if (err == 0) {
         return 11;
     }
-
-    /* Enable server certificate verification. Enable before accepting connections. */
-    SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT |
-                       SSL_VERIFY_CLIENT_ONCE, 0);
 
     err = load_private_key(engine_id, ctx, key_file);
     if (err == 0) {

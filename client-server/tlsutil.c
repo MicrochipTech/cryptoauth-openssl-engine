@@ -160,6 +160,10 @@ int configure_context(SSL_CTX *ctx, const char *ca_path, const char *chain_file,
         ERR_print_errors_fp(stderr);
         goto done;
     }
+    if (!SSL_CTX_set_default_verify_paths(ctx)) {
+        ERR_print_errors_fp(stderr);
+        goto done;
+    }
 
     rc = 1;
 done:

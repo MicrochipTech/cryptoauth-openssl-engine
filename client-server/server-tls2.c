@@ -84,8 +84,14 @@ int connect_server(const char *engine_id, const char *ca_path, const char *chain
         return 11;
     }
 
-    /* Do not verify client certificate. */
+    /* It is desired to enable the client certificate verification.
+       But the openssl cli default is SSL_VERIFY_NONE - just follow the pattern */
+#if 0
+    SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT |
+                       SSL_VERIFY_CLIENT_ONCE, 0);
+#else
     SSL_CTX_set_verify(ctx, SSL_VERIFY_NONE, 0);
+#endif
 
     err = load_private_key(engine_id, ctx, key_file);
     if (err == 0) {
