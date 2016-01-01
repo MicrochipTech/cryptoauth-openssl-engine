@@ -37,6 +37,7 @@ personal/
 exchange-tls12
 *homut_client_*
 *homut_server_*
+homut_rsa_*
 AT_*
 
 # Eclipse Core
