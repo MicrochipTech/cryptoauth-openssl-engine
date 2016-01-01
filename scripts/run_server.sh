@@ -6,6 +6,15 @@ source ./common.sh
 
 BUNDLE=bundle
 
+if [ -z "$USE_WWW" ]; then
+    USE_WWW=0
+fi
+if [ $USE_WWW = "0" ]; then
+    WWW=
+else
+    WWW=-www
+fi
+
 #TARGET="dh"
 if [ -z "$TARGET" ]; then
   if [ $USE_ENGINE = "0" ]; then
@@ -54,7 +63,7 @@ if [ $USE_EXAMPLE = "0" ]; then
     -key ${DEVICE_KEY} \
     -CApath ${SIGNER_PATH} \
     -CAfile ${SIGNER_BUNDLE} \
-    -no_ssl2 -no_ssl3 -no_tls1 -no_tls1_1
+    -no_ssl2 -no_ssl3 -no_tls1 -no_tls1_1 ${WWW}
 else
     ${CMD_EX} -s ${ENGINE_EX} \
     -d 2 \

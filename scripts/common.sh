@@ -53,12 +53,6 @@ else
     export ENGINE_EX="-e ateccx08"
 fi
 
-if [ $USE_ENGINE = "0" ]; then
-    export TARGET="client"
-else
-    export TARGET="client_eccx08"
-fi
-
 if [ -z "$USE_RSA" ]; then
     export USE_RSA=0
 fi
