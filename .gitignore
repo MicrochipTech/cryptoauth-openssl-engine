@@ -29,6 +29,16 @@ ecc-test-main
 *.exp
 *.*~
 
+newcerts/
+*.old
+*.der
+*.pem
+personal/
+exchange-tls12
+*homut_client_*
+*homut_server_*
+AT_*
+
 # Eclipse Core
 .project
 
