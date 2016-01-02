@@ -14,14 +14,6 @@ source ./common.sh
 cd ..
 cd ${CERTSTORE}
 
-if [ -z "$COMPANY" ]; then
-    COMPANY="homut"
-fi
-
-if [ -z "$NEW_KEY" ]; then
-  NEW_KEY=0
-fi
-
 if [ $NEW_ROOT = "1" ]; then
     ##
     ## Root cert
@@ -80,7 +72,7 @@ if [ $NEW_KEY = "1" ]; then
 	-keyout ${CERTSTORE}/privkeys/${COMPANY}_server_eccx08.key \
 	-out ${CERTSTORE}/csr/${COMPANY}_server_eccx08.csr \
 	-sha256 -config ${CERTSTORE}/openssl.cnf \
-	-subj '/C=US/ST=CA/L=Sunnyvale/O=Homut\ LLC/CN=server_eccx08/' \
+	-subj /C=US/ST=CA/L=Sunnyvale/O=Homut\ LLC/CN=${COMMON_NAME}/ \
 	-verify
 
     #  generate a new key then generate and sign server certificate without using engine
@@ -89,7 +81,7 @@ if [ $NEW_KEY = "1" ]; then
     ${CMD} req -new -key ${CERTSTORE}/privkeys/${COMPANY}_server.key \
 	-out ${CERTSTORE}/csr/${COMPANY}_server.csr -sha256 \
 	-config ${CERTSTORE}/openssl.cnf \
-	-subj "/C=US/ST=CA/L=Sunnyvale/O=Homut LLC/CN=homut_server/" \
+	-subj /C=US/ST=CA/L=Sunnyvale/O=Homut\ LLC/CN=${COMMON_NAME}/ \
 	-verify
     ${CMD} ca -batch \
 	-config ${CERTSTORE}/openssl.cnf -extensions usr_cert \
@@ -105,7 +97,7 @@ else
 	-new -key ${CERTSTORE}/privkeys/${COMPANY}_server_eccx08.key \
 	-out ${CERTSTORE}/csr/${COMPANY}_server_eccx08.csr \
 	-sha256 -config ${CERTSTORE}/openssl.cnf \
-	-subj '/C=US/ST=CA/L=Sunnyvale/O=Homut LLC/CN=server_eccx08/' \
+	-subj /C=US/ST=CA/L=Sunnyvale/O=Homut\ LLC/CN=${COMMON_NAME}/ \
 	-verify
 
 fi

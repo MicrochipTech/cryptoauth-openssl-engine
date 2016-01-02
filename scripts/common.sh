@@ -29,6 +29,10 @@ if [ -z "$COMPANY" ]; then
     export COMPANY="homut"
 fi
 
+if [ -z "COMMON_NAME" ]; then
+    export COMMON_NAME="homut"
+fi
+
 if [ -z "$USE_EXAMPLE" ]; then
     export USE_EXAMPLE=0
 fi
@@ -43,6 +47,10 @@ fi
 
 if [ -z "$NEW_KEY" ]; then
     export NEW_KEY=0
+fi
+
+if [ -z "$NEW_ROOT" ]; then
+    export NEW_ROOT=0
 fi
 
 if [ $USE_ENGINE = "0" ]; then
