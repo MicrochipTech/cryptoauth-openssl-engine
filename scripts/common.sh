@@ -29,7 +29,7 @@ if [ -z "$COMPANY" ]; then
     export COMPANY="homut"
 fi
 
-if [ -z "COMMON_NAME" ]; then
+if [ -z "$COMMON_NAME" ]; then
     export COMMON_NAME="homut"
 fi
 
