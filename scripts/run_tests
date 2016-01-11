@@ -18,9 +18,9 @@ regex_exitstatus = re.compile(r'^(.*)EXITSTATUS_CLIENT:(\s+)(\d+)(\s+)EXITSTATUS
 
 test_seq = 0
 
-def mk_client_cmd(base_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,client_id,log_prefix,use_atmel_ca=1):
+def mk_client_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,client_id,log_prefix,use_atmel_ca=1):
    print log_prefix
-   fname_log = '%s_%s_clnt_%0d_hwc_%0d_hws_%0d_exsrv_%0d_exclnt_%0d_%s.log' % (log_prefix,cipher_string,client_id,hw_eng_client,hw_eng_serv,example_server,example_client,run_script)
+   fname_log = '%s/%s_%s_clnt_%0d_hwc_%0d_hws_%0d_exsrv_%0d_exclnt_%0d_%s.log' % (log_dir,log_prefix,cipher_string,client_id,hw_eng_client,hw_eng_serv,example_server,example_client,run_script)
    #cmd_client = '(%s/run_client.sh 2>&1) | tee > %s' % (base_dir,fname_log)
    #cmd_client = '%s/run_client.sh 2>&1 | tee > %s' % (base_dir,fname_log)
    #cmd_client = '(%s/run_client.sh 2>&1) ' % (base_dir)
@@ -46,8 +46,8 @@ def mk_client_cmd(base_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,ex
 
    return (cmd_client,fname_log,my_env)
 
-def mk_server_cmd(base_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,log_prefix,use_atmel_ca=1):
-   fname_log = '%s_%s_hwc_%0d_hws_%0d_exsrv_%0d_exclnt_%0d_%s.log' % (log_prefix,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,run_script)
+def mk_server_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,log_prefix,use_atmel_ca=1):
+   fname_log = '%s/%s_%s_hwc_%0d_hws_%0d_exsrv_%0d_exclnt_%0d_%s.log' % (log_dir,log_prefix,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,run_script)
    #cmd_server = '(%s/run_server.sh 2>&1) > %s' % (base_dir,fname_log)
    #cmd_server = '%s/run_server.sh 2>&1 > %s' % (base_dir,fname_log)
    my_env = os.environ.copy()
@@ -158,7 +158,7 @@ def create_test(client_cmd_lst,cmd_server,env_server,fname_log_server,gen_cert,g
    else:
       write_test_script(fname_drv,'#%s/%s' % (base_dir,script_name))
 
-def create_tests(base_dir,test_script_pairs,cipher_db,num_clients=1,test_engine_server=None,test_engine_client=None,test_example_server=None,test_example_client=None,skip_combos=[]):
+def create_tests(base_dir,log_dir,test_script_pairs,cipher_db,num_clients=1,test_engine_server=None,test_engine_client=None,test_example_server=None,test_example_client=None,skip_combos=[]):
    global rsa_cert_generated
    global test_seq
    nxt_prev_eng = (0,0)
@@ -207,11 +207,11 @@ def create_tests(base_dir,test_script_pairs,cipher_db,num_clients=1,test_engine_
 
                      (client_cmd_lst,fname_log_client_lst) = ([],[])
                      for i in range(num_clients):
-                        (cmd_client,fname_log_client,env_client) = mk_client_cmd(base_dir,run_scr_client,cipher_string,engine_client,engine_server,example_server,example_client,i,log_prefix)
+                        (cmd_client,fname_log_client,env_client) = mk_client_cmd(base_dir,log_dir,run_scr_client,cipher_string,engine_client,engine_server,example_server,example_client,i,log_prefix)
                         client_cmd_lst += [(cmd_client,fname_log_client,env_client)]
                         fname_log_client_lst += [fname_log_client]
                         
-                     (cmd_server,fname_log_server,env_server) = mk_server_cmd(base_dir,run_scr_server,cipher_string,engine_client,engine_server,example_server,example_client,log_prefix)
+                     (cmd_server,fname_log_server,env_server) = mk_server_cmd(base_dir,log_dir,run_scr_server,cipher_string,engine_client,engine_server,example_server,example_client,log_prefix)
 
                      create_test(client_cmd_lst,cmd_server,env_server,fname_log_server,gen_cert,gen_rsa_cert,script_prefix,hw_cert)
                      if True or test_seq < 2: # debug
@@ -349,9 +349,11 @@ def run_tests(fname_drv,test_db):
 
 if __name__ == "__main__":
    base_dir = '.'
+   log_dir = 'log'
    fname_drv = '%s/runit.sh' % (base_dir)
    write_test_script(fname_drv,'#!/bin/bash',init=True)
    write_test_script(fname_drv,'set -x')
+   write_test_script(fname_drv,'mkdir -p %s/%s' % (base_dir,log_dir))
    write_test_script(fname_drv,'sudo chmod a+rw /dev/ttyACM0')
    all_results = {}
 
@@ -379,7 +381,7 @@ if __name__ == "__main__":
    ]
 
    num_clients = 1
-   test_db = create_tests(base_dir,test_script_pairs,cipher_db,test_engine_server=test_engine_server,test_engine_client=test_engine_client,test_example_server=test_example_server,test_example_client=test_example_client,num_clients=num_clients,skip_combos=skip_combos)
+   test_db = create_tests(base_dir,log_dir,test_script_pairs,cipher_db,test_engine_server=test_engine_server,test_engine_client=test_engine_client,test_example_server=test_example_server,test_example_client=test_example_client,num_clients=num_clients,skip_combos=skip_combos)
    results = run_tests(fname_drv,test_db)
    all_results = merge_dicts(all_results,results)
    testing_summary(all_results)
