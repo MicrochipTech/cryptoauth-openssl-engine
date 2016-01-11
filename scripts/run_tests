@@ -8,54 +8,19 @@ import re
 import time
 import signal
 import threading
-import mutex
 
 debug = False
 #debug = True
+regex_exitstatus = re.compile(r'^(.*)EXITSTATUS_CLIENT:(\s+)(\d+)(\s+)EXITSTATUS_SERVER:(\s+)(\d+)(\s+)?$')
+#regex_exitstatus = re.compile(r'EXITSTATUS_CLIENT:(\s+)(\d+)(\s+)EXITSTATUS_SERVER:(\s+)(\d+)(\s+)?$')
+#regex_exitstatus = re.compile(r'EXITSTATUS_CLIENT:(\s+)(\d+)(\s+)EXITSTATUS_SERVER:(\s+)(\d+)$')
+#regex_exitstatus = re.compile(r'EXITSTATUS_CLIENT:')
 
-mutex_expect = mutex.mutex()
+test_seq = 0
 
-logdir = '.'
-results = {}
-
-# Note this env var can be considered in OpenSSL s_client.c (see getenv)
-cipher_db = ['ECDHE-ECDSA-AES128-GCM-SHA256', # define RSA to nothing on both client and server
-             'ECDH-ECDSA-AES128-GCM-SHA256', # define RSA to nothing on both client and server
-             'ECDHE-RSA-AES128-SHA', # define RSA=rsa_ on both client and server
-             'ECDHE-RSA-AES128-SHA256', # define RSA=rsa_ on both client and server
-#            'ECDH-RSA-AES128-SHA256', # - dropped from SOW       
-#            'DH-RSA-AES256-SHA256',  # requires TARGET="dh"on server side
-
-               ]
-
-# Works SW (both sides), HW (client side)
-if debug:
-   pass
-#   cipher_db = ['ECDHE-ECDSA-AES128-GCM-SHA256','ECDH-ECDSA-AES128-GCM-SHA256']
-
-# Fails SW: 139754186692256:error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure:s23_clnt.c:767:
-if debug:
-#   cipher_db = ['ECDHE-RSA-AES128-SHA']
-   pass
-
-# Fails - SW: 140375392794272:error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure:s23_clnt.c:767:
-#cipher_db = ['ECDHE-RSA-AES128-SHA'] 
-
-# Fails - SW: 140562226415264:error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure:s23_clnt.c:767:
-#cipher_db = ['ECDHE-RSA-AES128-SHA256']
-
-# Fails SW: 139863400318624:error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure:s23_clnt.c:767:
-# Fails HW (client side)
-#cipher_db = ['DH-RSA-AES256-SHA256']
-
-
-# Unknowns
-if debug:
-   pass
-   cipher_db = ['ECDH-ECDSA-AES128-GCM-SHA256']
-
-def mk_client_cmd(base_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,client_id):
-   fname_log = '%s/%s_clnt_%0d_hwc_%0d_hws_%0d_%s.log' % (logdir,cipher_string,client_id,hw_eng_client,hw_eng_serv,run_script)
+def mk_client_cmd(base_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,client_id,log_prefix,use_atmel_ca=1):
+   print log_prefix
+   fname_log = '%s_%s_clnt_%0d_hwc_%0d_hws_%0d_exsrv_%0d_exclnt_%0d_%s.log' % (log_prefix,cipher_string,client_id,hw_eng_client,hw_eng_serv,example_server,example_client,run_script)
    #cmd_client = '(%s/run_client.sh 2>&1) | tee > %s' % (base_dir,fname_log)
    #cmd_client = '%s/run_client.sh 2>&1 | tee > %s' % (base_dir,fname_log)
    #cmd_client = '(%s/run_client.sh 2>&1) ' % (base_dir)
@@ -67,331 +32,194 @@ def mk_client_cmd(base_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,cl
    my_env = os.environ.copy()
    if re.search('_der_',run_script):
       run_script = re.sub(r'_der_','_',run_script)
-      my_env['USE_ATMEL_CA'] = '%d' % (1)
+      my_env['USE_ATMEL_CA'] = '%d' % (use_atmel_ca)
 
    cmd_client = '%s/%s 2>&1' % (base_dir,run_script)
 
    print '*** cmd_client: %s, hwc=%0d hws=%0d ***' % (cmd_client,hw_eng_client,hw_eng_serv)
    my_env['USE_ENGINE'] = '%d' % (hw_eng_client)
    my_env['SSL_CIPHER'] = '%s' % (cipher_string)
+   my_env['NEW_KEY'] = '%d' % (0)
    if cipher_string in ciphers_rsa:
       my_env['USE_RSA'] = '1'
+   my_env['USE_EXAMPLE'] = '%d' % (example_client)
+
    return (cmd_client,fname_log,my_env)
 
-def mk_server_cmd(base_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv):
-   fname_log = '%s/%s_hwc_%0d_hws_%0d_%s.log' % (logdir,cipher_string,hw_eng_client,hw_eng_serv,run_script)
+def mk_server_cmd(base_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,log_prefix,use_atmel_ca=1):
+   fname_log = '%s_%s_hwc_%0d_hws_%0d_exsrv_%0d_exclnt_%0d_%s.log' % (log_prefix,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,run_script)
    #cmd_server = '(%s/run_server.sh 2>&1) > %s' % (base_dir,fname_log)
    #cmd_server = '%s/run_server.sh 2>&1 > %s' % (base_dir,fname_log)
    my_env = os.environ.copy()
    if re.search('_der_',run_script):
       run_script = re.sub(r'_der_','_',run_script)
-      my_env['USE_ATMEL_CA'] = '%d' % (1)
+      my_env['USE_ATMEL_CA'] = '%d' % (use_atmel_ca)
 
    cmd_server = '%s/%s 2>&1' % (base_dir,run_script)
 
    print '*** cmd_server: %s, hwc=%0d hws=%0d ***' % (cmd_server,hw_eng_client,hw_eng_serv)
    my_env['USE_ENGINE'] = '%d' % (hw_eng_serv)
    my_env['SSL_CIPHER'] = '%s' % (cipher_string)
+   my_env['NEW_KEY'] = '%d' % (0)
    if cipher_string in ['DH-RSA-AES256-SHA256']: # requires TARGET="dh"on server side
       my_env['TARGET'] = 'dh'
    if cipher_string in ciphers_rsa:
       my_env['USE_RSA'] = '1'
+   my_env['USE_EXAMPLE'] = '%d' % (example_server)
 
    return (cmd_server,fname_log,my_env)
 
-def run_cert_cmd(base_dir,cert_type,new_key=1):
-   cmd_cert = '%s/run_cert_%s.sh ' % (base_dir,cert_type)
-   my_env = os.environ.copy()
-   my_env['NEW_KEY'] = '%d' % (new_key)
-   print '** Running CERT command: %s' % (cmd_cert)
-   child = pexpect.spawn(cmd_cert,env=my_env)
-   child.logfile = sys.stdout
-   child.expect('Enter PEM pass phrase:')
-   child.sendline('1111')
-   child.expect('Verifying - Enter PEM pass phrase:')
-   child.sendline('1111')
-   child.expect('Enter PEM pass phrase:')
-   child.sendline('1111')               
-   while child.isalive(): # Wait for child to exit gracefully
-      pass
-   child.close()
-
-   print 'Exit status: %s %s' % (child.exitstatus,child.status)
-   if child.exitstatus is not 0:
-      print 'ERROR: Cert command %s FAILED' % (cmd_cert)
-      sys.exit(child.exitstatus)
-
-   return cmd_cert
-
-def run_rsa_cert(base_dir):
-   cmd_cert = '%s/run_rsa_ca.sh ' % (base_dir)
-   print '** Running CERT command: %s' % (cmd_cert)
-   os.system(cmd_cert)
-
-class client_driver(threading.Thread):
-   def __init__(self,env,fname_log,cmd):
-      threading.Thread.__init__(self)
-      self.env = env
-      self.fname_log = fname_log
-      self.cmd = cmd
-      #self.exitstatus = None
-      self.exitstatus = 1
-      self.mutex_expect = mutex_expect
-
-   def run(self):
-      with open(self.fname_log,'w') as flog_client:
-         print '** Running client command: %s **' % (self.cmd)
-         p_client = pexpect.spawn(self.cmd,env=self.env,logfile=flog_client)
-#      try:
-         # Plain text string
-         plain_text = 'hello world'
-
-         # Client sends string
-         self.mutex_expect.lock(p_client.expect,'---')
-         #p_client.expect('---')
-         self.mutex_expect.unlock()
-
-         self.mutex_expect.lock(p_client.sendline,plain_text)
-         #p_client.sendline(plain_text)
-         self.mutex_expect.unlock()
-
-         # Server recognizes string
-         #server_status = self.p_server.expect(plain_text)
-         time.sleep(2)
-
-         ### Client may have exited as this point in time
-
-         # Client shows prompt of ciphered data
-         self.mutex_expect.lock(p_client.expect,'rec->data')
-         #p_client.expect('rec->data')
-         try:
-            self.mutex_expect.unlock()
-         except:
-            print '** ERROR: Exception at unlock in client **'
-
-         # Client shuts down
-         print 'before client ctrl-D'
-         self.mutex_expect.lock(p_client.sendcontrol,'d')
-         #p_client.sendcontrol('d')
-         try:
-            self.mutex_expect.unlock()
-         except:
-            print '** ERROR: Exception at unlock in client **'
-         print 'after client ctrl-D'
-#      except:
-#         print '** ERROR: client pexpect protocol failed'
-
-      p_client.close(force=True)
-      while p_client.isalive(): # Wait for child to exit gracefully
-         pass
-
-      time.sleep(1)
-
-      if p_client.exitstatus is None:
-         self.exitstatus = 1
-      self.exitstatus = p_client.exitstatus
-      #print '** p_client.exitstatus: %s' % (self.exitstatus)
-
-      return (0)
-
-def test_expect(client_cmd_lst,cmd_server,env_server,fname_log_server):
-   # Spawn server
-   flog_server = open(fname_log_server,'w')
-   print '** Running server command: %s **' % (cmd_server)
-   p_server = pexpect.spawn(cmd_server,env=env_server,logfile=flog_server)
-   try:
-      mutex_expect.lock(p_server.expect,'ACCEPT')
-      #p_server.expect('ACCEPT')
-      mutex_expect.unlock()
-   except:
-      pass
-
-   # delay, waiting for server to come up?
-   time.sleep(2)
-
-   client_thread_lst = []
-   for (cmd_client,fname_log_client,env_client) in client_cmd_lst:
-      # A new thread needs to be created for each client
-      client_thread = client_driver(env_client,fname_log_client,cmd_client)
-      client_thread.start()
-      client_thread_lst += [client_thread]
-
-   try: # BOZO - unclear to to relate this on a per server thread basis or else per socket basis
-      # Server retruns to ACCEPT prompt after receives msesages: DONE, shutting down SSL
-      mutex_expect.lock(p_server.expect,'CONNECTION CLOSED')
-      #p_server.expect('CONNECTION CLOSED')
-      mutex_expect.unlock()
-
-      print 'before server ctrl-D'
-      mutex_expect.lock(p_server.sendcontrol,'d')
-      #p_server.sendcontrol('d')
-      mutex_expect.unlock()
-      print 'after server ctrl-D'
-   except:
-      pass
-
-      #time.sleep(1)
-      #p_server.kill(signal.SIGHUP)
-      #time.sleep(1)
-      #p_server.kill(signal.SIGTERM)
-      #time.sleep(1)
-      #p_server.kill(signal.SIGKILL)
-
-   client_exitstatus = 0
-   for client_thread in client_thread_lst:
-      client_thread.join(5)
-      print '** p_client.exitstatus: %s' % (client_thread.exitstatus)
-      client_exitstatus |= client_thread.exitstatus
-
-   # This code should execute only after all clients have exited
-   # wait for all threads on client_thread_lst
-   time.sleep(1)
-   p_server.close(force=True)
-   #p_server.close()
-   server_status = p_server.signalstatus
-   while p_server.isalive():
-      pass
-   flog_server.close()
-
-   # Hack - openssl process has at times seen to be still running even after the above shutdown sequence.  Try harder with OS commands.
-   time.sleep(1)
-   cmd = 'pkill openssl'
-   print cmd
-   os.system(cmd)
-   time.sleep(1)
-   cmd = 'ps aux | grep openssl'
-   print cmd
-   os.system(cmd)
-
-   print 'SERVER: exitstatus: %s signalstatus: %s status: %s' % (p_server.exitstatus,
-                                                                 p_server.signalstatus,
-                                                                 p_server.status)
-
-   return (client_exitstatus,server_status)
-
-def run_cert_tests(base_dir,test_script_pairs,cipher_db):
+def run_cert_tests(base_dir,test_script_pairs,cipher_db,test_engine_server,test_engine_client,test_example_server,test_example_client,skip_combos=[],atmel_ca=0):
+   if atmel_ca == 1:
+      run_cert_cmd(base_dir,cmd_cert='run_extract_certs.sh')
    run_cert_cmd(base_dir,'serv')
    run_cert_cmd(base_dir,'client')
    cmd = 'cd %s/../client-server/src;./run_extract_certs' % (base_dir)
    print cmd
    os.system(cmd)
-
-   test_engine_server = [0,1]
-   test_engine_client = [0,1]
-
+   
+   test_db = {}
    for (run_scr_client,run_scr_server) in test_script_pairs:
       for engine_server in test_engine_server:
          for engine_client in test_engine_client:
-            print 'test_engine_server: %d test_engine_client: %d' %(engine_server,engine_client)
-            if (engine_server,engine_client) == (1,1):
-               print 'skipping HW both sides client=%0d/server=%0d' % (engine_client,engine_server)
-               continue
+            for example_server in test_example_server:
+               for example_client in test_example_client:
 
-            if (engine_server,engine_client) == (0,0):
-               print 'skipping SW both sides client=%0d/server=%0d' % (engine_client,engine_server)
-               continue
+                  t = (example_server, engine_server, example_client, engine_client)
+                  if t in skip_combos:
+                     print 'skipping: ',t
+                     continue
 
-            if re.search('_der_',run_scr_server) and (engine_server is not 1):
-               print 'skipping case no HW on server: %s _der_ side engine_server=%0d' % (run_scr_server,engine_server)
-               continue
+                  if re.search('_der_',run_scr_server) and (engine_server is not 1):
+                     print 'skipping case no HW on server: %s _der_ side engine_server=%0d' % (run_scr_server,engine_server)
+                     continue
 
-            if re.search('_der_',run_scr_client) and (engine_client is not 1):
-               print 'skipping case no HW on client: %s _der_ side engine_client=%0d' % (run_scr_client,engine_client)
-               continue
+                  if re.search('_der_',run_scr_client) and (engine_client is not 1):
+                     print 'skipping case no HW on client: %s _der_ side engine_client=%0d' % (run_scr_client,engine_client)
+                     continue
                
-            for cipher_string in cipher_db:
-               print '******************************************************************'
-               print '*** Cipher string: %s **********' % (cipher_string)
-               print '******************************************************************'
+                  for cipher_string in cipher_db:
+                     print '******************************************************************'
+                     print '*** Cipher string: %s **********' % (cipher_string)
+                     print '******************************************************************'
 
-               (cmd_client,fname_log_client,env_client) = mk_client_cmd(base_dir,run_scr_client,cipher_string,engine_client,engine_server,0)
-               (cmd_server,fname_log_server,env_server) = mk_server_cmd(base_dir,run_scr_server,cipher_string,engine_client,engine_server)
-               client_cmd_lst = [(cmd_client,fname_log_client,env_client)]
-               (client_status,server_status) = test_expect(client_cmd_lst,cmd_server,env_server,fname_log_server)
-               fname_log_client_lst = [fname_log_client]
-               results[(str(fname_log_client_lst),fname_log_server)] = (client_status,
-                                                                        server_status,
-                                                                        fname_log_client_lst,
-                                                                        fname_log_server)
+                     script_prefix = 'run_test_%0d' % (test_seq)
+                     log_prefix = script_prefix
+                     (cmd_client,fname_log_client,env_client) = mk_client_cmd(base_dir,log_prefix,run_scr_client,cipher_string,engine_client,engine_server,example_server,example_client,0)
+                     (cmd_server,fname_log_server,env_server) = mk_server_cmd(base_dir,log_prefix,run_scr_server,cipher_string,engine_client,engine_server,example_server,example_client)
+                     client_cmd_lst = [(cmd_client,fname_log_client,env_client)]
+   
+                     create_test(client_cmd_lst,cmd_server,env_server,fname_log_server,gen_cert,gen_rsa_cert,script_prefix,hw_cert)
+#                     (client_status,server_status) = test_expect(client_cmd_lst,cmd_server,env_server,fname_log_server)
+                     fname_log_client_lst = [fname_log_client]
+                     results[(str(fname_log_client_lst),fname_log_server)] = (client_status,
+                                                                              server_status,
+                                                                              fname_log_client_lst,
+                                                                              fname_log_server)
 
-               print 'EXIT STATUS: client=%s server=%s' % (client_status,server_status)
+                     print 'EXIT STATUS: client=%s server=%s' % (client_status,server_status)
 
    return results
 
-def run_tests(base_dir,test_script_pairs,cipher_db,num_clients=1):
-   rsa_cert_generated = False
-   if debug:
-      rsa_cert_generated = True
+def create_test(client_cmd_lst,cmd_server,env_server,fname_log_server,gen_cert,gen_rsa_cert,script_prefix,hw_cert):
+   global test_seq
+   script_name = '%s.py' % (script_prefix)
 
+   tmpfile = 'tmp.py'
+   with open(tmpfile,'w') as f_test:
+#      f_test.write('if __name__ == "__main__":\n')
+      f_test.write('\tclient_cmd_lst = [\n')
+      for (cmd_client,fname_log_client,env_client) in client_cmd_lst:
+         #f_test.write("\tcmd_client = '%s',\n" % (cmd_client))
+         f_test.write("\t('%s','%s',%s)\n" % (cmd_client,fname_log_client,env_client))
+      f_test.write('\t]\n')
+      f_test.write("\tcmd_server = '%s'\n" % (cmd_server))
+      f_test.write("\tenv_server = %s\n" % (env_server))
+      f_test.write("\tfname_log_server = '%s'\n" % (fname_log_server))
+
+      #f_test.write('\tgen_cert = %s\n' % (gen_cert))
+      #f_test.write('\tgen_rsa_cert = %s\n' % (gen_rsa_cert))
+
+      if gen_cert:
+         f_test.write("\trun_cert_cmd(base_dir,'%s')\n" % (hw_cert))
+
+      if gen_rsa_cert:
+         f_test.write('\trun_rsa_cert(base_dir)\n')
+
+   test_seq += 1
+
+   cmd = 'cat test_engine_pre.py %s test_engine_post.py > %s;chmod +x %s;rm -f %s' % (tmpfile,script_name,script_name,tmpfile)
+   print cmd
+   os.system(cmd)
+
+   # Add to the test driver script
+   if True or test_seq < 2:
+      write_test_script(fname_drv,'%s/%s' % (base_dir,script_name))
+   else:
+      write_test_script(fname_drv,'#%s/%s' % (base_dir,script_name))
+
+def create_tests(base_dir,test_script_pairs,cipher_db,num_clients=1,test_engine_server=None,test_engine_client=None,test_example_server=None,test_example_client=None,skip_combos=[]):
+   global rsa_cert_generated
+   global test_seq
    nxt_prev_eng = (0,0)
-
-   test_engine_server = [0,1]
-   test_engine_client = [0,1]
-
-   if debug:
-      test_engine_server = [1]
-      test_engine_client = [0]
-      #test_engine_server = [0,1]
-      #test_engine_client = [0,1]
+   test_db = {}
 
    print 'TE: ',test_engine_server, test_engine_client
 
    for (run_scr_client,run_scr_server) in test_script_pairs:
       for engine_server in test_engine_server:
          for engine_client in test_engine_client:
-            print 'test_engine_server: %d test_engine_client: %d' %(engine_server,engine_client)
-            prev_eng = nxt_prev_eng
-            print 'prev_eng: ', prev_eng
-            if (engine_server,engine_client) == (1,1):
-               print 'skipping HW both sides client=%0d/server=%0d' % (engine_client,engine_server)
-               nxt_prev_eng = (engine_server,engine_client)
-               continue
+            for example_server in test_example_server:
+               for example_client in test_example_client:
 
-            gen_cert = False
-            if engine_server == 1 and prev_eng[0] == 0:
-               hw_cert = 'serv'
-               gen_cert = True
-            elif engine_client == 1 and prev_eng[1] == 0:
-               hw_cert = 'client'
-               gen_cert = True
-            else:
-               pass
+                  t = (example_server, engine_server, example_client, engine_client)
+                  prev_eng = nxt_prev_eng
+                  if t in skip_combos:
+                     print 'skipping: ',t
+                     nxt_prev_eng = (engine_server,engine_client)
+                     continue
 
-            print 'gen_cert: %s eng_srv: %d eng_clt: %d' % (gen_cert,engine_server,engine_client)
-            if gen_cert:
-               # switch in use of HW between client/server
-               run_cert_cmd(base_dir,hw_cert)
+                  print 'test_engine_server: %d test_engine_client: %d' %(engine_server,engine_client)
 
-            prev_eng = (engine_server,engine_client)
-            for cipher_string in cipher_db:
-               print '******************************************************************'
-               print '*** Cipher string: %s **********' % (cipher_string)
-               print '******************************************************************'
+                  gen_cert = False
+                  if engine_server == 1 and prev_eng[0] == 0:
+                     hw_cert = 'serv'
+                     gen_cert = True
+                  elif engine_client == 1 and prev_eng[1] == 0:
+                     hw_cert = 'client'
+                     gen_cert = True
+                  else:
+                     hw_cert = None
 
-               if not rsa_cert_generated and re.search('RSA',cipher_string):
-                  run_rsa_cert(base_dir)
-                  rsa_cert_generated = True
+                  print 'gen_cert: %s eng_srv: %d eng_clt: %d' % (gen_cert,engine_server,engine_client)
 
-               (client_cmd_lst,fname_log_client_lst) = ([],[])
-               for i in range(num_clients):
-                  (cmd_client,fname_log_client,env_client) = mk_client_cmd(base_dir,run_scr_client,cipher_string,engine_client,engine_server,i)
-                  client_cmd_lst += [(cmd_client,fname_log_client,env_client)]
-                  fname_log_client_lst += [fname_log_client]
+                  prev_eng = (engine_server,engine_client)
+                  for cipher_string in cipher_db:
+                     print '******************************************************************'
+                     print '*** Cipher string: %s **********' % (cipher_string)
+                     print '******************************************************************'
 
-               (cmd_server,fname_log_server,env_server) = mk_server_cmd(base_dir,run_scr_server,cipher_string,engine_client,engine_server)
+                     script_prefix = 'run_test_%0d' % (test_seq)
+                     log_prefix = script_prefix
 
-               (client_status,server_status) = test_expect(client_cmd_lst,cmd_server,env_server,fname_log_server)
+                     if re.search('RSA',cipher_string):
+                        gen_rsa_cert = True
 
-               results[(str(fname_log_client_lst),fname_log_server)] = (client_status,
-                                                                        server_status,
-                                                                        fname_log_client_lst,
-                                                                        fname_log_server)
+                     (client_cmd_lst,fname_log_client_lst) = ([],[])
+                     for i in range(num_clients):
+                        (cmd_client,fname_log_client,env_client) = mk_client_cmd(base_dir,run_scr_client,cipher_string,engine_client,engine_server,example_server,example_client,i,log_prefix)
+                        client_cmd_lst += [(cmd_client,fname_log_client,env_client)]
+                        fname_log_client_lst += [fname_log_client]
+                        
+                     (cmd_server,fname_log_server,env_server) = mk_server_cmd(base_dir,run_scr_server,cipher_string,engine_client,engine_server,example_server,example_client,log_prefix)
 
-               print 'EXIT STATUS: client=%s server=%s' % (client_status,server_status)
+                     create_test(client_cmd_lst,cmd_server,env_server,fname_log_server,gen_cert,gen_rsa_cert,script_prefix,hw_cert)
+                     if True or test_seq < 2: # debug
+                        test_db[(str(fname_log_client_lst),fname_log_server)] = (fname_log_client_lst,fname_log_server)
+                     
+                     nxt_prev_eng = (engine_server,engine_client)
 
-            nxt_prev_eng = (engine_server,engine_client)
-
-   return results
+   return test_db
 
 def debug_errs(fname_debug,fname_log_client_lst,fname_log_server):
    with open(fname_debug,'a') as f_debug:
@@ -476,48 +304,142 @@ def merge_dicts(x, y):
     z.update(y)
     return z
 
-if __name__ == "__main__":
-   cmd = 'sudo chmod a+rw /dev/ttyACM0'
+def write_test_script(fname_script,text,init=False):
+   do_chmod = not os.path.exists(fname_script)
+   if init:
+      mode = 'w'
+   else:
+      mode = 'a'
+   with open(fname_script,mode) as f_out:
+      f_out.write('%s\n' % (text))
+      
+   if do_chmod:
+      cmd = 'chmod +x %s' % (fname_script)
+      print cmd
+      os.system(cmd)
+
+def run_tests(fname_drv,test_db):
+   cmd = '%s' % (fname_drv)
    print cmd
    os.system(cmd)
+   results = {}
+   print '**** run_tests() **** '
+   for (key,(fname_log_client_lst,fname_log_server)) in test_db.items():
+      (client_status,server_status) = (-1,-1)
+      try:
+         with open(fname_log_server,'r') as f_log:
+            for line in f_log.readlines():
+               line = line.strip()
+               m = regex_exitstatus.match(line)
+               if m:
+                  client_status = int(m.group(3))
+                  server_status = int(m.group(6))
+                  break
+               else:
+                  continue
+      except:
+         print 'Could not open log file: %s' % (fname_log_server)
+         pass
+
+      results[(str(fname_log_client_lst),fname_log_server)] = (client_status,
+                                                               server_status,
+                                                               fname_log_client_lst,
+                                                               fname_log_server)
+   return results
+
+if __name__ == "__main__":
    base_dir = '.'
+   fname_drv = '%s/runit.sh' % (base_dir)
+   write_test_script(fname_drv,'#!/bin/bash',init=True)
+   write_test_script(fname_drv,'set -x')
+   write_test_script(fname_drv,'sudo chmod a+rw /dev/ttyACM0')
    all_results = {}
 
-   ciphers_rsa = ['ECDHE-RSA-AES128-GCM-SHA256', 
-                  'ECDHE-RSA-AES128-SHA256',
-                  'ECDHE-RSA-AES256-SHA',
-                  'ECDHE-RSA-AES128-SHA'
-               ]
-
    # RSA tests
+   ciphers_rsa = [
+      'ECDHE-RSA-AES128-SHA',
+      'ECDHE-RSA-AES128-SHA256',
+      'ECDHE-RSA-AES128-GCM-SHA256' 
+      'ECDHE-RSA-AES256-SHA'
+   ]
+
    cipher_db = ciphers_rsa
    test_script_pairs = [('run_client.sh','run_server.sh')]
-   num_clients = 1
-   results = run_tests(base_dir,test_script_pairs,cipher_db,num_clients=num_clients)
-   all_results = merge_dicts(all_results,results)
-
-#   testing_summary(all_results)
-#   sys.exit(0)
-
-   ciphers_ecdsa = [
-      'ECDHE-ECDSA-AES128-GCM-SHA256', # define RSA to nothing on both client and server
-      'ECDH-ECDSA-AES128-GCM-SHA256', # define RSA to nothing on both client and server
-#      'ECDHE-RSA-AES128-SHA', # define RSA=rsa_ on both client and server
-#      'ECDHE-RSA-AES128-SHA256', # define RSA=rsa_ on both client and server
+   test_engine_server = [0,1]
+   test_engine_client = [0,1]
+   test_example_server = [0,1]
+   test_example_client = [0,1]
+   skip_combos = [
+      (0, 1, 0, 0),
+      (0, 1, 1, 0),
+      (0, 1, 1, 1),
+      (1, 0, 0, 1),
+      (1, 1, 0, 1),
+      (1, 1, 1, 1)
    ]
+
+   num_clients = 1
+   test_db = create_tests(base_dir,test_script_pairs,cipher_db,test_engine_server=test_engine_server,test_engine_client=test_engine_client,test_example_server=test_example_server,test_example_client=test_example_client,num_clients=num_clients,skip_combos=skip_combos)
+   results = run_tests(fname_drv,test_db)
+   all_results = merge_dicts(all_results,results)
+   testing_summary(all_results)
+   sys.exit(0)
+
    # ECDSA tests
+   ciphers_ecdsa = [
+      'ECDH-ECDSA-AES128-SHA',
+      'ECDH-ECDSA-AES128-SHA256',
+      'ECDH-ECDSA-AES128-GCM-SHA256',
+      'ECDHE-ECDSA-AES128-SHA',
+      'ECDHE-ECDSA-AES128-SHA256',
+      'ECDHE-ECDSA-AES128-GCM-SHA256'
+   ]
+
+   # Atmel CA defined
    cipher_db = ciphers_ecdsa
+   test_engine_server = [0,1]
+   test_engine_client = [0,1]
+   test_example_server = [0,1]
+   test_example_client = [0,1]
+   skip_combos = [
+      (0, 0, 0, 0),
+      (0, 0, 1, 0),
+      (0, 1, 0, 1),
+      (0, 1, 1, 0),
+      (0, 1, 1, 1),
+      (1, 0, 0, 0),
+      (1, 0, 0, 1),
+      (1, 0, 1, 0),
+      (1, 1, 0, 1),
+      (1, 1, 1, 1)
+   ]
+
    test_script_pairs = [('run_client.sh','run_server.sh')]
-   results = run_tests(base_dir,test_script_pairs,cipher_db,num_clients=num_clients)
+   results = run_cert_tests(base_dir,test_script_pairs,cipher_db,test_engine_server=test_engine_server,test_engine_client=test_engine_client,test_example_server=test_example_server,test_example_client=test_example_client,skip_combos=skip_combos)
+   #results = create_tests(base_dir,test_script_pairs,cipher_db,num_clients=num_clients)
    all_results = merge_dicts(all_results,results)
 
 #   testing_summary(all_results)
 #   sys.exit(0)
 
+# No Atmel CA defined
    # DER
    cipher_db = ciphers_ecdsa
+   test_engine_server = [0,1]
+   test_engine_client = [0,1]
+   test_example_server = [0,1]
+   test_example_client = [0,1]
+   skip_combos = [
+      (0, 1, 0, 1),
+      (0, 1, 1, 0),
+      (0, 1, 1, 1),
+      (1, 0, 0, 0),
+      (1, 0, 0, 1),
+      (1, 1, 0, 1),
+      (1, 1, 1, 1)
+   ]
    test_script_pairs = [('run_der_client.sh','run_server.sh'),('run_client.sh','run_der_server.sh')]
-   results = run_cert_tests(base_dir,test_script_pairs,cipher_db)
-   all_results = merge_dicts(all_results,results) 
+   results = run_cert_tests(base_dir,test_script_pairs,cipher_db,test_engine_server=test_engine_server,test_engine_client=test_engine_client,test_example_server=test_example_server,test_example_client=test_example_client,skip_combos=skip_combos)
 
+   all_results = merge_dicts(all_results,results) 
    testing_summary(all_results)
