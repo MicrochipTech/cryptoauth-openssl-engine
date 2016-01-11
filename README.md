@@ -18,7 +18,7 @@ Details for cipher suites can be found [here](https://github.com/AtmelCSO/crypto
 ##Download and Make 
 Build instructions for Linux can be found on the Wiki pages associate with this project.
 
-See: [Compile OpenSSL Engine for ATECC508A on Linux](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Linux:-Compile-OpenSSL-Engine-for-ATECC508)
+See: [Compile OpenSSL Engine for ATECC508A on Linux](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Linux:-Compile-OpenSSL-Engine-for-ATECC508A)
 
 ##Platform Integration
 Follow the platform integration instructions found [here](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Integrate-ATECC508A-onto-Your-Platform)
