@@ -26,8 +26,8 @@ Follow the platform integration instructions found [here](https://github.com/Atm
 ##Unit Tests
 Unit testing is provided for both integration of the ATECC508A device and OpenSSL Examples.  
 For details see:
-- [Platform Integration Tests](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/ATECC508A-Integration-Tests)
-- [OpenSSL Engine Tests & Examples](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Tests-And-Examples)
+[Platform Integration Tests](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/ATECC508A-Integration-Tests)
+[OpenSSL Engine Tests & Examples](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Tests-And-Examples)
 
 Source-Level Documentation
 Full Doxygen source-level documentation is provided.
@@ -39,7 +39,7 @@ See Details [here](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/We
 
 ##Wiki Topics:
 - [Linux Development Setup](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Linux:-Development-Setup)
-- [Compiling on Linux](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Linux:-Compile-OpenSSL-Engine-for-ATECC508)
+- [Compiling on Linux](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Linux:-Compile-OpenSSL-Engine-for-ATECC508A)
 - [Debugging on Linux](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Linux:-Debugging)
 - [ATECC508A Integration](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Integrate-ATECC508A-onto-Your-Platform)
 - [ATECC508A Certificate Provisioning](http://www.atmel.com/tools/at88ckeccroot-signer.aspx)
