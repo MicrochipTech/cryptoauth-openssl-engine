@@ -53,6 +53,10 @@ if [ -z "$NEW_ROOT" ]; then
     export NEW_ROOT=0
 fi
 
+if [ -z "$USE_WWW" ]; then
+    USE_WWW=0
+fi
+
 if [ $USE_ENGINE = "0" ]; then
     export ENGINE=
     export ENGINE_EX=

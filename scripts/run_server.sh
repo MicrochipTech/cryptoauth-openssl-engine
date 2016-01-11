@@ -6,9 +6,6 @@ source ./common.sh
 
 BUNDLE=bundle
 
-if [ -z "$USE_WWW" ]; then
-    USE_WWW=0
-fi
 if [ $USE_WWW = "0" ]; then
     WWW=
 else
