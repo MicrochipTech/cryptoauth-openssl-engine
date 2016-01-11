@@ -12,10 +12,13 @@ This project will integrate the key creation and import capabilities of the ATEC
 Also, secure key storage for RSA keys are implemented using the encrypted read/write feature of the ATECC508A. 
 
 ###Supported Cipher Suites
-In principle all ECDH(E), ECDH(E)-ECDSA and ECDH(E)-RSA cipher suites are supported with the OpenSSL Engine for ATECC508A implementation.  Details for cipher suites can be found [here](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Supported-Ciphers)
+In principle all ECDH(E), ECDH(E)-ECDSA and ECDH(E)-RSA cipher suites are supported with the OpenSSL Engine for ATECC508A implementation.  
+
+Details for cipher suites can be found [here](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Supported-Ciphers)
 
 ##Download and Make 
 Build instructions for Linux can be found on the Wiki pages associate with this project.
+
 See: [Compile OpenSSL Engine for ATECC508 on Linux](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Compile-OpenSSL-Engine-for-ATECC508-on-Linux)
 
 ##Platform Integration
