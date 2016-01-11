@@ -26,8 +26,8 @@ Follow the platform integration instructions found [here](https://github.com/Atm
 ##Unit Tests
 Unit testing is provided for both integration of the ATECC508A device and OpenSSL Examples.  
 For details see:
-[Platform Integration Tests](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/ATECC508A-Integration-Tests)
-[OpenSSL Engine Tests & Examples](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Tests-And-Examples)
+- [Platform Integration Tests](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/ATECC508A-Integration-Tests)
+- [OpenSSL Engine Tests & Examples](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Tests-And-Examples)
 
 Source-Level Documentation
 Full Doxygen source-level documentation is provided.
