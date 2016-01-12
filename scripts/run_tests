@@ -35,6 +35,7 @@ def mk_client_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng
       my_env['USE_ATMEL_CA'] = '%d' % (use_atmel_ca)
 
    cmd_client = '%s/%s 2>&1' % (base_dir,run_script)
+   #cmd_client = '%s/%s >> %s 2>&1' % (base_dir,fname_log,run_script)
 
    print '*** cmd_client: %s, hwc=%0d hws=%0d ***' % (cmd_client,hw_eng_client,hw_eng_serv)
    my_env['USE_ENGINE'] = '%d' % (hw_eng_client)
@@ -56,6 +57,7 @@ def mk_server_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng
       my_env['USE_ATMEL_CA'] = '%d' % (use_atmel_ca)
 
    cmd_server = '%s/%s 2>&1' % (base_dir,run_script)
+#   cmd_server = '%s/%s >> %s 2>&1' % (base_dir,fname_log,run_script)
 
    print '*** cmd_server: %s, hwc=%0d hws=%0d ***' % (cmd_server,hw_eng_client,hw_eng_serv)
    my_env['USE_ENGINE'] = '%d' % (hw_eng_serv)
@@ -133,18 +135,21 @@ def create_test(client_cmd_lst,cmd_server,env_server,fname_log_server,gen_cert,g
          #f_test.write("\tcmd_client = '%s',\n" % (cmd_client))
          f_test.write("\t('%s','%s',%s)\n" % (cmd_client,fname_log_client,env_client))
       f_test.write('\t]\n')
+      for (cmd_client,fname_log_client,env_client) in client_cmd_lst:
+         f_test.write("\tos.system('rm -f %s')\n" % (fname_log_client))
       f_test.write("\tcmd_server = '%s'\n" % (cmd_server))
       f_test.write("\tenv_server = %s\n" % (env_server))
       f_test.write("\tfname_log_server = '%s'\n" % (fname_log_server))
-
+      f_test.write("\tos.system('rm -f %s')\n" % (fname_log_server))
+      
       #f_test.write('\tgen_cert = %s\n' % (gen_cert))
       #f_test.write('\tgen_rsa_cert = %s\n' % (gen_rsa_cert))
 
       if gen_cert:
-         f_test.write("\trun_cert_cmd(base_dir,'%s')\n" % (hw_cert))
+         f_test.write("\trun_cert_cmd(base_dir,fname_log_server,'%s')\n" % (hw_cert))
 
       if gen_rsa_cert:
-         f_test.write('\trun_rsa_cert(base_dir)\n')
+         f_test.write('\trun_rsa_cert(base_dir,fname_log_server)\n')
 
    test_seq += 1
 
@@ -224,15 +229,14 @@ def create_tests(base_dir,log_dir,test_script_pairs,cipher_db,num_clients=1,test
 def debug_errs(fname_debug,fname_log_client_lst,fname_log_server):
    with open(fname_debug,'a') as f_debug:
       f_debug.write('\n')
-      f_debug.write('***********************\n')
+      f_debug.write('=======================\n')
 
    for fname_log_client in fname_log_client_lst:
-      #cmd = '(egrep -i "error|Cipher is \(NONE\)|Connection refused" %s 2>&1) >> %s' % (fname_log_client,fname_debug)
-      cmd = '(egrep -i "error|Cipher is \(NONE\)|Connection refused" %s | egrep -v "verify error" 2>&1) >> %s' % (fname_log_client,fname_debug)
+      cmd = '(egrep -i "unknown command|Segmentation fault|error|Cipher is \(NONE\)|Connection refused" %s | egrep -v "verify error" 2>&1) >> %s' % (fname_log_client,fname_debug)
       with open(fname_debug,'a') as f_debug:
-         f_debug.write('** client dbg **\n')
-         f_debug.write('%s\n' % (cmd))
-         # os.system(cmd)
+         f_debug.write('** client dbg **: %s\n' % (fname_log_client))
+         #f_debug.write('%s\n' % (cmd))
+
       p_dclient = subprocess.Popen(cmd,shell=True)
       p_dclient.wait()
       if p_dclient.returncode == 0:
@@ -240,27 +244,29 @@ def debug_errs(fname_debug,fname_log_client_lst,fname_log_server):
       else:
          dstatus_client = 0
 
-   cmd = '(egrep -i "error" %s 2>&1) >> %s' % (fname_log_server,fname_debug)
+   cmd = '(egrep -i "unknown command|Address already in use|error" %s 2>&1) >> %s' % (fname_log_server,fname_debug)
    with open(fname_debug,'a') as f_debug:
-      f_debug.write('** server dbg **\n')
-      f_debug.write('%s\n' % (cmd))
-   # os.system(cmd)
+      f_debug.write('** server dbg **: %s\n' % (fname_log_server))
+      #f_debug.write('%s\n' % (cmd))
+
    p_dserver = subprocess.Popen(cmd,shell=True)
    p_dserver.wait()
    if p_dserver.returncode == 0:
       dstatus_server = 1
    else:
       dstatus_server = 0
+   with open(fname_debug,'a') as f_debug:
+      f_debug.write('=======================\n')
 
    return (dstatus_client,dstatus_server)
 
-def testing_summary(results):
+def testing_summary(results,log_dir):
    print '*****************************************************'
    print '****************** TEST RESULTS *********************'
    print '*****************************************************'
    pass_client_cnt,fail_client_cnt = 0,0
    pass_server_cnt,fail_server_cnt = 0,0
-   fname_debug = 'debug.log'
+   fname_debug = '%s/debug.log' % (log_dir)
    cmd = 'rm -f %s' % (fname_debug)
    print cmd
    os.system(cmd)
@@ -271,7 +277,7 @@ def testing_summary(results):
          status_str += 'PASS_CLIENT\t'
          pass_client_cnt += 1
       else:
-         status_str += 'FAIL_CLIENT\t'
+         status_str += 'FAIL_CLIENT\t%0d %0d' % (status_client,dstatus_client)
          fail_client_cnt += 1
 
 #      if status_server == 0:
@@ -283,13 +289,14 @@ def testing_summary(results):
 
       with open(fname_debug,'a') as f_debug:
          f_debug.write('%s:\t\t%s\n' % (key,status_str))
+         f_debug.write('****************\n')
       
    cmd = 'cat %s | egrep "PASS|FAIL" | sort' % (fname_debug)
-   print cmd
+   #print cmd
    os.system(cmd)
 
    with open(fname_debug,'a') as f_debug:
-
+      f_debug.write('*********************************\n')
       pass_str = 'CLIENT_PASS:\t%0d' % (pass_client_cnt)
       print pass_str
       f_debug.write('%s:\n' % (pass_str))
@@ -297,6 +304,7 @@ def testing_summary(results):
       fail_str = 'CLIENT_FAIL:\t%0d' % (fail_client_cnt)
       print fail_str
       f_debug.write('%s:\n' % (fail_str))
+      f_debug.write('*********************************\n')
 
 def merge_dicts(x, y):
     '''Given two dicts, merge them into a new dict as a shallow copy.'''
@@ -370,7 +378,8 @@ if __name__ == "__main__":
    test_engine_server = [0,1]
    test_engine_client = [0,1]
    test_example_server = [0,1]
-   test_example_client = [0,1]
+   #test_example_client = [0,1]
+   test_example_client = [0]
    skip_combos = [
       (0, 1, 0, 0),
       (0, 1, 1, 0),
@@ -382,9 +391,11 @@ if __name__ == "__main__":
 
    num_clients = 1
    test_db = create_tests(base_dir,log_dir,test_script_pairs,cipher_db,test_engine_server=test_engine_server,test_engine_client=test_engine_client,test_example_server=test_example_server,test_example_client=test_example_client,num_clients=num_clients,skip_combos=skip_combos)
+   #raise
+
    results = run_tests(fname_drv,test_db)
    all_results = merge_dicts(all_results,results)
-   testing_summary(all_results)
+   testing_summary(all_results,log_dir)
    sys.exit(0)
 
    # ECDSA tests
@@ -421,7 +432,7 @@ if __name__ == "__main__":
    #results = create_tests(base_dir,test_script_pairs,cipher_db,num_clients=num_clients)
    all_results = merge_dicts(all_results,results)
 
-#   testing_summary(all_results)
+#   testing_summary(all_results,log_dir)
 #   sys.exit(0)
 
 # No Atmel CA defined
@@ -444,4 +455,4 @@ if __name__ == "__main__":
    results = run_cert_tests(base_dir,test_script_pairs,cipher_db,test_engine_server=test_engine_server,test_engine_client=test_engine_client,test_example_server=test_example_server,test_example_client=test_example_client,skip_combos=skip_combos)
 
    all_results = merge_dicts(all_results,results) 
-   testing_summary(all_results)
+   testing_summary(all_results,log_dir)
