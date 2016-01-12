@@ -16,8 +16,10 @@ cd ${CERTSTORE}
 
 if [ $USE_WWW = "0" ]; then
     EXTENSION=v3_ca
+    ECCX08_CN="_eccx08"
 else
     EXTENSION=usr_cert
+    ECCX08_CN=
 fi
 
 if [ $NEW_ROOT = "1" ]; then
@@ -78,7 +80,7 @@ if [ $NEW_KEY = "1" ]; then
 	-keyout ${CERTSTORE}/privkeys/${COMPANY}_server_eccx08.key \
 	-out ${CERTSTORE}/csr/${COMPANY}_server_eccx08.csr \
 	-sha256 -config ${CERTSTORE}/openssl.cnf \
-	-subj /C=US/ST=CA/L=Sunnyvale/O=Homut\ LLC/CN=${COMMON_NAME}_eccx08/ \
+	-subj /C=US/ST=CA/L=Sunnyvale/O=Homut\ LLC/CN=${COMMON_NAME}${ECCX08_CN}/ \
 	-verify
 
     #  generate a new key then generate and sign server certificate without using engine
@@ -103,7 +105,7 @@ else
 	-new -key ${CERTSTORE}/privkeys/${COMPANY}_server_eccx08.key \
 	-out ${CERTSTORE}/csr/${COMPANY}_server_eccx08.csr \
 	-sha256 -config ${CERTSTORE}/openssl.cnf \
-	-subj /C=US/ST=CA/L=Sunnyvale/O=Homut\ LLC/CN=${COMMON_NAME}_eccx08/ \
+	-subj /C=US/ST=CA/L=Sunnyvale/O=Homut\ LLC/CN=${COMMON_NAME}${ECCX08_CN}/ \
 	-verify
 
 fi

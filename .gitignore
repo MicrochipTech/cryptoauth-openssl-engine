@@ -34,6 +34,7 @@ newcerts/
 *.der
 *.pem
 personal/
+csr/
 exchange-tls12
 *homut_client_*
 *homut_server_*

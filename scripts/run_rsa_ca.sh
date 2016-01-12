@@ -2,25 +2,13 @@
 set -x
 set -e
 cd $(dirname $0)
+source ./common.sh
+
 cd ..
-TREE_TOP=${PWD}
-CERTSTORE=$TREE_TOP/certstore
-SCRIPTS=$TREE_TOP/scripts
-BIN_DIR=$TREE_TOP/install_dir/bin
-CMD=${BIN_DIR}/openssl
-export LD_LIBRARY_PATH=$TREE_TOP/install_dir/lib
 
 # Create CA (RSA) #
 
 cd ${CERTSTORE}
-
-if [ -z "$COMPANY" ]; then
-    COMPANY="homut"
-fi
-
-if [ -z "$NEW_ROOT" ]; then
-    NEW_ROOT=0
-fi
 
 if [ $NEW_ROOT = "1" ]; then
     ##
