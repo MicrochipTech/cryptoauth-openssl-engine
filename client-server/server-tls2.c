@@ -108,6 +108,7 @@ int connect_server(const char *engine_id, const char *ca_path, const char *chain
 
     listen_sd = socket(AF_INET, SOCK_STREAM, 0);
     CHK_ERR(listen_sd, "socket");
+    fprintf(stderr, "ACCEPT\n");
 
     int enable = 1;
     if (setsockopt(listen_sd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0) {
