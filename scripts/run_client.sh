@@ -48,7 +48,7 @@ fi
 
 set +e
 if [ $USE_EXAMPLE = "0" ]; then
-    ${CMD}  s_client ${ENGINE} -connect localhost:${PORT} \
+    ${CMD}  s_client ${ENGINE} -connect ${IP_ADDRESS}:${PORT_NUMBER} \
     -verify 2 \
     -cert ${DEVICE_CERT_PEM} ${KEYFORM} \
     -key ${DEVICE_KEY} \
@@ -64,7 +64,9 @@ else
     -p ${SIGNER_PATH} \
     -b ${SIGNER_BUNDLE} \
     -f ${DEVICE_CERT_PEM} \
-    -k ${DEVICE_KEY}
+    -k ${DEVICE_KEY} \
+    -I ${IP_ADDRESS} \
+    -P ${PORT_NUMBER}
 fi
 STATUS=$?
 echo "EXIT STATUS: ${STATUS}"

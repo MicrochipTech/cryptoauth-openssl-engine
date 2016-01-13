@@ -62,7 +62,7 @@ static int bind_helper(ENGINE *e)
     use_software_ecdh = 1;
 #endif
 
-    eccx08_debug(" ECCX08 bind_helper()\n");
+    eccx08_debug("ECCX08 bind_helper()\n");
 
 #ifndef OPENSSL_NO_ECDSA
     const ECDSA_METHOD *meth_ecdsa;
@@ -125,7 +125,7 @@ static int bind_helper(ENGINE *e)
  */
 static int bind_fn(ENGINE *e, const char *id)
 {
-    eccx08_debug(" bind_fn()\n");
+    eccx08_debug("bind_fn()\n");
     if (id && (strcmp(id, engine_eccx08_id) != 0)) {
         return 0;
     }
@@ -147,7 +147,7 @@ IMPLEMENT_DYNAMIC_BIND_FN(bind_fn);
  */
 static ENGINE* ENGINE_ateccx08(void)
 {
-    eccx08_debug(" ENGINE_ateccx08()\n");
+    eccx08_debug("ENGINE_ateccx08()\n");
     ENGINE *eng = ENGINE_new();
 
     if (!eng) {
@@ -169,7 +169,7 @@ static
 #endif
 void ENGINE_load_ateccx08(void)
 {
-    eccx08_debug(" ENGINE_load_ateccx08()\n");
+    eccx08_debug("ENGINE_load_ateccx08()\n");
     /* Copied from eng_[openssl|dyn].c */
     ENGINE *toadd = ENGINE_ateccx08();
     if (!toadd) return;

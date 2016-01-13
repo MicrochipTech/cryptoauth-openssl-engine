@@ -58,9 +58,10 @@ void usage(void)
     printf("\n\nUsage:\n"
            "\t./exchange-tls12 -s -c <cipher_list> "
            "-p <ca_path> -b <chain_file>"
-           "-f <cert_file> -k <key_file>"
-           "-C <cmd> -E [-e ateccx08]"
-           "-d <depth> [-v] [h|?]");
+           "-f <cert_file> -k <key_file> -d <depth>"
+           "-C <cmd> [-E] [-e ateccx08]"
+           "[-I <IP_address>] [-P <port_number>]"
+           " [-v] [h|?]");
     printf("\n\nWhere:\n");
     printf("\t-C <cmd> - run a command through the engine. Commands are:\n"
            "\t\tECCX08_CMD_GET_VERSION:\t\t %d\n"
@@ -90,6 +91,8 @@ void usage(void)
     printf("\t-k <key_file> - Private Key File Name\n");
     printf("\t-e <engine ID> Use utility with an engine (supported ateccx08 only)\n");
     printf("\t-d <depth> - the maximum length of the server certificate chain\n");
+    printf("\t-I <IP_address> - optional server IP address (127.0.0.1 if not provided)\n");
+    printf("\t-P <port_number> - optional server port number (49917 if not provided)\n");
     printf("\t-v \t- print the utility version\n"
            "\t-h \t- This message\n"
            "\t-? \t- This message\n"
@@ -120,6 +123,8 @@ int main(int argc, char *argv[])
     char *key_file = NULL;
     char *engine_id = NULL;
     char *cipher_list = NULL;
+    char *ip_address = "127.0.0.1";
+    uint16_t port_number = PORT_NUMBER_DEFAULT;
     char cwd[200];
     char cmd_buffer[256];
     int buf_len = 128;
@@ -134,7 +139,7 @@ int main(int argc, char *argv[])
     }
     snprintf(cmd_buffer, 256, "%s/certstore", cwd);
 
-    while ((ch = getopt(argc, argv, "C:Ec:sp:b:f:k:e:d:vh?")) != (char)-1) {
+    while ((ch = getopt(argc, argv, "C:Ec:sp:b:f:k:e:d:I:P:vh?")) != (char)-1) {
         switch (ch) {
             case 'C':
                 cmd = strtol(optarg, NULL, 0);
@@ -166,6 +171,12 @@ int main(int argc, char *argv[])
                 break;
             case 'd':
                 verify_depth = strtol(optarg, NULL, 0);
+                break;
+            case 'I':
+                ip_address = strdup(optarg);
+                break;
+            case 'P':
+                port_number = strtol(optarg, NULL, 0);
                 break;
             case 'v':
                 printf("Exchange version = %s\n", EXCHANGE_VERSION);
@@ -231,9 +242,11 @@ int main(int argc, char *argv[])
     }
 
     if (is_server) {
-        err = connect_server(engine_id, ca_path, chain_file, cert_file, key_file);
+        err = connect_server(engine_id, ca_path, chain_file, cert_file, key_file,
+                   ip_address, port_number);
     } else {
-        err = connect_client(engine_id, ca_path, chain_file, cert_file, key_file, cipher_list);
+        err = connect_client(engine_id, ca_path, chain_file, cert_file, key_file, cipher_list,
+                   ip_address, port_number);
     }
     return (err);
 done:

@@ -560,6 +560,7 @@ int eccx08_debug(const char *fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
+    fprintf(stderr, "ATECCX08: ");
     vfprintf(stderr, fmt, args);
     va_end(args);
     return (1);

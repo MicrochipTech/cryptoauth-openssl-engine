@@ -51,10 +51,13 @@
  * \param[in] chain_file Chain File Name (Certificate Bundle)
  * \param[in] cert_file Certificate File Name
  * \param[in] key_file Private Key File Name
+ * \param[in] ip_address The server IP address
+ * \param[in] ip_address The server port number
  * \return 0 for success
  */
 int connect_server(const char *engine_id, const char *ca_path, const char *chain_file,
-                   const char *cert_file, const char *key_file)
+                   const char *cert_file, const char *key_file,
+                   const char *ip_address, uint16_t port_number)
 {
     int err;
     SSL_CTX *ctx = NULL;
@@ -118,7 +121,7 @@ int connect_server(const char *engine_id, const char *ca_path, const char *chain
     memset(&sa_s, '\0', sizeof(sa_s));
     sa_s.sin_family = AF_INET;
     sa_s.sin_addr.s_addr = INADDR_ANY;
-    sa_s.sin_port = htons(PORT_NUMBER); /* Server Port number */
+    sa_s.sin_port = htons(port_number); /* Server Port number */
 
     err = bind(listen_sd, (struct sockaddr *)&sa_s, sizeof(sa_s));
     CHK_ERR(err, "bind");

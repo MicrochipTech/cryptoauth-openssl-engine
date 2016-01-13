@@ -21,8 +21,12 @@ export SIGNER_BUNDLE=${CERTSTORE}/trusted/AT_bundle.crt
 export LD_LIBRARY_PATH=$TREE_TOP/install_dir/lib
 export LD_PRELOAD=/lib/x86_64-linux-gnu/libpthread.so.0
 
-if [ -z "$PORT" ]; then
-    export PORT=49917
+if [ -z "$PORT_NUMBER" ]; then
+    export PORT_NUMBER=49917
+fi
+
+if [ -z "$IP_ADDRESS" ]; then
+    export IP_ADDRESS="127.0.0.1"
 fi
 
 export ENGINE="-engine ateccx08"

@@ -64,8 +64,8 @@
 
 #include <engine_meth/ecc_meth.h>
 
-#define EXCHANGE_VERSION "1.0.1"
-#define PORT_NUMBER      (49917)
+#define EXCHANGE_VERSION         "1.1.0"
+#define PORT_NUMBER_DEFAULT      (49917)
 
 #define CHK_NULL(x) if ((x)==NULL) { sleep(1); exit (1); }
 #define CHK_ERR(err,s) if ((err)==-1) { perror(s); sleep(1); exit(1); }
@@ -82,9 +82,11 @@ int load_private_key(const char *engine_id, SSL_CTX *ctx, const char *key_file);
 void cleanup_openssl(void);
 
 int connect_client(const char *engine_id, const char *ca_path, const char *chain_file,
-                   const char *cert_file, const char *key_file, const char *cipher_list);
+                   const char *cert_file, const char *key_file, const char *cipher_list,
+                   const char *ip_address, uint16_t port_number);
 int connect_server(const char *engine_id, const char *ca_path, const char *chain_file,
-                   const char *cert_file, const char *key_file);
+                   const char *cert_file, const char *key_file,
+                   const char *ip_address, uint16_t port_number);
 
 int save_private_key(EVP_PKEY *pkey, const char *privkey_fname);
 int save_x509_certificate(X509 *x509, const char *cert_fname);

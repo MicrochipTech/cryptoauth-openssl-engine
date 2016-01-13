@@ -55,10 +55,13 @@
  *                    (ECDH-ECDSA-AES128-SHA256,
  *                    ECDH-ECDSA-AES128-GCM-SHA256, etc) - Must
  *                    be SHA-256 for ECC508
+ * \param[in] ip_address The server IP address
+ * \param[in] ip_address The server port number
  * \return 0 for success
  */
 int connect_client(const char *engine_id, const char *ca_path, const char *chain_file,
-                   const char *cert_file, const char *key_file, const char *cipher_list)
+                   const char *cert_file, const char *key_file, const char *cipher_list,
+                   const char *ip_address, uint16_t port_number)
 {
     int err = 0;
     SSL_CTX *ctx = NULL;
@@ -105,8 +108,8 @@ int connect_client(const char *engine_id, const char *ca_path, const char *chain
 
     memset(&sa, '\0', sizeof(sa));
     sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = inet_addr("127.0.0.1"); /* localhost */
-    sa.sin_port = htons(PORT_NUMBER);
+    sa.sin_addr.s_addr = inet_addr(ip_address); /* server IP address to connect to*/
+    sa.sin_port = htons(port_number);           /* server port number */
 
     err = connect(sd, (struct sockaddr *)&sa, sizeof(sa));
     CHK_ERR(err, "connect");

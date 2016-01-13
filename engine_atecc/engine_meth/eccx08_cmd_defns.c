@@ -121,7 +121,7 @@ int get_device_cert(char *path)
 
     snprintf(dev_cert_fname, 300, "%s/personal/AT_device.der", path);
 
-    eccx08_debug(" eccx08_cmd_ctrl(ECCX08_CMD_GET_DEVICE_CERT)\n");
+    eccx08_debug("eccx08_cmd_ctrl(ECCX08_CMD_GET_DEVICE_CERT)\n");
     // Get the device certificate
     status = atcatls_get_cert(&g_cert_def_0_device_t, signerPubkey, deviceCert, &deviceCertSize);
     if (status != ATCA_SUCCESS) {
@@ -154,7 +154,7 @@ int get_public_key(void)
 {
     ATCA_STATUS status = ATCA_GEN_FAIL;
 
-    eccx08_debug(" eccx08_cmd_ctrl(ECCX08_CMD_GET_PUB_KEY)\n");
+    eccx08_debug("eccx08_cmd_ctrl(ECCX08_CMD_GET_PUB_KEY)\n");
     // Get the signer public key from the signer certificate
     status = atcacert_get_subj_public_key(&g_cert_def_1_signer_t, signerCert, signerCertSize, signerPubkey);
     if (status != ATCA_SUCCESS) {
@@ -183,7 +183,7 @@ int get_signer_cert(char *path)
 
     snprintf(signer_cert_fname, 300, "%s/trusted/AT_signer.der", path);
 
-    eccx08_debug(" eccx08_cmd_ctrl(ECCX08_CMD_GET_SIGNER_CERT)\n");
+    eccx08_debug("eccx08_cmd_ctrl(ECCX08_CMD_GET_SIGNER_CERT)\n");
     // Get the signer certificate
     status = atcatls_get_cert(&g_cert_def_1_signer_t, g_signer_1_ca_public_key_t, signerCert, &signerCertSize);
     if (status != ATCA_SUCCESS) {
@@ -217,7 +217,7 @@ int verify_signer_cert(void)
 {
     ATCA_STATUS status = ATCA_GEN_FAIL;
 
-    eccx08_debug(" eccx08_cmd_ctrl(ECCX08_CMD_VERIFY_SIGNER_CERT)\n");
+    eccx08_debug("eccx08_cmd_ctrl(ECCX08_CMD_VERIFY_SIGNER_CERT)\n");
     // Verify the signer certificate
     status = atcacert_verify_cert_hw(&g_cert_def_1_signer_t, signerCert, signerCertSize, caPubkey);
     if (status != ATCA_SUCCESS) {
@@ -239,7 +239,7 @@ int verify_device_cert(void)
 {
     ATCA_STATUS status = ATCA_GEN_FAIL;
 
-    eccx08_debug(" eccx08_cmd_ctrl(ECCX08_CMD_VERIFY_DEVICE_CERT)\n");
+    eccx08_debug("eccx08_cmd_ctrl(ECCX08_CMD_VERIFY_DEVICE_CERT)\n");
     // Verify the device certificate
     status = atcacert_verify_cert_hw(&g_cert_def_0_device_t, deviceCert, deviceCertSize, signerPubkey);
     if (status != ATCA_SUCCESS) {
@@ -268,7 +268,7 @@ int get_root_cert(char *path)
 
     snprintf(root_cert_fname, 300, "%s/trusted/AT_root.der", path);
 
-    eccx08_debug(" eccx08_cmd_ctrl(ECCX08_CMD_GET_ROOT_CERT)\n");
+    eccx08_debug("eccx08_cmd_ctrl(ECCX08_CMD_GET_ROOT_CERT)\n");
     // Get root certificate
     status = atcatls_get_ca_cert(rootCert, &rootCertSize);
     if (status != ATCA_SUCCESS) {
@@ -304,7 +304,7 @@ int extract_all_certs(char *path)
 {
     ATCA_STATUS status = ATCA_GEN_FAIL;
 
-    eccx08_debug(" eccx08_cmd_ctrl(ECCX08_CMD_EXTRACT_ALL_CERTS)\n");
+    eccx08_debug("eccx08_cmd_ctrl(ECCX08_CMD_EXTRACT_ALL_CERTS)\n");
     // Get the CA public key
     memcpy(caPubkey, g_signer_1_ca_public_key_t, sizeof(caPubkey));
 
@@ -400,10 +400,14 @@ int eccx08_cmd_ctrl(ENGINE *e, int cmd, long i, void *p, void (*f)(void))
             status = extract_all_certs(path);
             break;
         case ECCX08_CMD_GET_PRIV_KEY:
-            eccx08_debug(" eccx08_cmd_ctrl(ECCX08_CMD_GET_PRIV_KEY)\n");
+            eccx08_debug("eccx08_cmd_ctrl(ECCX08_CMD_GET_PRIV_KEY)\n");
+            break;
+        case 1:
+            /* openssl cli sends it for a reason: print and ignore */
+            eccx08_debug("eccx08_cmd_ctrl(1)\n");
             break;
         default:
-            eccx08_debug("eccx08_cmd_ctrl(): unknown command\n");
+            eccx08_debug("eccx08_cmd_ctrl(): unknown command: %d\n", cmd);
             ret = 0;
     }
 err:
