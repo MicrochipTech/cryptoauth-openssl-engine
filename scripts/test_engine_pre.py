@@ -58,14 +58,19 @@ def run_rsa_cert(base_dir,fname_log):
    os.system(cmd_cert)
 
 class client_driver(threading.Thread):
-   def __init__(self,env,fname_log,cmd):
+   def __init__(self,env,fname_log,cmd,p_server):
       threading.Thread.__init__(self)
       self.env = env
       self.fname_log = fname_log
       self.cmd = cmd
+      self.p_server = p_server
       #self.exitstatus = None
       self.exitstatus = 1
       self.mutex_expect = mutex_expect
+      if self.env['USE_EXAMPLE'] == '1':
+         self.use_example = True
+      else:
+         self.use_example = False
 
    def run(self):
       global g_timeout
@@ -105,20 +110,25 @@ class client_driver(threading.Thread):
          print '** CLIENT: DONE Sending: %s **' % (expect_str)
          self.mutex_expect.unlock()
 
-         # Server recognizes string
-         #server_status = self.p_server.expect(plain_text)
-         time.sleep(2)
-
-         ### Client may have exited as this point in time
+         # Server recognizes plaintext string
+         expect_str = plain_text
+         print '** SERVER: Waiting for prompt: %s **' % (expect_str)
+         self.mutex_expect.lock(self.p_server.expect,expect_str)
+         print '** SERVER: Got prompt %s **' % (expect_str)
 
          # Client shows prompt of ciphered data
+         if self.use_example:
+            expect_str = 'Thank you, my lovely Client!'
+         else:
+            expect_str = 'rec->data'
+
          print '** CLIENT: Waiting for %s **' % (expect_str)
          self.mutex_expect.lock(p_client.expect,expect_str)
          print '** CLIENT: DONE Waiting for %s **' % (expect_str)
          try:
             self.mutex_expect.unlock()
          except:
-            print '** ERROR: Exception at unlock in client location 1 **'
+            print '** ERROR: Exception at unlock in client location 1 - expected: %s **' % (expect_str)
             self.exitstatus = 255
             return (0)
 
@@ -130,13 +140,11 @@ class client_driver(threading.Thread):
          try:
             self.mutex_expect.unlock()
          except:
-            print '** ERROR: Exception at unlock in client location 2 **'
+            print '** ERROR: Exception at unlock in client location 2 - expected: %s **' % (expect_str)
             self.exitstatus = 255
             return (0)
 
          print '** After client quit **'
-#      except:
-#         print '** ERROR: client pexpect protocol failed'
 
       p_client.close(force=True)
       while p_client.isalive(): # Wait for child to exit gracefully
@@ -184,7 +192,7 @@ def test_expect(client_cmd_lst,cmd_server,env_server,fname_log_server):
    client_thread_lst = []
    for (cmd_client,fname_log_client,env_client) in client_cmd_lst:
       # A new thread needs to be created for each client
-      client_thread = client_driver(env_client,fname_log_client,cmd_client)
+      client_thread = client_driver(env_client,fname_log_client,cmd_client,p_server)
       client_thread.start()
       client_thread_lst += [client_thread]
 
