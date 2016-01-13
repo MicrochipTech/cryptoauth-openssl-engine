@@ -53,6 +53,7 @@ def run_cert_cmd(base_dir,fname_log,cert_type,new_key=1,cmd_cert=None):
    return cmd_cert
 
 def run_rsa_cert(base_dir,fname_log):
+   my_env = os.environ.copy()
    cmd_cert = '%s/run_rsa_ca.sh >> %s 2>&1' % (base_dir,fname_log)
    print '** Running CERT command: %s' % (cmd_cert)
    with open(fname_log,'a') as flog:
