@@ -41,8 +41,8 @@ See Details [here](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/We
 - [Linux Development Setup](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Linux:-Development-Setup)
 - [Compiling on Linux](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Linux:-Compile-OpenSSL-Engine-for-ATECC508A)
 - [Debugging on Linux](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Linux:-Debugging)
-- [ATECC508A Integration](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Integrate-ATECC508A-onto-Your-Platform)
+- [ATECC508A Integration](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/ATECC508A:-Platform-Integration)
 - [ATECC508A Certificate Provisioning](http://www.atmel.com/tools/at88ckeccroot-signer.aspx)
-- [Tests and Examples](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Tests-And-Examples)
+- [Tests and Examples](https://github.com/AtmelCSO/cryptoauth-openssl-engine/wiki/Tests:-OpenSSL-Tests-and-Examples)
 
 
