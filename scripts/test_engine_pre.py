@@ -30,7 +30,9 @@ def run_cert_cmd(base_dir,fname_log,cert_type,new_key=1,cmd_cert=None):
       cmd_cert = '%s/%s >> %s 2>&1 ' % (base_dir,cmd_cert,fname_log)
    my_env = os.environ.copy()
    my_env['NEW_KEY'] = '%d' % (new_key)
-   print '** Running CERT command: %s' % (cmd_cert)
+   print '** Running CERT command: %s **' % (cmd_cert)
+   with open(fname_log,'a') as flog:
+      dump_env(flog,my_env)
    child = pexpect.spawn(cmd_cert,env=my_env,timeout=60)
    child.logfile = sys.stdout
    child.expect('Enter PEM pass phrase:')
@@ -53,6 +55,8 @@ def run_cert_cmd(base_dir,fname_log,cert_type,new_key=1,cmd_cert=None):
 def run_rsa_cert(base_dir,fname_log):
    cmd_cert = '%s/run_rsa_ca.sh >> %s 2>&1' % (base_dir,fname_log)
    print '** Running CERT command: %s' % (cmd_cert)
+   with open(fname_log,'a') as flog:
+      dump_env(flog,my_env)
    if debug:
       return
    os.system(cmd_cert)
