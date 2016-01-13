@@ -20,7 +20,10 @@ export SIGNER_BUNDLE=${CERTSTORE}/trusted/AT_bundle.crt
 
 export LD_LIBRARY_PATH=$TREE_TOP/install_dir/lib
 export LD_PRELOAD=/lib/x86_64-linux-gnu/libpthread.so.0
-export PORT=49917
+
+if [ -z "$PORT" ]; then
+    export PORT=49917
+fi
 
 export ENGINE="-engine ateccx08"
 export KEYGEN_ENGINE="-keygen_engine ateccx08"

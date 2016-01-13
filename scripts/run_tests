@@ -17,8 +17,9 @@ regex_exitstatus = re.compile(r'^(.*)EXITSTATUS_CLIENT:(\s+)(\d+)(\s+)EXITSTATUS
 #regex_exitstatus = re.compile(r'EXITSTATUS_CLIENT:')
 
 test_seq = 0
+portno_start = 49917
 
-def mk_client_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,client_id,log_prefix,use_atmel_ca=1):
+def mk_client_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,client_id,log_prefix,portno,use_atmel_ca=1):
    print log_prefix
    fname_log = '%s/%s_%s_clnt_%0d_hwc_%0d_hws_%0d_exsrv_%0d_exclnt_%0d_%s.log' % (log_dir,log_prefix,cipher_string,client_id,hw_eng_client,hw_eng_serv,example_server,example_client,run_script)
    #cmd_client = '(%s/run_client.sh 2>&1) | tee > %s' % (base_dir,fname_log)
@@ -38,6 +39,7 @@ def mk_client_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng
    #cmd_client = '%s/%s >> %s 2>&1' % (base_dir,fname_log,run_script)
 
    print '*** cmd_client: %s, hwc=%0d hws=%0d ***' % (cmd_client,hw_eng_client,hw_eng_serv)
+   my_env['PORT'] = '%d' % (portno)
    my_env['USE_ENGINE'] = '%d' % (hw_eng_client)
    my_env['SSL_CIPHER'] = '%s' % (cipher_string)
    my_env['NEW_KEY'] = '%d' % (0)
@@ -47,7 +49,7 @@ def mk_client_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng
 
    return (cmd_client,fname_log,my_env)
 
-def mk_server_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,log_prefix,use_atmel_ca=1):
+def mk_server_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,log_prefix,portno,use_atmel_ca=1):
    fname_log = '%s/%s_%s_hwc_%0d_hws_%0d_exsrv_%0d_exclnt_%0d_%s.log' % (log_dir,log_prefix,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,run_script)
    #cmd_server = '(%s/run_server.sh 2>&1) > %s' % (base_dir,fname_log)
    #cmd_server = '%s/run_server.sh 2>&1 > %s' % (base_dir,fname_log)
@@ -60,6 +62,7 @@ def mk_server_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng
 #   cmd_server = '%s/%s >> %s 2>&1' % (base_dir,fname_log,run_script)
 
    print '*** cmd_server: %s, hwc=%0d hws=%0d ***' % (cmd_server,hw_eng_client,hw_eng_serv)
+   my_env['PORT'] = '%d' % (portno)
    my_env['USE_ENGINE'] = '%d' % (hw_eng_serv)
    my_env['SSL_CIPHER'] = '%s' % (cipher_string)
    my_env['NEW_KEY'] = '%d' % (0)
@@ -168,6 +171,7 @@ def create_tests(base_dir,log_dir,test_script_pairs,cipher_db,num_clients=1,test
    global test_seq
    nxt_prev_eng = (0,0)
    test_db = {}
+   portno = portno_start
 
    print 'TE: ',test_engine_server, test_engine_client
 
@@ -212,17 +216,18 @@ def create_tests(base_dir,log_dir,test_script_pairs,cipher_db,num_clients=1,test
 
                      (client_cmd_lst,fname_log_client_lst) = ([],[])
                      for i in range(num_clients):
-                        (cmd_client,fname_log_client,env_client) = mk_client_cmd(base_dir,log_dir,run_scr_client,cipher_string,engine_client,engine_server,example_server,example_client,i,log_prefix)
+                        (cmd_client,fname_log_client,env_client) = mk_client_cmd(base_dir,log_dir,run_scr_client,cipher_string,engine_client,engine_server,example_server,example_client,i,log_prefix,portno)
                         client_cmd_lst += [(cmd_client,fname_log_client,env_client)]
                         fname_log_client_lst += [fname_log_client]
                         
-                     (cmd_server,fname_log_server,env_server) = mk_server_cmd(base_dir,log_dir,run_scr_server,cipher_string,engine_client,engine_server,example_server,example_client,log_prefix)
+                     (cmd_server,fname_log_server,env_server) = mk_server_cmd(base_dir,log_dir,run_scr_server,cipher_string,engine_client,engine_server,example_server,example_client,log_prefix,portno)
 
                      create_test(client_cmd_lst,cmd_server,env_server,fname_log_server,gen_cert,gen_rsa_cert,script_prefix,hw_cert)
                      if True or test_seq < 2: # debug
                         test_db[(str(fname_log_client_lst),fname_log_server)] = (fname_log_client_lst,fname_log_server)
                      
                      nxt_prev_eng = (engine_server,engine_client)
+                     portno += 1
 
    return test_db
 
@@ -231,8 +236,10 @@ def debug_errs(fname_debug,fname_log_client_lst,fname_log_server):
       f_debug.write('\n')
       f_debug.write('=======================\n')
 
+   dstatus_client = 0
    for fname_log_client in fname_log_client_lst:
-      cmd = '(egrep -i "unknown command|Segmentation fault|error|Cipher is \(NONE\)|Connection refused" %s | egrep -v "verify error" 2>&1) >> %s' % (fname_log_client,fname_debug)
+      #cmd = '(egrep -i "unknown command|Segmentation fault|error|Cipher is \(NONE\)|Connection refused" %s | egrep -v "verify error" 2>&1) >> %s' % (fname_log_client,fname_debug)
+      cmd = '(egrep -i "Segmentation fault|error|Cipher is \(NONE\)|Connection refused" %s | egrep -v "verify error" 2>&1) >> %s' % (fname_log_client,fname_debug)
       with open(fname_debug,'a') as f_debug:
          f_debug.write('** client dbg **: %s\n' % (fname_log_client))
          #f_debug.write('%s\n' % (cmd))
@@ -240,11 +247,12 @@ def debug_errs(fname_debug,fname_log_client_lst,fname_log_server):
       p_dclient = subprocess.Popen(cmd,shell=True)
       p_dclient.wait()
       if p_dclient.returncode == 0:
-         dstatus_client = 1
+         dstatus_client |= 1
       else:
-         dstatus_client = 0
+         dstatus_client |= 0
 
-   cmd = '(egrep -i "unknown command|Address already in use|error" %s 2>&1) >> %s' % (fname_log_server,fname_debug)
+   #cmd = '(egrep -i "unknown command|Address already in use|error" %s 2>&1) >> %s' % (fname_log_server,fname_debug)
+   cmd = '(egrep -i "Address already in use|error" %s 2>&1) >> %s' % (fname_log_server,fname_debug)
    with open(fname_debug,'a') as f_debug:
       f_debug.write('** server dbg **: %s\n' % (fname_log_server))
       #f_debug.write('%s\n' % (cmd))
@@ -377,7 +385,8 @@ if __name__ == "__main__":
    test_script_pairs = [('run_client.sh','run_server.sh')]
    test_engine_server = [0,1]
    test_engine_client = [0,1]
-   test_example_server = [0,1]
+   #test_example_server = [0,1]
+   test_example_server = [0]
    #test_example_client = [0,1]
    test_example_client = [0]
    skip_combos = [

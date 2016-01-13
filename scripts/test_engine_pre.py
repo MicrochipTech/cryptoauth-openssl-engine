@@ -15,7 +15,8 @@ debug = False
 
 mutex_expect = mutex.mutex()
 
-g_timeout = 15
+g_timeout = 30
+g_timeout_server = 30
 
 def run_cert_cmd(base_dir,fname_log,cert_type,new_key=1,cmd_cert=None):
    if cmd_cert is None:
@@ -25,7 +26,7 @@ def run_cert_cmd(base_dir,fname_log,cert_type,new_key=1,cmd_cert=None):
    my_env = os.environ.copy()
    my_env['NEW_KEY'] = '%d' % (new_key)
    print '** Running CERT command: %s' % (cmd_cert)
-   child = pexpect.spawn(cmd_cert,env=my_env)
+   child = pexpect.spawn(cmd_cert,env=my_env,timeout=60)
    child.logfile = sys.stdout
    child.expect('Enter PEM pass phrase:')
    child.sendline('1111')
@@ -65,7 +66,8 @@ class client_driver(threading.Thread):
       global g_timeout
       with open(self.fname_log,'a') as flog_client:
          print '** Running client command: %s **' % (self.cmd)
-         p_client = pexpect.spawn(self.cmd,env=self.env,logfile=flog_client,timeout=g_timeout)
+#         p_client = pexpect.spawn(self.cmd,env=self.env,logfile=flog_client,timeout=g_timeout)
+         p_client = pexpect.spawn(self.cmd,env=self.env,logfile=sys.stdout,timeout=g_timeout)
          if self.env['USE_EXAMPLE'] == '1':
             expect_str = 'Using cipher'
          else:
@@ -79,6 +81,7 @@ class client_driver(threading.Thread):
          #except pexpect.EOF:
          except:
             print '** ERROR: Exception at unlock in client location 0 **'
+            print str(p_client)
             self.exitstatus = 255
             return(0)
          self.mutex_expect.unlock()
@@ -137,13 +140,13 @@ class client_driver(threading.Thread):
 
       if p_client.exitstatus is None:
          self.exitstatus = 255
-      self.exitstatus = p_client.exitstatus
+      else:
+         self.exitstatus = p_client.exitstatus
       #print '** p_client.exitstatus: %s' % (self.exitstatus)
 
       return (0)
 
 def pkill_openssl():
-   time.sleep(1)
    cmd = 'pkill openssl'
    print cmd
    os.system(cmd)
@@ -161,7 +164,8 @@ def test_expect(client_cmd_lst,cmd_server,env_server,fname_log_server):
    if debug:
       return (0,0)
 
-   p_server = pexpect.spawn(cmd_server,env=env_server,logfile=flog_server,timeout=g_timeout)
+   p_server = pexpect.spawn(cmd_server,env=env_server,logfile=flog_server,timeout=g_timeout_server)
+   # Once server prints ACCEPT it is same to start clients
    try:
       print '*** SERVER: Waiting for accept ***'
       mutex_expect.lock(p_server.expect,'ACCEPT')
@@ -169,9 +173,6 @@ def test_expect(client_cmd_lst,cmd_server,env_server,fname_log_server):
       mutex_expect.unlock()
    except:
       print '*** ERROR: No ACCEPT on server ***'
-
-   # delay, waiting for server to come up?
-   time.sleep(2)
 
    client_thread_lst = []
    for (cmd_client,fname_log_client,env_client) in client_cmd_lst:
@@ -183,16 +184,16 @@ def test_expect(client_cmd_lst,cmd_server,env_server,fname_log_server):
    # This code should execute only after all clients have exited
    # wait for all threads on client_thread_lst
    client_exitstatus = 0
-   twait_client = 10
    for client_thread in client_thread_lst:
       print '*** SERVER: Waiting for client threads to exit ***'
-      client_thread.join(twait_client)
+      client_thread.join()
       print '*** SERVER: p_client.exitstatus: %s ***' % (client_thread.exitstatus)
       if client_thread.exitstatus is None:
          client_exitstatus |= 255
       else:
          client_exitstatus |= client_thread.exitstatus
 
+   print '*** ALL CLIENTS HAVE TERMINATED ***'
    try: 
       # Server retruns to ACCEPT prompt after receives msesages: DONE, shutting down SSL
       print '*** SERVER: Waiting for CONNECTION CLOSED ***'
@@ -200,14 +201,15 @@ def test_expect(client_cmd_lst,cmd_server,env_server,fname_log_server):
       print '*** SERVER: got CONNECTION CLOSED ***'
       mutex_expect.unlock()
 
-      print '*** SERVER: before server ctrl-D ***'
-      mutex_expect.lock(p_server.sendcontrol,'d')
+      print '*** SERVER: before server ctrl-C ***'
+      mutex_expect.lock(p_server.sendcontrol,'c')
+      #time.sleep(1)
+      #p_server.sendcontrol('c')
       mutex_expect.unlock()
-      print '*** SERVER: after server ctrl-D ***'
+      print '*** SERVER: after server ctrl-C ***'
    except:
       print '*** ERROR: No CONNECTION CLOSED on server ***'
 
-   time.sleep(1)
    p_server.close(force=True)
    server_status = p_server.signalstatus
    if server_status is None:
@@ -216,7 +218,9 @@ def test_expect(client_cmd_lst,cmd_server,env_server,fname_log_server):
       pass
    flog_server.close()
 
-   # Hack - openssl process has at times seen to be still running even after the above shutdown sequence.  Try harder with OS commands.
+   # Hack - openssl process has at times seen to be still running even after the above shutdown sequence.  
+   # Try harder with OS commands.
+   time.sleep(1)
    pkill_openssl()
 
    print 'SERVER: exitstatus: %s signalstatus: %s status: %s' % (p_server.exitstatus,
@@ -230,4 +234,4 @@ def test_expect(client_cmd_lst,cmd_server,env_server,fname_log_server):
 
 if __name__ == "__main__":
         base_dir = '.'
-        pkill_openssl()
+        #pkill_openssl()
