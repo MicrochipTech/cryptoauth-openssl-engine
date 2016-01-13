@@ -1,0 +1,59 @@
+#!/bin/bash
+set -x
+set -e
+
+function upfind() {
+    startdir=`pwd`
+    dir=$startdir
+    while [ "$dir" != "/" ]; do
+	p=`find "$dir" -maxdepth 1 -name $1`
+	if [ ! -z $p ]; then
+	    echo "$dir"
+	    return 
+	fi
+        dir=`dirname "$dir"`
+    done
+    echo "ERROR: Failed to locate base directory ${startdir}/$1"
+    exit 1
+}
+
+# Prepare the base directory
+cd ..
+make init_submodule
+cd -
+
+TMP=/var/tmp
+BASEDIR="$(upfind .git)"
+DNAME=`basename ${BASEDIR}`
+TMPSB=${TMP}/${DNAME}
+
+#echo ${BASEDIR}
+#echo $dname
+#exit 0
+
+rm -rf ${TMPSB}
+cp -rf ${BASEDIR} ${TMP}
+rm -rf ${TMPSB}/trace_coverages
+mv ${TMPSB}/.git/modules ${TMPSB}
+rm -rf ${TMPSB}/.git
+mkdir -p ${TMPSB}/.git
+mv ${TMPSB}/modules ${TMPSB}/.git
+rm -f ${TMPSB}/.gitignore
+rm -f ${TMPSB}/.gitmodules
+#rm -rf ${TMPSB}/openssl*
+#rm -rf ${TMPSB}/openssl*/.git
+#rm -rf ${TMPSB}/unity
+rm -rf ${TMPSB}/ecc-crypto
+rm -f ${TMPSB}/Tasks-Schedule-*.xlsx
+rm -f ${TMPSB}/tools/*.exe
+rm -rf ${TMPSB}/tools/SignerModule
+rm -rf ${TMPSB}/tools/cryptoauth-kit-d21-host
+rm -rf ${TMPSB}/install_dir
+#rm -rf ${TMPSB}/engine_atecc/cryptoauthlib
+#exit 0
+
+cd ${TMP}
+TARBALL=${TMP}/${DNAME}.tgz
+tar cvfz ${TARBALL} ${DNAME}
+cd -
+echo "CREATED RELEASE TARBALL: ${TARBALL}"
