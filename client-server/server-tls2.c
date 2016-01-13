@@ -178,6 +178,9 @@ int connect_server(const char *engine_id, const char *ca_path, const char *chain
 
     /* Use TLS1.2 transmit and receive */
 
+    fprintf(stderr, "Secure Renegotiation IS%s supported\n",
+               SSL_get_secure_renegotiation_support(ssl) ? "" : " NOT");
+
     err = SSL_read(ssl, buf, sizeof(buf) - 1);
     CHK_SSL(err);
     buf[err] = '\0';

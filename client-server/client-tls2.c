@@ -153,6 +153,8 @@ int connect_client(const char *engine_id, const char *ca_path, const char *chain
 
     /* Use TLS1.2 transmit and receive */
 
+    fprintf(stderr, "---\n");
+
     err = SSL_write(ssl, message, strlen(message));
     CHK_SSL(err);
 
