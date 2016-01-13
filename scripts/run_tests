@@ -364,6 +364,11 @@ def run_tests(fname_drv,test_db):
    return results
 
 if __name__ == "__main__":
+   gen_only = False
+   if len(sys.argv) == 2:
+      if re.search('gen',sys.argv[1]):
+         gen_only = True
+
    base_dir = '.'
    log_dir = 'log'
    fname_drv = '%s/runit.sh' % (base_dir)
@@ -402,9 +407,10 @@ if __name__ == "__main__":
    test_db = create_tests(base_dir,log_dir,test_script_pairs,cipher_db,test_engine_server=test_engine_server,test_engine_client=test_engine_client,test_example_server=test_example_server,test_example_client=test_example_client,num_clients=num_clients,skip_combos=skip_combos)
    #raise
 
-   results = run_tests(fname_drv,test_db)
-   all_results = merge_dicts(all_results,results)
-   testing_summary(all_results,log_dir)
+   if not gen_only:
+      results = run_tests(fname_drv,test_db)
+      all_results = merge_dicts(all_results,results)
+      testing_summary(all_results,log_dir)
    sys.exit(0)
 
    # ECDSA tests

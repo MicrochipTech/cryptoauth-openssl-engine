@@ -18,6 +18,11 @@ mutex_expect = mutex.mutex()
 g_timeout = 30
 g_timeout_server = 30
 
+def dump_env(flog,env):
+   flog.write('*** ENVIRONMENT VARIABLES ***\n')
+   for (var,val) in env.items():
+      flog.write('%s=%s\n' % (var,val))
+                 
 def run_cert_cmd(base_dir,fname_log,cert_type,new_key=1,cmd_cert=None):
    if cmd_cert is None:
       cmd_cert = '%s/run_cert_%s.sh >> %s 2>&1 ' % (base_dir,cert_type,fname_log)
@@ -65,6 +70,7 @@ class client_driver(threading.Thread):
    def run(self):
       global g_timeout
       with open(self.fname_log,'a') as flog_client:
+         dump_env(flog_client,self.env)
          print '** Running client command: %s **' % (self.cmd)
          p_client = pexpect.spawn(self.cmd,env=self.env,logfile=flog_client,timeout=g_timeout)
 #         p_client = pexpect.spawn(self.cmd,env=self.env,logfile=sys.stdout,timeout=g_timeout)
@@ -159,6 +165,7 @@ def pkill_openssl():
 def test_expect(client_cmd_lst,cmd_server,env_server,fname_log_server):
    # Spawn server
    flog_server = open(fname_log_server,'a')
+   dump_env(flog_server,env_server)
    print '** Running server command: %s **' % (cmd_server)
 
    if debug:
