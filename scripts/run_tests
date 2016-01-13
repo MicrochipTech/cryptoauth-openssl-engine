@@ -377,7 +377,7 @@ if __name__ == "__main__":
    ciphers_rsa = [
       'ECDHE-RSA-AES128-SHA',
       'ECDHE-RSA-AES128-SHA256',
-      'ECDHE-RSA-AES128-GCM-SHA256' 
+      'ECDHE-RSA-AES128-GCM-SHA256',
       'ECDHE-RSA-AES256-SHA'
    ]
 

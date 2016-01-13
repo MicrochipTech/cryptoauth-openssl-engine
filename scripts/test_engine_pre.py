@@ -66,8 +66,8 @@ class client_driver(threading.Thread):
       global g_timeout
       with open(self.fname_log,'a') as flog_client:
          print '** Running client command: %s **' % (self.cmd)
-#         p_client = pexpect.spawn(self.cmd,env=self.env,logfile=flog_client,timeout=g_timeout)
-         p_client = pexpect.spawn(self.cmd,env=self.env,logfile=sys.stdout,timeout=g_timeout)
+         p_client = pexpect.spawn(self.cmd,env=self.env,logfile=flog_client,timeout=g_timeout)
+#         p_client = pexpect.spawn(self.cmd,env=self.env,logfile=sys.stdout,timeout=g_timeout)
          if self.env['USE_EXAMPLE'] == '1':
             expect_str = 'Using cipher'
          else:
