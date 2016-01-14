@@ -107,7 +107,8 @@ class client_driver(threading.Thread):
          #
 
          # Plain text string
-         plain_text = 'hello world'
+         #plain_text = 'hello world'
+         plain_text = 'Hi from OpenSSL client'
          expect_str = plain_text
 
          print '** CLIENT: Sending: %s **' % (expect_str)
