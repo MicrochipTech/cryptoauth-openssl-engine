@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.10"/>
-<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/atmel-ecc/client-server/exchange-tls12.c File Reference</title>
+<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/GitHub/cryptoauth-openssl-engine/client-server/exchange-tls12.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
    <div id="projectname">OpenSSL ECC Engine
    &#160;<span id="projectnumber">1.0</span>
    </div>
-   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage, ECDSA sign/verify, and ECDH</div>
+   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage and ECDSA, ECDH, and RNG.</div>
   </td>
  </tr>
  </tbody>
@@ -87,7 +87,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">exchange-tls12.c File Reference</div>  </div>
 </div><!--header-->
@@ -106,6 +107,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exch
 <tr class="memitem:a0ddf1224851353fc92bfbff6f499fa97"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exchange-tls12_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main</a> (int argc, char *argv[])</td></tr>
 <tr class="memdesc:a0ddf1224851353fc92bfbff6f499fa97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main exchange-tls12 function. For help on arguments see the <a class="el" href="exchange-tls12_8c.html#ae8605e2b78cd4a81b6c6b5c30cb7366a" title="Print a short help on &quot;./exchange-tls12 -h&quot;, &quot;./exchange-tls12 -?&quot;, or for an invalid arguments...">usage()</a> above.  <a href="#a0ddf1224851353fc92bfbff6f499fa97">More...</a><br /></td></tr>
 <tr class="separator:a0ddf1224851353fc92bfbff6f499fa97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:af960941c08b45889252b28b3dac628c7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af960941c08b45889252b28b3dac628c7"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>verify_depth</b></td></tr>
+<tr class="separator:af960941c08b45889252b28b3dac628c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>TLS1.2 client/server exchange utility. It is an example of the programmatic use of the ateccx08 engine for TLS1.2 exchange. This file is the main entry point. Call "./exchange-tls12 -h" for help. For details see <a href="https://wiki.openssl.org/index.php/SSL/TLS_Client">https://wiki.openssl.org/index.php/SSL/TLS_Client</a> and <a href="https://wiki.openssl.org/index.php/Simple_TLS_Server">https://wiki.openssl.org/index.php/Simple_TLS_Server</a>. </p>

@@ -26,7 +26,7 @@
    <div id="projectname">OpenSSL ECC Engine
    &#160;<span id="projectnumber">1.0</span>
    </div>
-   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage, ECDSA sign/verify, and ECDH</div>
+   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage and ECDSA, ECDH, and RNG.</div>
   </td>
  </tr>
  </tbody>
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_e5fbe6d2783ccd4c93c7856d92d7be6e.html">GitHub</a></li><li class="navelem"><a class="el" href="dir_25da87d0bf317b89c0082535728e7539.html">cryptoauth-openssl-engine</a></li><li class="navelem"><a class="el" href="dir_55bf9114afb72e272416ccdce2951846.html">engine_atecc</a></li><li class="navelem"><a class="el" href="dir_b815950d2aa9b477cbbfe364c838d47a.html">engine_meth</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d7376ed000e7baf53580e5ebf4f2793d.html">engine_atecc</a></li><li class="navelem"><a class="el" href="dir_2966bf9dc90328f94ffc6acb95b64b45.html">engine_meth</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -92,48 +92,34 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">platform.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Update this file when integrating to your platform. This file contains hooks to the CryptoAuthLib HAL and Certificate definitions.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="platform_8h_source.html">platform.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a09e5719e17f4a7fb74bd3c2fb5f87b73"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="platform_8c.html#a09e5719e17f4a7fb74bd3c2fb5f87b73">staticKey</a> [ATCA_KEY_SIZE] = { 0x77 }</td></tr>
+<tr class="memitem:a09e5719e17f4a7fb74bd3c2fb5f87b73"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a09e5719e17f4a7fb74bd3c2fb5f87b73"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>staticKey</b> [ATCA_KEY_SIZE] = { 0x77 }</td></tr>
 <tr class="separator:a09e5719e17f4a7fb74bd3c2fb5f87b73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af899041f5687ab31ab271d2b398d7131"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="platform_8c.html#af899041f5687ab31ab271d2b398d7131">g_signer_1_ca_public_key_t</a> [64]</td></tr>
+<tr class="memitem:af899041f5687ab31ab271d2b398d7131"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>g_signer_1_ca_public_key_t</b> [64]</td></tr>
 <tr class="separator:af899041f5687ab31ab271d2b398d7131"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1645e9d4e0ce7119f03296597ecc1ebd"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="platform_8c.html#a1645e9d4e0ce7119f03296597ecc1ebd">g_cert_template_1_signer_t</a> []</td></tr>
+<tr class="memitem:a1645e9d4e0ce7119f03296597ecc1ebd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1645e9d4e0ce7119f03296597ecc1ebd"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>g_cert_template_1_signer_t</b> []</td></tr>
 <tr class="separator:a1645e9d4e0ce7119f03296597ecc1ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3f897311f4f3fab8dc6634929294167"><td class="memItemLeft" align="right" valign="top">const atcacert_def_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="platform_8c.html#ac3f897311f4f3fab8dc6634929294167">g_cert_def_1_signer_t</a></td></tr>
+<tr class="memitem:ac3f897311f4f3fab8dc6634929294167"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac3f897311f4f3fab8dc6634929294167"></a>
+const atcacert_def_t&#160;</td><td class="memItemRight" valign="bottom"><b>g_cert_def_1_signer_t</b></td></tr>
 <tr class="separator:ac3f897311f4f3fab8dc6634929294167"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3319848966f644d7b25198b8b33dc32"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="platform_8c.html#ac3319848966f644d7b25198b8b33dc32">g_cert_template_0_device_t</a> []</td></tr>
+<tr class="memitem:ac3319848966f644d7b25198b8b33dc32"><td class="memItemLeft" align="right" valign="top">const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>g_cert_template_0_device_t</b> []</td></tr>
 <tr class="separator:ac3319848966f644d7b25198b8b33dc32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c473336a15501e015a1b0949ced9c16"><td class="memItemLeft" align="right" valign="top">const atcacert_def_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="platform_8c.html#a1c473336a15501e015a1b0949ced9c16">g_cert_def_0_device_t</a></td></tr>
+<tr class="memitem:a1c473336a15501e015a1b0949ced9c16"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1c473336a15501e015a1b0949ced9c16"></a>
+const atcacert_def_t&#160;</td><td class="memItemRight" valign="bottom"><b>g_cert_def_0_device_t</b></td></tr>
 <tr class="separator:a1c473336a15501e015a1b0949ced9c16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Variable Documentation</h2>
-<a class="anchor" id="a1c473336a15501e015a1b0949ced9c16"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const atcacert_def_t g_cert_def_0_device_t</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ac3f897311f4f3fab8dc6634929294167"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const atcacert_def_t g_cert_def_1_signer_t</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Update this file when integrating to your platform. This file contains hooks to the CryptoAuthLib HAL and Certificate definitions. </p>
+<p>Copyright (c) 2015 Atmel Corporation. All rights reserved.</p>
+</div><h2 class="groupheader">Variable Documentation</h2>
 <a class="anchor" id="ac3319848966f644d7b25198b8b33dc32"></a>
 <div class="memitem">
 <div class="memproto">
@@ -176,18 +162,6 @@ Variables</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
-<a class="anchor" id="a1645e9d4e0ce7119f03296597ecc1ebd"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const uint8_t g_cert_template_1_signer_t[]</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="af899041f5687ab31ab271d2b398d7131"></a>
 <div class="memitem">
 <div class="memproto">
@@ -205,18 +179,6 @@ Variables</h2></td></tr>
 <div class="line">    0x83, 0x4A, 0x09, 0x1B, 0xA8, 0x6B, 0x0D, 0x36, 0xD1, 0x98, 0x05, 0x57, 0xE6, 0x8E, 0x89, 0xA0</div>
 <div class="line">}</div>
 </div><!-- fragment -->
-</div>
-</div>
-<a class="anchor" id="a09e5719e17f4a7fb74bd3c2fb5f87b73"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t staticKey[ATCA_KEY_SIZE] = { 0x77 }</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
 </div>
 </div>
 </div><!-- contents -->

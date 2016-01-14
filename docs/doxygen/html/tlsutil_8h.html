@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.10"/>
-<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/atmel-ecc/client-server/tlsutil.h File Reference</title>
+<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/GitHub/cryptoauth-openssl-engine/client-server/tlsutil.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
    <div id="projectname">OpenSSL ECC Engine
    &#160;<span id="projectnumber">1.0</span>
    </div>
-   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage, ECDSA sign/verify, and ECDH</div>
+   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage and ECDSA, ECDH, and RNG.</div>
   </td>
  </tr>
  </tbody>
@@ -119,11 +119,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a8a7893e51ad37e3d1ff919c20e68103d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8a7893e51ad37e3d1ff919c20e68103d"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EXCHANGE_VERSION</b>&#160;&#160;&#160;&quot;1.0.1&quot;</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EXCHANGE_VERSION</b>&#160;&#160;&#160;&quot;1.1.0&quot;</td></tr>
 <tr class="separator:a8a7893e51ad37e3d1ff919c20e68103d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2202f63d963700d51e0020db9cb64df6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2202f63d963700d51e0020db9cb64df6"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PORT_NUMBER</b>&#160;&#160;&#160;(49917)</td></tr>
-<tr class="separator:a2202f63d963700d51e0020db9cb64df6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d2568037f4b1fd192ac7587874389d8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2d2568037f4b1fd192ac7587874389d8"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PORT_NUMBER_DEFAULT</b>&#160;&#160;&#160;(49917)</td></tr>
+<tr class="separator:a2d2568037f4b1fd192ac7587874389d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d6d377a4b9232b677b770822c3a6ed3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3d6d377a4b9232b677b770822c3a6ed3"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CHK_NULL</b>(x)&#160;&#160;&#160;if ((x)==NULL) { sleep(1); exit (1); }</td></tr>
 <tr class="separator:a3d6d377a4b9232b677b770822c3a6ed3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,6 +152,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsu
 <tr class="memitem:a22bc66657938d8edb070d52b3421a35d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8h.html#a22bc66657938d8edb070d52b3421a35d">configure_context</a> (SSL_CTX *ctx, const char *ca_path, const char *chain_file, const char *cert_file)</td></tr>
 <tr class="memdesc:a22bc66657938d8edb070d52b3421a35d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the SSL context for server or client using provided certificates, chain files, and private keys (ATECCX08 token are encoded into the OpenSSL private key files)  <a href="#a22bc66657938d8edb070d52b3421a35d">More...</a><br /></td></tr>
 <tr class="separator:a22bc66657938d8edb070d52b3421a35d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55dd36e553ba7dbe70c32e5e5caa4e3d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8h.html#a55dd36e553ba7dbe70c32e5e5caa4e3d">verify_callback</a> (int ok, X509_STORE_CTX *ctx)</td></tr>
+<tr class="memdesc:a55dd36e553ba7dbe70c32e5e5caa4e3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A modification of the <a class="el" href="tlsutil_8c.html#a55dd36e553ba7dbe70c32e5e5caa4e3d" title="A modification of the verify_callback() function from the openssl aps/s_cb.c file. ">verify_callback()</a> function from the openssl aps/s_cb.c file.  <a href="#a55dd36e553ba7dbe70c32e5e5caa4e3d">More...</a><br /></td></tr>
+<tr class="separator:a55dd36e553ba7dbe70c32e5e5caa4e3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf9415420bf04e508e030b65bfa3b9a7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8h.html#adf9415420bf04e508e030b65bfa3b9a7">load_private_key</a> (const char *engine_id, SSL_CTX *ctx, const char *key_file)</td></tr>
 <tr class="memdesc:adf9415420bf04e508e030b65bfa3b9a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">setup OpenSSL engine by engine ID  <a href="#adf9415420bf04e508e030b65bfa3b9a7">More...</a><br /></td></tr>
 <tr class="separator:adf9415420bf04e508e030b65bfa3b9a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,12 +162,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsu
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8h.html#a83d44992530c78d43312acb7aa30fe4f">cleanup_openssl</a> (void)</td></tr>
 <tr class="memdesc:a83d44992530c78d43312acb7aa30fe4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call OpenSSL standard cleanup methods. <br /></td></tr>
 <tr class="separator:a83d44992530c78d43312acb7aa30fe4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af001045c3edf01693c5826c12c8bf563"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8h.html#af001045c3edf01693c5826c12c8bf563">connect_client</a> (const char *engine_id, const char *ca_path, const char *chain_file, const char *cert_file, const char *key_file, const char *cipher_list)</td></tr>
-<tr class="memdesc:af001045c3edf01693c5826c12c8bf563"><td class="mdescLeft">&#160;</td><td class="mdescRight">A complete procedure of connecting client using TLS-1.2 protocol over TCP/IP.  <a href="#af001045c3edf01693c5826c12c8bf563">More...</a><br /></td></tr>
-<tr class="separator:af001045c3edf01693c5826c12c8bf563"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac08479de4044117871d2b5ba30c8807f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8h.html#ac08479de4044117871d2b5ba30c8807f">connect_server</a> (const char *engine_id, const char *ca_path, const char *chain_file, const char *cert_file, const char *key_file)</td></tr>
-<tr class="memdesc:ac08479de4044117871d2b5ba30c8807f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A complete procedure of connecting server using TLS-1.2 protocol over TCP/IP.  <a href="#ac08479de4044117871d2b5ba30c8807f">More...</a><br /></td></tr>
-<tr class="separator:ac08479de4044117871d2b5ba30c8807f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a370cb6aab0469811dfec540edb52ae0f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8h.html#a370cb6aab0469811dfec540edb52ae0f">connect_client</a> (const char *engine_id, const char *ca_path, const char *chain_file, const char *cert_file, const char *key_file, const char *cipher_list, const char *ip_address, uint16_t port_number)</td></tr>
+<tr class="memdesc:a370cb6aab0469811dfec540edb52ae0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A complete procedure of connecting client using TLS-1.2 protocol over TCP/IP.  <a href="#a370cb6aab0469811dfec540edb52ae0f">More...</a><br /></td></tr>
+<tr class="separator:a370cb6aab0469811dfec540edb52ae0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6698edc277cf12e0cb421889192a4c8b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8h.html#a6698edc277cf12e0cb421889192a4c8b">connect_server</a> (const char *engine_id, const char *ca_path, const char *chain_file, const char *cert_file, const char *key_file, const char *ip_address, uint16_t port_number)</td></tr>
+<tr class="memdesc:a6698edc277cf12e0cb421889192a4c8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A complete procedure of connecting server using TLS-1.2 protocol over TCP/IP.  <a href="#a6698edc277cf12e0cb421889192a4c8b">More...</a><br /></td></tr>
+<tr class="separator:a6698edc277cf12e0cb421889192a4c8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd0671747f0e7d21d7285aded74639f0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8h.html#afd0671747f0e7d21d7285aded74639f0">save_private_key</a> (EVP_PKEY *pkey, const char *privkey_fname)</td></tr>
 <tr class="separator:afd0671747f0e7d21d7285aded74639f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c5048adf433e91e7168fcd6f2f8afb8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8h.html#a7c5048adf433e91e7168fcd6f2f8afb8">save_x509_certificate</a> (X509 *x509, const char *cert_fname)</td></tr>
@@ -262,7 +265,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsu
 
 </div>
 </div>
-<a class="anchor" id="af001045c3edf01693c5826c12c8bf563"></a>
+<a class="anchor" id="a370cb6aab0469811dfec540edb52ae0f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -300,7 +303,19 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsu
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>cipher_list</em>&#160;</td>
+          <td class="paramname"><em>cipher_list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>ip_address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>port_number</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -319,6 +334,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsu
     <tr><td class="paramdir">[in]</td><td class="paramname">cert_file</td><td>Certificate File Name </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">key_file</td><td>Private Key File Name </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">cipher_list</td><td>Cipher list string (ECDH-ECDSA-AES128-SHA256, ECDH-ECDSA-AES128-GCM-SHA256, etc) - Must be SHA-256 for ECC508 </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ip_address</td><td>The server IP address </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ip_address</td><td>The server port number </td></tr>
   </table>
   </dd>
 </dl>
@@ -326,7 +343,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsu
 
 </div>
 </div>
-<a class="anchor" id="ac08479de4044117871d2b5ba30c8807f"></a>
+<a class="anchor" id="a6698edc277cf12e0cb421889192a4c8b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -358,7 +375,19 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsu
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>key_file</em>&#160;</td>
+          <td class="paramname"><em>key_file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>ip_address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>port_number</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -376,6 +405,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsu
     <tr><td class="paramdir">[in]</td><td class="paramname">chain_file</td><td>Chain File Name (Certificate Bundle) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">cert_file</td><td>Certificate File Name </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">key_file</td><td>Private Key File Name </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ip_address</td><td>The server IP address </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ip_address</td><td>The server port number </td></tr>
   </table>
   </dd>
 </dl>
@@ -592,6 +623,42 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsu
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>1 for success, 0 for error </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a55dd36e553ba7dbe70c32e5e5caa4e3d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int verify_callback </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>ok</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">X509_STORE_CTX *&#160;</td>
+          <td class="paramname"><em>ctx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A modification of the <a class="el" href="tlsutil_8c.html#a55dd36e553ba7dbe70c32e5e5caa4e3d" title="A modification of the verify_callback() function from the openssl aps/s_cb.c file. ">verify_callback()</a> function from the openssl aps/s_cb.c file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ok</td><td>a parameter allowint to exit from the callback immediately </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">ctx</td><td>X509_STORE_CTX </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 for success </dd></dl>
 
 </div>
 </div>

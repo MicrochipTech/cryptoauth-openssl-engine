@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.10"/>
-<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/atmel-ecc/client-server/server-tls2.c File Reference</title>
+<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/GitHub/cryptoauth-openssl-engine/client-server/server-tls2.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
    <div id="projectname">OpenSSL ECC Engine
    &#160;<span id="projectnumber">1.0</span>
    </div>
-   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage, ECDSA sign/verify, and ECDH</div>
+   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage and ECDSA, ECDH, and RNG.</div>
   </td>
  </tr>
  </tbody>
@@ -99,15 +99,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ac08479de4044117871d2b5ba30c8807f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="server-tls2_8c.html#ac08479de4044117871d2b5ba30c8807f">connect_server</a> (const char *engine_id, const char *ca_path, const char *chain_file, const char *cert_file, const char *key_file)</td></tr>
-<tr class="memdesc:ac08479de4044117871d2b5ba30c8807f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A complete procedure of connecting server using TLS-1.2 protocol over TCP/IP.  <a href="#ac08479de4044117871d2b5ba30c8807f">More...</a><br /></td></tr>
-<tr class="separator:ac08479de4044117871d2b5ba30c8807f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6698edc277cf12e0cb421889192a4c8b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="server-tls2_8c.html#a6698edc277cf12e0cb421889192a4c8b">connect_server</a> (const char *engine_id, const char *ca_path, const char *chain_file, const char *cert_file, const char *key_file, const char *ip_address, uint16_t port_number)</td></tr>
+<tr class="memdesc:a6698edc277cf12e0cb421889192a4c8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A complete procedure of connecting server using TLS-1.2 protocol over TCP/IP.  <a href="#a6698edc277cf12e0cb421889192a4c8b">More...</a><br /></td></tr>
+<tr class="separator:a6698edc277cf12e0cb421889192a4c8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The server portion of the TLS1.2 client/server exchange utility. For details see <a href="https://wiki.openssl.org/index.php/Simple_TLS_Server">https://wiki.openssl.org/index.php/Simple_TLS_Server</a>. </p>
 <p>Copyright (c) 2015 Atmel Corporation. All rights reserved.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="ac08479de4044117871d2b5ba30c8807f"></a>
+<a class="anchor" id="a6698edc277cf12e0cb421889192a4c8b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -139,7 +139,19 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>key_file</em>&#160;</td>
+          <td class="paramname"><em>key_file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>ip_address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>port_number</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -157,6 +169,8 @@ Functions</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">chain_file</td><td>Chain File Name (Certificate Bundle) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">cert_file</td><td>Certificate File Name </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">key_file</td><td>Private Key File Name </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ip_address</td><td>The server IP address </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ip_address</td><td>The server port number </td></tr>
   </table>
   </dd>
 </dl>
