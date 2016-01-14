@@ -19,7 +19,7 @@ regex_exitstatus = re.compile(r'^(.*)EXITSTATUS_CLIENT:(\s+)(\d+)(\s+)EXITSTATUS
 test_seq = 0
 portno_start = 49917
 
-def mk_client_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,client_id,log_prefix,portno,use_atmel_ca=1):
+def mk_client_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,client_id,log_prefix,portno,use_atmel_ca=1,new_key=0):
    print log_prefix
    fname_log = '%s/%s_%s_clnt_%0d_hwc_%0d_hws_%0d_exsrv_%0d_exclnt_%0d_%s.log' % (log_dir,log_prefix,cipher_string,client_id,hw_eng_client,hw_eng_serv,example_server,example_client,run_script)
    #cmd_client = '(%s/run_client.sh 2>&1) | tee > %s' % (base_dir,fname_log)
@@ -39,17 +39,17 @@ def mk_client_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng
    #cmd_client = '%s/%s >> %s 2>&1' % (base_dir,fname_log,run_script)
 
    print '*** cmd_client: %s, hwc=%0d hws=%0d ***' % (cmd_client,hw_eng_client,hw_eng_serv)
-   my_env['PORT'] = '%d' % (portno)
+   my_env['PORT_NUMBER'] = '%d' % (portno)
    my_env['USE_ENGINE'] = '%d' % (hw_eng_client)
    my_env['SSL_CIPHER'] = '%s' % (cipher_string)
-   my_env['NEW_KEY'] = '%d' % (0)
+   my_env['NEW_KEY'] = '%d' % (new_key)
    if cipher_string in ciphers_rsa:
       my_env['USE_RSA'] = '1'
    my_env['USE_EXAMPLE'] = '%d' % (example_client)
 
    return (cmd_client,fname_log,my_env)
 
-def mk_server_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,log_prefix,portno,use_atmel_ca=1):
+def mk_server_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,log_prefix,portno,use_atmel_ca=1,new_key=0):
    fname_log = '%s/%s_%s_hwc_%0d_hws_%0d_exsrv_%0d_exclnt_%0d_%s.log' % (log_dir,log_prefix,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,run_script)
    #cmd_server = '(%s/run_server.sh 2>&1) > %s' % (base_dir,fname_log)
    #cmd_server = '%s/run_server.sh 2>&1 > %s' % (base_dir,fname_log)
@@ -62,10 +62,10 @@ def mk_server_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng
 #   cmd_server = '%s/%s >> %s 2>&1' % (base_dir,fname_log,run_script)
 
    print '*** cmd_server: %s, hwc=%0d hws=%0d ***' % (cmd_server,hw_eng_client,hw_eng_serv)
-   my_env['PORT'] = '%d' % (portno)
+   my_env['PORT_NUMBER'] = '%d' % (portno)
    my_env['USE_ENGINE'] = '%d' % (hw_eng_serv)
    my_env['SSL_CIPHER'] = '%s' % (cipher_string)
-   my_env['NEW_KEY'] = '%d' % (0)
+   my_env['NEW_KEY'] = '%d' % (new_key)
    if cipher_string in ['DH-RSA-AES256-SHA256']: # requires TARGET="dh"on server side
       my_env['TARGET'] = 'dh'
    if cipher_string in ciphers_rsa:
@@ -392,8 +392,10 @@ if __name__ == "__main__":
    test_engine_client = [0,1]
    #test_example_server = [0,1]
    test_example_server = [0]
+   #test_example_server = [1]
    #test_example_client = [0,1]
    test_example_client = [0]
+   #test_example_client = [1]
    skip_combos = [
       (0, 1, 0, 0),
       (0, 1, 1, 0),
