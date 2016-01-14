@@ -22,6 +22,7 @@ def dump_env(flog,env,location='UNSPECIFIED'):
    flog.write('*** ENVIRONMENT VARIABLES from: %s ***\n' % (location))
    for (var,val) in env.items():
       flog.write('%s=%s\n' % (var,val))
+   flog.write('*** END ENVIRONMENT VARIABLES from: %s ***\n' % (location))
                  
 def run_cert_cmd(base_dir,fname_log,cert_type,new_key=1,cmd_cert=None):
    if cmd_cert is None:
