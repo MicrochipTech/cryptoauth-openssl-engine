@@ -141,13 +141,13 @@ class client_driver(threading.Thread):
 
          # Client shuts down
          expect_str = 'q'
-         print '** CLIENT: Sending: %s **' % (expect_str)
-         self.mutex_expect.lock(p_client.sendline,expect_str)
-         print '** CLIENT: DONE Sending: %s **' % (expect_str)
+         print '** SERVER: Sending: %s **' % (expect_str)
+         self.mutex_expect.lock(p_server.sendline,expect_str)
+         print '** SERVER: DONE Sending: %s **' % (expect_str)
          try:
             self.mutex_expect.unlock()
          except:
-            print '** ERROR: Exception at unlock in client location 2 - expected: %s **' % (expect_str)
+            print '** ERROR: Exception at unlock in server location 2 - expected: %s **' % (expect_str)
             self.exitstatus = 255
             return (0)
 
