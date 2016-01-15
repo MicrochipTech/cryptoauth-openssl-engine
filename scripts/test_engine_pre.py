@@ -26,32 +26,35 @@ def dump_env(flog,env,location='UNSPECIFIED'):
                  
 def run_cert_cmd(base_dir,fname_log,cert_type,new_key=1,cmd_cert=None):
    if cmd_cert is None:
-      cmd_cert = '%s/run_cert_%s.sh >> %s 2>&1 ' % (base_dir,cert_type,fname_log)
+      cmd = '%s/run_cert_%s.sh >> %s 2>&1 ' % (base_dir,cert_type,fname_log)
    else:
-      cmd_cert = '%s/%s >> %s 2>&1 ' % (base_dir,cmd_cert,fname_log)
+      cmd = '%s/%s >> %s 2>&1 ' % (base_dir,cmd_cert,fname_log)
    my_env = os.environ.copy()
    my_env['NEW_KEY'] = '%d' % (new_key)
-   print '** Running CERT command: %s **' % (cmd_cert)
+   print '** Running CERT command: %s **' % (cmd)
+
    with open(fname_log,'a') as flog:
       dump_env(flog,my_env,location='run_cert_cmd')
-   child = pexpect.spawn(cmd_cert,env=my_env,timeout=60)
-   child.logfile = sys.stdout
-   child.expect('Enter PEM pass phrase:')
-   child.sendline('1111')
-   child.expect('Verifying - Enter PEM pass phrase:')
-   child.sendline('1111')
-   child.expect('Enter PEM pass phrase:')
-   child.sendline('1111')               
-   while child.isalive(): # Wait for child to exit gracefully
-      pass
-   child.close()
 
-   print 'Exit status: %s %s' % (child.exitstatus,child.status)
-   if child.exitstatus is not 0:
-      print 'ERROR: Cert command %s FAILED' % (cmd_cert)
-      sys.exit(child.exitstatus)
+      child = pexpect.spawn(cmd,env=my_env,timeout=30)
+      #child.logfile = sys.stdout
+      child.logfile = flog
+      child.expect('Enter PEM pass phrase:')
+      child.sendline('1111')
+      child.expect('Verifying - Enter PEM pass phrase:')
+      child.sendline('1111')
+      child.expect('Enter PEM pass phrase:')
+      child.sendline('1111')               
+      while child.isalive(): # Wait for child to exit gracefully
+         pass
+      child.close()
 
-   return cmd_cert
+      print 'Exit status: %s %s' % (child.exitstatus,child.status)
+      if child.exitstatus is not 0:
+         print 'ERROR: Cert command %s FAILED' % (cmd)
+         sys.exit(child.exitstatus)
+
+   return cmd
 
 def run_rsa_cert(base_dir,fname_log):
    my_env = os.environ.copy()
@@ -59,8 +62,6 @@ def run_rsa_cert(base_dir,fname_log):
    print '** Running CERT command: %s' % (cmd_cert)
    with open(fname_log,'a') as flog:
       dump_env(flog,my_env,location='run_rsa_cert')
-   if debug:
-      return
    os.system(cmd_cert)
 
 class client_driver(threading.Thread):
