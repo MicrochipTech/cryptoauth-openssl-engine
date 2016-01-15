@@ -142,7 +142,7 @@ class client_driver(threading.Thread):
          # Client shuts down
          expect_str = 'q'
          print '** SERVER: Sending: %s **' % (expect_str)
-         self.mutex_expect.lock(p_server.sendline,expect_str)
+         self.mutex_expect.lock(self.p_server.sendline,expect_str)
          print '** SERVER: DONE Sending: %s **' % (expect_str)
          try:
             self.mutex_expect.unlock()
