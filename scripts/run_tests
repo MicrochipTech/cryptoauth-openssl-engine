@@ -178,7 +178,7 @@ def create_tests(base_dir,log_dir,test_script_pairs,cipher_db,num_clients=1,test
                               hw_cert = 'client'
                               gen_cert = True
                            else:
-                              raise
+                              hw_cert = None
                               
                         print 'gen_cert: %s eng_srv: %d eng_clt: %d' % (gen_cert,engine_server,engine_client)
 
