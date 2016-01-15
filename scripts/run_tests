@@ -30,22 +30,29 @@ def mk_client_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng
 
    # Works
    #cmd_client = '%s/run_client.sh 2>&1 > %s' % (base_dir,fname_log)
-   my_env = os.environ.copy()
+   env_vars = {}
    if re.search('_der_',run_script):
       run_script = re.sub(r'_der_','_',run_script)
-      my_env['USE_ATMEL_CA'] = '%d' % (use_atmel_ca)
+      env_vars['USE_ATMEL_CA'] = '%d' % (use_atmel_ca)
 
    cmd_client = '%s/%s 2>&1' % (base_dir,run_script)
    #cmd_client = '%s/%s >> %s 2>&1' % (base_dir,fname_log,run_script)
 
    print '*** cmd_client: %s, hwc=%0d hws=%0d ***' % (cmd_client,hw_eng_client,hw_eng_serv)
-   my_env['PORT_NUMBER'] = '%d' % (portno)
-   my_env['USE_ENGINE'] = '%d' % (hw_eng_client)
-   my_env['SSL_CIPHER'] = '%s' % (cipher_string)
-   my_env['NEW_KEY'] = '%d' % (new_key)
+   env_vars['PORT_NUMBER'] = '%d' % (portno)
+   env_vars['USE_ENGINE'] = '%d' % (hw_eng_client)
+   env_vars['SSL_CIPHER'] = '%s' % (cipher_string)
+   env_vars['NEW_KEY'] = '%d' % (new_key)
    if cipher_string in ciphers_rsa:
-      my_env['USE_RSA'] = '1'
-   my_env['USE_EXAMPLE'] = '%d' % (example_client)
+      env_vars['USE_RSA'] = '1'
+   env_vars['USE_EXAMPLE'] = '%d' % (example_client)
+   
+   parm_str = ''
+   for (var,val) in env_vars.items():
+      parm_str += '%s=%s ' % (var,val)
+   rerun_str = '%s %s' % (parm_str,cmd_client)
+   print '#RERUN: %s' % (rerun_str)
+   my_env = merge_dicts(os.environ.copy(),env_vars)
 
    return (cmd_client,fname_log,my_env)
 
@@ -53,24 +60,31 @@ def mk_server_cmd(base_dir,log_dir,run_script,cipher_string,hw_eng_client,hw_eng
    fname_log = '%s/%s_%s_hwc_%0d_hws_%0d_exsrv_%0d_exclnt_%0d_%s.log' % (log_dir,log_prefix,cipher_string,hw_eng_client,hw_eng_serv,example_server,example_client,run_script)
    #cmd_server = '(%s/run_server.sh 2>&1) > %s' % (base_dir,fname_log)
    #cmd_server = '%s/run_server.sh 2>&1 > %s' % (base_dir,fname_log)
-   my_env = os.environ.copy()
+   env_vars = {}
    if re.search('_der_',run_script):
       run_script = re.sub(r'_der_','_',run_script)
-      my_env['USE_ATMEL_CA'] = '%d' % (use_atmel_ca)
+      env_vars['USE_ATMEL_CA'] = '%d' % (use_atmel_ca)
 
    cmd_server = '%s/%s 2>&1' % (base_dir,run_script)
 #   cmd_server = '%s/%s >> %s 2>&1' % (base_dir,fname_log,run_script)
 
    print '*** cmd_server: %s, hwc=%0d hws=%0d ***' % (cmd_server,hw_eng_client,hw_eng_serv)
-   my_env['PORT_NUMBER'] = '%d' % (portno)
-   my_env['USE_ENGINE'] = '%d' % (hw_eng_serv)
-   my_env['SSL_CIPHER'] = '%s' % (cipher_string)
-   my_env['NEW_KEY'] = '%d' % (new_key)
+   env_vars['PORT_NUMBER'] = '%d' % (portno)
+   env_vars['USE_ENGINE'] = '%d' % (hw_eng_serv)
+   env_vars['SSL_CIPHER'] = '%s' % (cipher_string)
+   env_vars['NEW_KEY'] = '%d' % (new_key)
    if cipher_string in ['DH-RSA-AES256-SHA256']: # requires TARGET="dh"on server side
-      my_env['TARGET'] = 'dh'
+      env_vars['TARGET'] = 'dh'
    if cipher_string in ciphers_rsa:
-      my_env['USE_RSA'] = '1'
-   my_env['USE_EXAMPLE'] = '%d' % (example_server)
+      env_vars['USE_RSA'] = '1'
+   env_vars['USE_EXAMPLE'] = '%d' % (example_server)
+
+   parm_str = ''
+   for (var,val) in env_vars.items():
+      parm_str += '%s=%s ' % (var,val)
+   rerun_str = '%s %s' % (parm_str,cmd_server)
+   print '#RERUN: %s' % (rerun_str)
+   my_env = merge_dicts(os.environ.copy(),env_vars)
 
    return (cmd_server,fname_log,my_env)
 
@@ -166,7 +180,7 @@ def create_test(client_cmd_lst,cmd_server,env_server,fname_log_server,gen_cert,g
    else:
       write_test_script(fname_drv,'#%s/%s' % (base_dir,script_name))
 
-def create_tests(base_dir,log_dir,test_script_pairs,cipher_db,num_clients=1,test_engine_server=None,test_engine_client=None,test_example_server=None,test_example_client=None,skip_combos=[]):
+def create_tests(base_dir,log_dir,test_script_pairs,cipher_db,num_clients=1,test_engine_server=None,test_engine_client=None,test_example_server=None,test_example_client=None,valid_combos=None):
    global rsa_cert_generated
    global test_seq
    nxt_prev_eng = (0,0)
@@ -181,10 +195,18 @@ def create_tests(base_dir,log_dir,test_script_pairs,cipher_db,num_clients=1,test
             for example_server in test_example_server:
                for example_client in test_example_client:
 
-                  t = (example_server, engine_server, example_client, engine_client)
+                  use_atmel_ca_server = 0
+                  use_atmel_ca_client = 0
+
+                  combo = (example_server, engine_server, use_atmel_ca_server,
+                           example_client, engine_client, use_atmel_ca_client)
+
                   prev_eng = nxt_prev_eng
-                  if t in skip_combos:
-                     print 'skipping: ',t
+
+                  print 'combo: ',combo
+                  print 'valid_combos: ',valid_combos
+                  if not (combo in valid_combos):
+                     print 'skipping: ',combo
                      nxt_prev_eng = (engine_server,engine_client)
                      continue
 
@@ -396,17 +418,22 @@ if __name__ == "__main__":
    #test_example_client = [0,1]
    test_example_client = [0]
    #test_example_client = [1]
-   skip_combos = [
-      (0, 1, 0, 0),
-      (0, 1, 1, 0),
-      (0, 1, 1, 1),
-      (1, 0, 0, 1),
-      (1, 1, 0, 1),
-      (1, 1, 1, 1)
+
+   valid_combos = [
+      (0,0,0,0,0,0),
+      (1,0,0,0,0,0),
+      (0,0,0,1,0,0),
+      (1,0,0,1,0,0),
+      (0,1,0,0,0,0),
+      (1,1,0,0,0,0),
+      (0,0,0,0,1,0),
+      (0,0,0,1,1,0),
+      (1,1,0,1,0,0),
+      (1,0,0,1,1,0)
    ]
 
    num_clients = 1
-   test_db = create_tests(base_dir,log_dir,test_script_pairs,cipher_db,test_engine_server=test_engine_server,test_engine_client=test_engine_client,test_example_server=test_example_server,test_example_client=test_example_client,num_clients=num_clients,skip_combos=skip_combos)
+   test_db = create_tests(base_dir,log_dir,test_script_pairs,cipher_db,test_engine_server=test_engine_server,test_engine_client=test_engine_client,test_example_server=test_example_server,test_example_client=test_example_client,num_clients=num_clients,valid_combos=valid_combos)
    #raise
 
    if not gen_only:
