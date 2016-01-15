@@ -66,6 +66,7 @@
 #define ECCX08_CMD_GET_ROOT_CERT         (ENGINE_CMD_BASE + 6)
 #define ECCX08_CMD_EXTRACT_ALL_CERTS     (ENGINE_CMD_BASE + 7)
 #define ECCX08_CMD_GET_PRIV_KEY          (ENGINE_CMD_BASE + 8)
+#define ECCX08_CMD_MAX                   (ENGINE_CMD_BASE + 9)
 
 #define ECCX08_SLOT8_ENC_STORE_LEN       (416)
 

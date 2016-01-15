@@ -248,8 +248,10 @@ int main(int argc, char *argv[])
         err = connect_client(engine_id, ca_path, chain_file, cert_file, key_file, cipher_list,
                    ip_address, port_number);
     }
+    sleep(2);
     return (err);
 done:
+    sleep(2);
     cleanup_openssl();
     return (err);
 }

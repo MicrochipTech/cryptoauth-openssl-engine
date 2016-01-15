@@ -239,7 +239,7 @@ int eccx08_ctrl(ENGINE *e, int cmd, long i, void *p, void (*f)())
 {
     int rc = 0;
     eccx08_debug("eccx08_ctrl()\n");
-    if (cmd < ENGINE_CMD_BASE) { 
+    if ((cmd < ENGINE_CMD_BASE) || (cmd >= ECCX08_CMD_MAX)) { 
         // if cmd < ENGINE_CMD_BASE this is being called by OpenSSL.  
         // In this case no work to do so just return.
         return (1);
