@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.10"/>
-<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/atmel-ecc/client-server/tlsutil.c File Reference</title>
+<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/GitHub/cryptoauth-openssl-engine/client-server/tlsutil.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
    <div id="projectname">OpenSSL ECC Engine
    &#160;<span id="projectnumber">1.0</span>
    </div>
-   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage, ECDSA sign/verify, and ECDH</div>
+   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage and ECDSA, ECDH, and RNG.</div>
   </td>
  </tr>
  </tbody>
@@ -87,7 +87,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">tlsutil.c File Reference</div>  </div>
 </div><!--header-->
@@ -118,6 +119,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsu
 <tr class="memitem:a3686986951cb06131c3c7e67fe35a4d5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8c.html#a3686986951cb06131c3c7e67fe35a4d5">config_args_ssl_call</a> (SSL_CTX *ctx, SSL_CONF_CTX *cctx)</td></tr>
 <tr class="memdesc:a3686986951cb06131c3c7e67fe35a4d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A modification of the args_ssl_call() function from the openssl aps/s_cb.c file.  <a href="#a3686986951cb06131c3c7e67fe35a4d5">More...</a><br /></td></tr>
 <tr class="separator:a3686986951cb06131c3c7e67fe35a4d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55dd36e553ba7dbe70c32e5e5caa4e3d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8c.html#a55dd36e553ba7dbe70c32e5e5caa4e3d">verify_callback</a> (int ok, X509_STORE_CTX *ctx)</td></tr>
+<tr class="memdesc:a55dd36e553ba7dbe70c32e5e5caa4e3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A modification of the <a class="el" href="tlsutil_8c.html#a55dd36e553ba7dbe70c32e5e5caa4e3d" title="A modification of the verify_callback() function from the openssl aps/s_cb.c file. ">verify_callback()</a> function from the openssl aps/s_cb.c file.  <a href="#a55dd36e553ba7dbe70c32e5e5caa4e3d">More...</a><br /></td></tr>
+<tr class="separator:a55dd36e553ba7dbe70c32e5e5caa4e3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acffc20c5feb0bed940c823cca4c1f121"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acffc20c5feb0bed940c823cca4c1f121"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8c.html#acffc20c5feb0bed940c823cca4c1f121">cleanup_openssl</a> ()</td></tr>
 <tr class="memdesc:acffc20c5feb0bed940c823cca4c1f121"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call OpenSSL standard cleanup methods. <br /></td></tr>
@@ -128,6 +132,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsu
 <tr class="separator:a7c5048adf433e91e7168fcd6f2f8afb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a138afb41094f19e261ca1519585f6a30"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsutil_8c.html#a138afb41094f19e261ca1519585f6a30">run_engine_cmds</a> (const char *engine_id, int cmd, char *buffer, int len)</td></tr>
 <tr class="separator:a138afb41094f19e261ca1519585f6a30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:af960941c08b45889252b28b3dac628c7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af960941c08b45889252b28b3dac628c7"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>verify_depth</b> = 0</td></tr>
+<tr class="separator:af960941c08b45889252b28b3dac628c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a446b4baf0f688868588246d7473926fe"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a446b4baf0f688868588246d7473926fe"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>verify_quiet</b> = 0</td></tr>
+<tr class="separator:a446b4baf0f688868588246d7473926fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae62b662fa76c00450c9fc9f99100039d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae62b662fa76c00450c9fc9f99100039d"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>verify_error</b> = X509_V_OK</td></tr>
+<tr class="separator:ae62b662fa76c00450c9fc9f99100039d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd450e2ef2ff28a0e39efb5641a362f0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abd450e2ef2ff28a0e39efb5641a362f0"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>verify_return_error</b> = 0</td></tr>
+<tr class="separator:abd450e2ef2ff28a0e39efb5641a362f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Common functions for the TLS1.2 client/server exchange utility. It is an example of the programmatic use of the ateccx08 engine for TLS1.2 exchange. For details see <a href="https://wiki.openssl.org/index.php/SSL/TLS_Client">https://wiki.openssl.org/index.php/SSL/TLS_Client</a> and <a href="https://wiki.openssl.org/index.php/Simple_TLS_Server">https://wiki.openssl.org/index.php/Simple_TLS_Server</a>. </p>
@@ -428,6 +447,42 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tlsu
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>1 for success, 0 for error </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a55dd36e553ba7dbe70c32e5e5caa4e3d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int verify_callback </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>ok</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">X509_STORE_CTX *&#160;</td>
+          <td class="paramname"><em>ctx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A modification of the <a class="el" href="tlsutil_8c.html#a55dd36e553ba7dbe70c32e5e5caa4e3d" title="A modification of the verify_callback() function from the openssl aps/s_cb.c file. ">verify_callback()</a> function from the openssl aps/s_cb.c file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ok</td><td>a parameter allowint to exit from the callback immediately </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">ctx</td><td>X509_STORE_CTX </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 for success </dd></dl>
 
 </div>
 </div>

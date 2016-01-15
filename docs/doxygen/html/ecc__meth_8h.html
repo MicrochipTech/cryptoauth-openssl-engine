@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.10"/>
-<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/atmel-ecc/engine_atecc/engine_meth/ecc_meth.h File Reference</title>
+<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/GitHub/cryptoauth-openssl-engine/engine_atecc/engine_meth/ecc_meth.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
    <div id="projectname">OpenSSL ECC Engine
    &#160;<span id="projectnumber">1.0</span>
    </div>
-   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage, ECDSA sign/verify, and ECDH</div>
+   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage and ECDSA, ECDH, and RNG.</div>
   </td>
  </tr>
  </tbody>
@@ -400,8 +400,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>test_pub_key</b> [
     <tr><td class="paramdir">[in]</td><td class="paramname">e</td><td>a pointer to the ENGINE structure </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">cmd</td><td>a command to execute. For the full list of commands see ECCX08_CMD_* defines in the <a class="el" href="ecc__meth_8h.html" title="Function definitions used in OpenSSL ENGINE. ">ecc_meth.h</a> file </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">i</td><td>an integer parameter of the command </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>a string parameter of the command </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>a function pointer parameter of the command </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">p</td><td>a string parameter of the command </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>a function pointer parameter of the command </td></tr>
   </table>
   </dd>
 </dl>
@@ -482,8 +482,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>test_pub_key</b> [
     <tr><td class="paramdir">[in]</td><td class="paramname">e</td><td>A pointer to the ENGINE structure </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">cmd</td><td>A command to execute. For the full list of commands see ECCX08_CMD_* defines in the <a class="el" href="ecc__meth_8h.html" title="Function definitions used in OpenSSL ENGINE. ">ecc_meth.h</a> file </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">i</td><td>An integer parameter of the command </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>A string parameter of the command </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>A function pointer parameter of the command </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">p</td><td>A string parameter of the command </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>A function pointer parameter of the command </td></tr>
   </table>
   </dd>
 </dl>

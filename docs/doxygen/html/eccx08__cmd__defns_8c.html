@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.10"/>
-<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/atmel-ecc/engine_atecc/engine_meth/eccx08_cmd_defns.c File Reference</title>
+<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/GitHub/cryptoauth-openssl-engine/engine_atecc/engine_meth/eccx08_cmd_defns.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
    <div id="projectname">OpenSSL ECC Engine
    &#160;<span id="projectnumber">1.0</span>
    </div>
-   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage, ECDSA sign/verify, and ECDH</div>
+   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage and ECDSA, ECDH, and RNG.</div>
   </td>
  </tr>
  </tbody>
@@ -111,31 +111,31 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <code>#include &lt;crypto/ecdsa/ecs_locl.h&gt;</code><br />
 <code>#include &lt;err.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="ecc__meth_8h_source.html">ecc_meth.h</a>&quot;</code><br />
-<code>#include &quot;platform.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="platform_8h_source.html">platform.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:adffc4fa1141b53facaa726027e6e3547"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccx08__cmd__defns_8c.html#adffc4fa1141b53facaa726027e6e3547">get_device_cert</a> (void)</td></tr>
-<tr class="memdesc:adffc4fa1141b53facaa726027e6e3547"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves pre-programmed certificates from ATECCX08 chip and saves them into temporary files as defined in the dev_cert_fname, signer_cert_fname, and root_cert_fname variables.  <a href="#adffc4fa1141b53facaa726027e6e3547">More...</a><br /></td></tr>
-<tr class="separator:adffc4fa1141b53facaa726027e6e3547"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb9044d31aa0408c82e75f0c5ea1768e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccx08__cmd__defns_8c.html#afb9044d31aa0408c82e75f0c5ea1768e">get_device_cert</a> (char *path)</td></tr>
+<tr class="memdesc:afb9044d31aa0408c82e75f0c5ea1768e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves pre-programmed certificates from ATECCX08 chip and saves them into temporary files as defined in the dev_cert_fname, signer_cert_fname, and root_cert_fname variables.  <a href="#afb9044d31aa0408c82e75f0c5ea1768e">More...</a><br /></td></tr>
+<tr class="separator:afb9044d31aa0408c82e75f0c5ea1768e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77e94282c1b9c9b8dc785f686a50f871"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccx08__cmd__defns_8c.html#a77e94282c1b9c9b8dc785f686a50f871">get_public_key</a> (void)</td></tr>
 <tr class="memdesc:a77e94282c1b9c9b8dc785f686a50f871"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the signer public key from ATECCX08 chip and saves them into a global signerPubkey buffer.  <a href="#a77e94282c1b9c9b8dc785f686a50f871">More...</a><br /></td></tr>
 <tr class="separator:a77e94282c1b9c9b8dc785f686a50f871"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f0266578738be78d798b144e6262169"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccx08__cmd__defns_8c.html#a3f0266578738be78d798b144e6262169">get_signer_cert</a> (void)</td></tr>
-<tr class="memdesc:a3f0266578738be78d798b144e6262169"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves pre-programmed signer certificate from ATECCX08 chip and saves it into a global signerCert buffer.  <a href="#a3f0266578738be78d798b144e6262169">More...</a><br /></td></tr>
-<tr class="separator:a3f0266578738be78d798b144e6262169"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e1cb74bd2dadf37d19170a182ccb72a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccx08__cmd__defns_8c.html#a0e1cb74bd2dadf37d19170a182ccb72a">get_signer_cert</a> (char *path)</td></tr>
+<tr class="memdesc:a0e1cb74bd2dadf37d19170a182ccb72a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves pre-programmed signer certificate from ATECCX08 chip and saves it into a global signerCert buffer.  <a href="#a0e1cb74bd2dadf37d19170a182ccb72a">More...</a><br /></td></tr>
+<tr class="separator:a0e1cb74bd2dadf37d19170a182ccb72a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae217a42334bdcfcfa942d9fc4cdb099"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccx08__cmd__defns_8c.html#aae217a42334bdcfcfa942d9fc4cdb099">verify_signer_cert</a> (void)</td></tr>
 <tr class="memdesc:aae217a42334bdcfcfa942d9fc4cdb099"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifies the signer certificate using the ATECCX08 chip hardware and data in caPubkey buffer (CA root key).  <a href="#aae217a42334bdcfcfa942d9fc4cdb099">More...</a><br /></td></tr>
 <tr class="separator:aae217a42334bdcfcfa942d9fc4cdb099"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5af7c257defb33ecc34433b4c0263d5b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccx08__cmd__defns_8c.html#a5af7c257defb33ecc34433b4c0263d5b">verify_device_cert</a> (void)</td></tr>
 <tr class="memdesc:a5af7c257defb33ecc34433b4c0263d5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifies the device certificate using the ATECCX08 chip hardware and data in signerPubkey buffer.  <a href="#a5af7c257defb33ecc34433b4c0263d5b">More...</a><br /></td></tr>
 <tr class="separator:a5af7c257defb33ecc34433b4c0263d5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9a2f8768f02f3e82c901157fde9eccd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccx08__cmd__defns_8c.html#aa9a2f8768f02f3e82c901157fde9eccd">get_root_cert</a> (void)</td></tr>
-<tr class="memdesc:aa9a2f8768f02f3e82c901157fde9eccd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves pre-programmed CA certificate (the root) from ATECCX08 chip and saves it into a global rootCert buffer.  <a href="#aa9a2f8768f02f3e82c901157fde9eccd">More...</a><br /></td></tr>
-<tr class="separator:aa9a2f8768f02f3e82c901157fde9eccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a707f101b472aeb0e21336f3ca3932fb5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccx08__cmd__defns_8c.html#a707f101b472aeb0e21336f3ca3932fb5">extract_all_certs</a> (void)</td></tr>
-<tr class="memdesc:a707f101b472aeb0e21336f3ca3932fb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves all pre-programmed certificates from ATECCX08 chip and saves it into a global buffers. Calls functions to verify them.  <a href="#a707f101b472aeb0e21336f3ca3932fb5">More...</a><br /></td></tr>
-<tr class="separator:a707f101b472aeb0e21336f3ca3932fb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5859b850c471a14cf0f4c2599a31036"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccx08__cmd__defns_8c.html#aa5859b850c471a14cf0f4c2599a31036">get_root_cert</a> (char *path)</td></tr>
+<tr class="memdesc:aa5859b850c471a14cf0f4c2599a31036"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves pre-programmed CA certificate (the root) from ATECCX08 chip and saves it into a global rootCert buffer.  <a href="#aa5859b850c471a14cf0f4c2599a31036">More...</a><br /></td></tr>
+<tr class="separator:aa5859b850c471a14cf0f4c2599a31036"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee92d6dc47bc9e9a94239a3177f80547"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccx08__cmd__defns_8c.html#aee92d6dc47bc9e9a94239a3177f80547">extract_all_certs</a> (char *path)</td></tr>
+<tr class="memdesc:aee92d6dc47bc9e9a94239a3177f80547"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves all pre-programmed certificates from ATECCX08 chip and saves it into a global buffers. Calls functions to verify them.  <a href="#aee92d6dc47bc9e9a94239a3177f80547">More...</a><br /></td></tr>
+<tr class="separator:aee92d6dc47bc9e9a94239a3177f80547"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b6d80f21687a19c864c1233aa69f1ac"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccx08__cmd__defns_8c.html#a1b6d80f21687a19c864c1233aa69f1ac">eccx08_cmd_ctrl</a> (ENGINE *e, int cmd, long i, void *p, void(*f)(void))</td></tr>
 <tr class="memdesc:a1b6d80f21687a19c864c1233aa69f1ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call a function of the ateccx08 engine depending on provided command. This is an extension of OpenSSL: there is no openssl cli command to call this function. See <a class="el" href="tlsutil_8c.html#a138afb41094f19e261ca1519585f6a30">run_engine_cmds()</a> function from the tlsutils.c file for details.  <a href="#a1b6d80f21687a19c864c1233aa69f1ac">More...</a><br /></td></tr>
 <tr class="separator:a1b6d80f21687a19c864c1233aa69f1ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,15 +169,6 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>signerCertSize</b> 
 <tr class="memitem:af9237934057bc89425f5d2d3686693e4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af9237934057bc89425f5d2d3686693e4"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>deviceCertSize</b> = 1024</td></tr>
 <tr class="separator:af9237934057bc89425f5d2d3686693e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae40e7f6f973e09a21b80ef83a5ecc732"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae40e7f6f973e09a21b80ef83a5ecc732"></a>
-char *&#160;</td><td class="memItemRight" valign="bottom"><b>dev_cert_fname</b> = &quot;/tmp/dev_cert.der&quot;</td></tr>
-<tr class="separator:ae40e7f6f973e09a21b80ef83a5ecc732"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d4f4dc055adafeba82ca9167d53755e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8d4f4dc055adafeba82ca9167d53755e"></a>
-char *&#160;</td><td class="memItemRight" valign="bottom"><b>signer_cert_fname</b> = &quot;/tmp/signer_cert.der&quot;</td></tr>
-<tr class="separator:a8d4f4dc055adafeba82ca9167d53755e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21b7469379f4c70fb02fe2199f6093d5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a21b7469379f4c70fb02fe2199f6093d5"></a>
-char *&#160;</td><td class="memItemRight" valign="bottom"><b>root_cert_fname</b> = &quot;/tmp/root_cert.der&quot;</td></tr>
-<tr class="separator:a21b7469379f4c70fb02fe2199f6093d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of OpenSSL ENGINE callback functions for certificate handling. </p>
@@ -231,8 +222,8 @@ char *&#160;</td><td class="memItemRight" valign="bottom"><b>root_cert_fname</b>
     <tr><td class="paramdir">[in]</td><td class="paramname">e</td><td>a pointer to the ENGINE structure </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">cmd</td><td>a command to execute. For the full list of commands see ECCX08_CMD_* defines in the <a class="el" href="ecc__meth_8h.html" title="Function definitions used in OpenSSL ENGINE. ">ecc_meth.h</a> file </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">i</td><td>an integer parameter of the command </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>a string parameter of the command </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>a function pointer parameter of the command </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">p</td><td>a string parameter of the command </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>a function pointer parameter of the command </td></tr>
   </table>
   </dd>
 </dl>
@@ -265,40 +256,52 @@ char *&#160;</td><td class="memItemRight" valign="bottom"><b>root_cert_fname</b>
 
 </div>
 </div>
-<a class="anchor" id="a707f101b472aeb0e21336f3ca3932fb5"></a>
+<a class="anchor" id="aee92d6dc47bc9e9a94239a3177f80547"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int extract_all_certs </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Retrieves all pre-programmed certificates from ATECCX08 chip and saves it into a global buffers. Calls functions to verify them. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">path</td><td>a pointer to a buffer with a path to the certstore </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>ATCA_SUCCESS for success </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="adffc4fa1141b53facaa726027e6e3547"></a>
+<a class="anchor" id="afb9044d31aa0408c82e75f0c5ea1768e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int get_device_cert </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Retrieves pre-programmed certificates from ATECCX08 chip and saves them into temporary files as defined in the dev_cert_fname, signer_cert_fname, and root_cert_fname variables. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">path</td><td>a pointer to a buffer with a path to the certstore </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>ATCA_SUCCESS for success </dd></dl>
 
 </div>
@@ -322,40 +325,52 @@ char *&#160;</td><td class="memItemRight" valign="bottom"><b>root_cert_fname</b>
 
 </div>
 </div>
-<a class="anchor" id="aa9a2f8768f02f3e82c901157fde9eccd"></a>
+<a class="anchor" id="aa5859b850c471a14cf0f4c2599a31036"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int get_root_cert </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Retrieves pre-programmed CA certificate (the root) from ATECCX08 chip and saves it into a global rootCert buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">path</td><td>a pointer to a buffer with a path to the certstore </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>ATCA_SUCCESS for success </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a3f0266578738be78d798b144e6262169"></a>
+<a class="anchor" id="a0e1cb74bd2dadf37d19170a182ccb72a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int get_signer_cert </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Retrieves pre-programmed signer certificate from ATECCX08 chip and saves it into a global signerCert buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">path</td><td>a pointer to a buffer with a path to the certstore </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>ATCA_SUCCESS for success </dd></dl>
 
 </div>

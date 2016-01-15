@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.10"/>
-<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/atmel-ecc/client-server/client-tls2.c File Reference</title>
+<title>OpenSSL ECC Engine: C:/Source/GitLab/CaSw/OpenSSL/GitHub/cryptoauth-openssl-engine/client-server/client-tls2.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
    <div id="projectname">OpenSSL ECC Engine
    &#160;<span id="projectnumber">1.0</span>
    </div>
-   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage, ECDSA sign/verify, and ECDH</div>
+   <div id="projectbrief">OpenSSL Engine implementation using ATECC508 for ECC key storage and ECDSA, ECDH, and RNG.</div>
   </td>
  </tr>
  </tbody>
@@ -99,15 +99,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af001045c3edf01693c5826c12c8bf563"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="client-tls2_8c.html#af001045c3edf01693c5826c12c8bf563">connect_client</a> (const char *engine_id, const char *ca_path, const char *chain_file, const char *cert_file, const char *key_file, const char *cipher_list)</td></tr>
-<tr class="memdesc:af001045c3edf01693c5826c12c8bf563"><td class="mdescLeft">&#160;</td><td class="mdescRight">A complete procedure of connecting client using TLS-1.2 protocol over TCP/IP.  <a href="#af001045c3edf01693c5826c12c8bf563">More...</a><br /></td></tr>
-<tr class="separator:af001045c3edf01693c5826c12c8bf563"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a370cb6aab0469811dfec540edb52ae0f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="client-tls2_8c.html#a370cb6aab0469811dfec540edb52ae0f">connect_client</a> (const char *engine_id, const char *ca_path, const char *chain_file, const char *cert_file, const char *key_file, const char *cipher_list, const char *ip_address, uint16_t port_number)</td></tr>
+<tr class="memdesc:a370cb6aab0469811dfec540edb52ae0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A complete procedure of connecting client using TLS-1.2 protocol over TCP/IP.  <a href="#a370cb6aab0469811dfec540edb52ae0f">More...</a><br /></td></tr>
+<tr class="separator:a370cb6aab0469811dfec540edb52ae0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The client portion of the TLS1.2 client/server exchange utility. For details see <a href="https://wiki.openssl.org/index.php/SSL/TLS_Client">https://wiki.openssl.org/index.php/SSL/TLS_Client</a>. </p>
 <p>Copyright (c) 2015 Atmel Corporation. All rights reserved.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="af001045c3edf01693c5826c12c8bf563"></a>
+<a class="anchor" id="a370cb6aab0469811dfec540edb52ae0f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -145,7 +145,19 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>cipher_list</em>&#160;</td>
+          <td class="paramname"><em>cipher_list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>ip_address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>port_number</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -164,6 +176,8 @@ Functions</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">cert_file</td><td>Certificate File Name </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">key_file</td><td>Private Key File Name </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">cipher_list</td><td>Cipher list string (ECDH-ECDSA-AES128-SHA256, ECDH-ECDSA-AES128-GCM-SHA256, etc) - Must be SHA-256 for ECC508 </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ip_address</td><td>The server IP address </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ip_address</td><td>The server port number </td></tr>
   </table>
   </dd>
 </dl>

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['server_2dtls2_2ec',['server-tls2.c',['../server-tls2_8c.html',1,'']]]
+  ['platform_2ec',['platform.c',['../platform_8c.html',1,'']]],
+  ['platform_2eh',['platform.h',['../platform_8h.html',1,'']]]
 ];
