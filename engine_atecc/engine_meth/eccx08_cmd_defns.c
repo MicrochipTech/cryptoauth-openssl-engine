@@ -349,7 +349,7 @@ err:
  *       commands see ECCX08_CMD_* defines in the ecc_meth.h
  *       file
  * \param[in] i an integer parameter of the command
- * \param[in,out] p a string parameter of the command
+ * \param[in,out] p a void * parameter of the command
  * \param[in] f a function pointer parameter of the command
  * \return 1 for success
  */

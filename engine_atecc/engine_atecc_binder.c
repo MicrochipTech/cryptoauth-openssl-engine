@@ -231,7 +231,7 @@ int eccx08_finish(ENGINE *e)
  *       commands see ECCX08_CMD_* defines in the ecc_meth.h
  *       file
  * \param[in] i An integer parameter of the command
- * \param[in, out] p A string parameter of the command
+ * \param[in, out] p void * parameter of the command
  * \param[in] f A function pointer parameter of the command
  * \return ATCA_SUCCESS for success
  */
@@ -239,6 +239,12 @@ int eccx08_ctrl(ENGINE *e, int cmd, long i, void *p, void (*f)())
 {
     int rc = 0;
     eccx08_debug("eccx08_ctrl()\n");
+    if (cmd < ENGINE_CMD_BASE) { 
+        // if cmd < ENGINE_CMD_BASE this is being called by OpenSSL.  
+        // In this case no work to do so just return.
+        return (1);
+    }
+
     rc = eccx08_cmd_ctrl(e, cmd, i, p, f);
     return rc;
 }
