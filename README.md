@@ -1,6 +1,6 @@
 
 #CryptoAuthentication OpenSSL Engine  
-[TOC]
+
 ##Overview
 This is an OpenSSL Engine implementation using ATECC508A for ECC key storage, ECDSA sign/verify, ECDH, and FIPS Random Number Generator
 
