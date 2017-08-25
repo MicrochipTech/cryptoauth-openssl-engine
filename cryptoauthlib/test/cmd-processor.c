@@ -260,7 +260,6 @@ int help(void)
     printf("rand - generate some random numbers\r\n");
     printf("discover - buses and devices\r\n");
     printf("openssl - run OpenSSL engine tests\r\n");
-    printf("sti - run sti command\r\n");
 
     printf("\r\n");
     return ATCA_SUCCESS;
@@ -472,7 +471,6 @@ int parseCmd(const char *command)
     {
         help();
     }
-
     else if ( (cmds = strstr(command, "u508")) )
     {
         atca_unit_tests(ATECC508A);
@@ -600,7 +598,6 @@ int parseCmd(const char *command)
     {
         doRandoms();
     }
-
     else if ( (cmds = strstr(command, "discover")) )
     {
         for (i = 0; i < (int)(sizeof( ifaceCfgs ) / sizeof(ATCAIfaceCfg)); i++)

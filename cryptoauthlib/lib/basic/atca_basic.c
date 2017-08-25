@@ -48,7 +48,7 @@
 #include "atca_basic.h"
 #include "host/atca_host.h"
 
-char atca_version[] = { "20170601" };  // change for each release, yyyymmdd
+char atca_version[] = { "20170701" };  // change for each release, yyyymmdd
 
 /** \brief returns a version string for the CryptoAuthLib release.
  *  The format of the version string returned is "yyyymmdd"

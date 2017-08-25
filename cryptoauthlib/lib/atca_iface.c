@@ -85,8 +85,8 @@ ATCAIface newATCAIface(ATCAIfaceCfg *cfg)  // constructor
 
     if (atinit(caiface) != ATCA_SUCCESS)
     {
-        //free(caiface);
-        //caiface = NULL;
+        free(caiface);
+        caiface = NULL;
     }
 
     return caiface;

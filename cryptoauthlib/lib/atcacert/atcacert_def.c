@@ -127,7 +127,7 @@ int atcacert_get_device_locs(const atcacert_def_t*  cert_def,
         block_size);
     if (ret != ATCACERT_E_SUCCESS)
         return ret;
-        
+
     ret = atcacert_merge_device_loc(
         device_locs,
         device_locs_count,

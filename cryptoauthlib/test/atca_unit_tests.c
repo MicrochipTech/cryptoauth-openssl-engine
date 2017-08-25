@@ -384,15 +384,11 @@ TEST(atca_it_feature, counter)
     uint16_t execution_time = 0;
     uint8_t increased_bin_val[4] = { 0x00 };
 
-    if ((ATSHA204A == gIfaceCfg->devtype) ||
-        (ATECC108A == gIfaceCfg->devtype))
-    {
-        /* Test is unsupported by the device so skip it */
-        TEST_IGNORE_MESSAGE("Device has no counter")
+    if ((ATSHA204A == gIfaceCfg->devtype) || (ATECC108A == gIfaceCfg->devtype))
+        TEST_IGNORE_MESSAGE("Device has no counter");
 
-        // build a counter command
-        packet.param1 = COUNTER_MODE_INCREASE;
-    }
+    // build a counter command
+    packet.param1 = COUNTER_MODE_INCREASE;
     packet.param2 = 0x0000;
     status = atCounter(gCommandObj, &packet);
     TEST_ASSERT_EQUAL(COUNTER_RSP_SIZE, packet.rxsize);
@@ -513,15 +509,11 @@ TEST(atca_it_feature, ecdh)
 
     test_assert_data_is_locked();
 
-    if ((ATSHA204A == gIfaceCfg->devtype) ||
-        (ATECC108A == gIfaceCfg->devtype))
-    {
-        /* Test is unsupported by the device so skip it */
-        TEST_IGNORE_MESSAGE("Test is unsupported by the device ")
+    if ((ATSHA204A == gIfaceCfg->devtype) || (ATECC108A == gIfaceCfg->devtype))
+        TEST_IGNORE_MESSAGE("Test is unsupported by the device ");
 
-        // Read SN
-        packet.param1 = ATCA_ZONE_CONFIG | ATCA_ZONE_READWRITE_32;
-    }
+    // Read SN
+    packet.param1 = ATCA_ZONE_CONFIG | ATCA_ZONE_READWRITE_32;
     packet.param2 = 0;
     status = atRead(gCommandObj, &packet);
     TEST_ASSERT_EQUAL(ATCA_SUCCESS, status);
@@ -733,13 +725,10 @@ TEST(atca_it_feature, genkey)
     test_assert_config_is_locked();
 
     if (ATSHA204A == gIfaceCfg->devtype)
-    {
-        /* Test is unsupported by the device so skip it */
-        TEST_IGNORE_MESSAGE("Test is unsupported by the device ")
+        TEST_IGNORE_MESSAGE("Test is unsupported by the device");
 
-        // build a genkey command
-        packet.param1 = 0x04; // a random private key is generated and stored in slot keyID
-    }
+    // build a genkey command
+    packet.param1 = 0x04; // a random private key is generated and stored in slot keyID
     packet.param2 = keyID;
     status = atGenKey(gCommandObj, &packet);
     TEST_ASSERT_EQUAL(GENKEY_RSP_SIZE_LONG, packet.rxsize);
@@ -1070,13 +1059,10 @@ TEST(atca_it_feature, privwrite)
     test_assert_data_is_unlocked();
 
     if (ATSHA204A == gIfaceCfg->devtype)
-    {
-        /* Test is unsupported by the device so skip it */
-        TEST_IGNORE_MESSAGE("Test is not supported by the device")
+        TEST_IGNORE_MESSAGE("Test is not supported by the device");
 
-        // build an PrivWrite command
-        packet.param1 = 0x00;
-    }
+    // build an PrivWrite command
+    packet.param1 = 0x00;
     packet.param2 = 0x0000;
     memset(&packet.data[4], 0x55, 32);
 
@@ -1220,14 +1206,11 @@ TEST(atca_it_feature, sign)
     test_assert_config_is_locked();
 
     if (ATSHA204A == gIfaceCfg->devtype)
-    {
-        /* Test is unsupported by the device so skip it */
-        TEST_IGNORE_MESSAGE("Test is unsupported by the device ")
+        TEST_IGNORE_MESSAGE("Test is unsupported by the device ");
 
-        // set up message to sign
-        //build a nonce command (pass through mode)
-        packet.param1 = NONCE_MODE_PASSTHROUGH;
-    }
+    // set up message to sign
+    //build a nonce command (pass through mode)
+    packet.param1 = NONCE_MODE_PASSTHROUGH;
     packet.param2 = 0x0000;
     memset(packet.data, 0x55, 32);    // a 32-byte nonce
 
@@ -1330,13 +1313,10 @@ TEST(atca_it_feature, verify)
     test_assert_config_is_locked();
 
     if (ATSHA204A == gIfaceCfg->devtype)
-    {
-        /* Test is unsupported by the device so skip it */
-        TEST_IGNORE_MESSAGE("Test is unsupported by the device ")
+        TEST_IGNORE_MESSAGE("Test is unsupported by the device ");
 
-        // build a genkey command
-        packet.param1 = 0x04; // a random private key is generated and stored in slot keyID
-    }
+    // build a genkey command
+    packet.param1 = 0x04; // a random private key is generated and stored in slot keyID
     packet.param2 = keyID;
     status = atGenKey(gCommandObj, &packet);
     TEST_ASSERT_EQUAL(GENKEY_RSP_SIZE_LONG, packet.rxsize);
