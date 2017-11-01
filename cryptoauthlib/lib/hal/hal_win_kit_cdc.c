@@ -36,6 +36,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifdef ATCA_HAL_KIT_CDC
+
 //#include "atca_basic.h"
 #include "atca_hal.h"
 #include "kit_phy.h"
@@ -511,3 +513,5 @@ ATCA_STATUS hal_kit_cdc_discover_devices(int busNum, ATCAIfaceCfg *cfg, int *fou
     *found = 0;
     return ATCA_UNIMPLEMENTED;
 }
+
+#endif

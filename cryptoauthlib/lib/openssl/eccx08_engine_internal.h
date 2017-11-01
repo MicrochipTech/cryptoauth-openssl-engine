@@ -40,8 +40,24 @@
 
 #include "atcacert/atcacert_def.h"
 
-#if 0
+/** \brief Define if we're using the 1.0 or 1.1 APIs */
 #if OPENSSL_VERSION_NUMBER > 0x10002000 && OPENSSL_VERSION_NUMBER < 0x10003000
+#define ATCA_OPENSSL_OLD_API                    (1)
+#else
+#error "This module will not work with OpenSSL v1.1.x APIs yet"
+#endif
+
+/** Additional Logic for Allowed Functions */
+#if ATCA_OPENSSL_ENGINE_REGISTER_ECDH && !defined(OPENSSL_NO_ECDH)
+#define ATCA_OPENSSL_ENGINE_ECDH                (1)
+#endif
+
+#if ATCA_OPENSSL_ENGINE_REGISTER_ECDSA && !defined(OPENSSL_NO_ECDSA)
+#define ATCA_OPENSSL_ENGINE_ECDSA               (1)
+#endif
+
+
+#if ATCA_OPENSSL_OLD_API
 /** From crypto/ecdh/ech_locl.h (OpenSSL 1.0.2) */
 struct ecdh_method {
     const char *name;
@@ -53,56 +69,19 @@ struct ecdh_method {
     char *app_data;
 };
 
-///** From crypto/ecdsa/ecs_locl.h (OpenSSL 1.0.2) */
-//struct ecdsa_method {
-//    const char *name;
-//    ECDSA_SIG *(*ecdsa_do_sign) (const unsigned char *dgst, int dgst_len,
-//        const BIGNUM *inv, const BIGNUM *rp,
-//        EC_KEY *eckey);
-//    int(*ecdsa_sign_setup) (EC_KEY *eckey, BN_CTX *ctx, BIGNUM **kinv,
-//        BIGNUM **r);
-//    int(*ecdsa_do_verify) (const unsigned char *dgst, int dgst_len,
-//        const ECDSA_SIG *sig, EC_KEY *eckey);
-//    int flags;
-//    void *app_data;
-//};
-
-///** From crypto/ec/ec_lcl.h (OpenSSL 1.0.2) */
-//struct ec_point_st {
-//    const EC_METHOD *meth;
-//    /*
-//    * All members except 'meth' are handled by the method functions, even if
-//    * they appear generic
-//    */
-//    BIGNUM X;
-//    BIGNUM Y;
-//    BIGNUM Z;                   /* Jacobian projective coordinates: (X, Y, Z)
-//                                * represents (X/Z^2, Y/Z^3) if Z != 0 */
-//    int Z_is_one;               /* enable optimized point arithmetics for
-//                                * special case */
-//} /* EC_POINT */;
-//
-///** From crypto/ec/ec_lcl.h (OpenSSL 1.0.2) */
-//typedef struct ec_extra_data_st {
-//    struct ec_extra_data_st *next;
-//    void *data;
-//    void *(*dup_func) (void *);
-//    void(*free_func) (void *);
-//    void(*clear_free_func) (void *);
-//} EC_EXTRA_DATA;
-//
-///** From crypto/ec/ec_lcl.h (OpenSSL 1.0.2) */
-//struct ec_key_st {
-//    int version;
-//    EC_GROUP *group;
-//    EC_POINT *pub_key;
-//    BIGNUM *priv_key;
-//    unsigned int enc_flag;
-//    point_conversion_form_t conv_form;
-//    int references;
-//    int flags;
-//    EC_EXTRA_DATA *method_data;
-//};
+/** From crypto/ecdsa/ecs_locl.h (OpenSSL 1.0.2) */
+struct ecdsa_method {
+    const char *name;
+    ECDSA_SIG *(*ecdsa_do_sign) (const unsigned char *dgst, int dgst_len,
+        const BIGNUM *inv, const BIGNUM *rp,
+        EC_KEY *eckey);
+    int(*ecdsa_sign_setup) (EC_KEY *eckey, BN_CTX *ctx, BIGNUM **kinv,
+        BIGNUM **r);
+    int(*ecdsa_do_verify) (const unsigned char *dgst, int dgst_len,
+        const ECDSA_SIG *sig, EC_KEY *eckey);
+    int flags;
+    void *app_data;
+};
 
 /** From crypto/evp/evp_locl.h (OpenSSL 1.0.2) */
 struct evp_pkey_method_st {
@@ -144,7 +123,6 @@ struct evp_pkey_method_st {
     int(*ctrl_str) (EVP_PKEY_CTX *ctx, const char *type, const char *value);
 } /* EVP_PKEY_METHOD */;
 
-/** From crypto/evp/evp_locl.h (OpenSSL 1.0.2) */
 struct evp_pkey_ctx_st {
     /* Method associated with this operation */
     const EVP_PKEY_METHOD *pmeth;
@@ -166,16 +144,15 @@ struct evp_pkey_ctx_st {
     int *keygen_info;
     int keygen_info_count;
 } /* EVP_PKEY_CTX */;
-#else
-#error "OpenSSL 1.1.x is not yet supported by this engine"
-#endif  //OPENSSL_VERSION_NUMBER
-#endif  //ATCA_OPENSSL_ENGINE_INTERNAL_HEADERS
+
+#endif
 
 /* Global Configuration Structures */
 extern ATCAIfaceCfg *       pCfg;
 extern atcacert_def_t *     g_cert_def_1_signer_ptr;
 extern atcacert_def_t *     g_cert_def_2_device_ptr;
-extern uint8_t        g_signer_1_ca_public_key[64];
+extern uint8_t              g_signer_1_ca_public_key[64];
+extern uint8_t              g_eccx08_transport_key[32];
 
 typedef struct _eccx08_engine_config
 {
@@ -188,22 +165,38 @@ typedef struct _eccx08_engine_config
 } eccx08_engine_config_t;
 extern eccx08_engine_config_t eccx08_engine_config;
 
+/** \brief Key Configuration Info stored as the private key "BIGNUM" */
+typedef struct _eccx08_engine_key
+{
+    uint8_t     magic[8];       /* Must be "ATECCx08" */
+    uint8_t     bus_type;
+    uint8_t     bus_num;
+    uint8_t     device_num;
+    uint8_t     slot_num;
+    uint8_t     reserved[20];
+} eccx08_engine_key_t;
+
 /* Global Engine Structures */
 extern const ENGINE_CMD_DEFN eccx08_cmd_defns[];
 extern RAND_METHOD eccx08_rand;
 
+/* General Engine Helper Functions */
+ATCAIfaceCfg* eccx08_get_iface_default(ATCAIfaceType iType);
+int eccx08_get_iface_cfg(ATCAIfaceCfg* iface, eccx08_engine_key_t * key);
+void eccx08_eckey_debug(BIO * bio, EC_KEY * ec);
+void eccx08_pkey_debug(BIO * bio, EVP_PKEY * pkey);
+void eccx08_pkey_ctx_debug(BIO * bio, EVP_PKEY_CTX *ctx);
+
 /* Library Module Initialization Functions */
-int eccx08_ameth_init(void); 
 int eccx08_cert_init(void);
 int eccx08_cipher_init(void);
-int eccx08_ecdh_init(void);
+int eccx08_ecdh_init(ECDH_METHOD**);
 int eccx08_ecdsa_init(ECDSA_METHOD**);
 int eccx08_pkey_meth_init(void);
 int eccx08_platform_init(void);
 int eccx08_rand_init(void);
 
 /* Library Module Cleanup Functions */
-int eccx08_ameth_cleanup(void);
 int eccx08_cert_cleanup(void);
 int eccx08_ecdsa_cleanup(void);
 int eccx08_pkey_meth_cleanup(void);
@@ -221,10 +214,17 @@ int eccx08_sha256_selector(ENGINE *, const EVP_MD **, const int **, int );
 
 /* PKEY */
 EVP_PKEY* eccx08_load_pubkey(ENGINE *, const char *, UI_METHOD *, void *);
+EVP_PKEY* eccx08_load_privkey(ENGINE *, const char *, UI_METHOD *, void *);
 int eccx08_pmeth_selector(ENGINE *, EVP_PKEY_METHOD **, const int **, int);
+int eccx08_eckey_isx08key(EC_KEY * ec);
+int eccx08_pkey_isx08key(EVP_PKEY * pkey);
 
-/* ASN1 PKEY */
-int eccx08_ameth_selector(ENGINE *, EVP_PKEY_ASN1_METHOD **, const int **, int);
+/* ECDSA */
+ECDSA_SIG* eccx08_ecdsa_do_sign(const unsigned char *dgst, int dgst_len,
+    const BIGNUM *inv, const BIGNUM *rp, EC_KEY *eckey);
+
+
+
 
 
 #endif /* __ECCX08_ENGINE_INTERNAL_H__ */

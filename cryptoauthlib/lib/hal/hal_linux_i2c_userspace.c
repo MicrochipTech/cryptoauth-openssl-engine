@@ -39,7 +39,6 @@
 #include "atca_hal.h"
 #include "hal_linux_i2c_userspace.h"
 
-#include <linux/i2c-dev.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
@@ -175,7 +174,7 @@ ATCA_STATUS hal_i2c_send(ATCAIface iface, uint8_t *txdata, int txlength)
         return ATCA_COMM_FAIL;
 
     // Set Slave Address
-    if (ioctl(f_i2c, I2C_SLAVE, cfg->atcai2c.slave_address >> 1) < 0)
+    if (ioctl(f_i2c, 0x0703, cfg->atcai2c.slave_address >> 1) < 0)
     {
         close(f_i2c);
         return ATCA_COMM_FAIL;
@@ -210,7 +209,7 @@ ATCA_STATUS hal_i2c_receive(ATCAIface iface, uint8_t *rxdata, uint16_t *rxlength
         return ATCA_COMM_FAIL;
 
     // Set Slave Address
-    if (ioctl(f_i2c, I2C_SLAVE, cfg->atcai2c.slave_address >> 1) < 0)
+    if (ioctl(f_i2c, 0x0703, cfg->atcai2c.slave_address >> 1) < 0)
     {
         close(f_i2c);
         return ATCA_COMM_FAIL;
@@ -256,7 +255,7 @@ ATCA_STATUS hal_i2c_wake(ATCAIface iface)
     // Send the wake by writing to an address of 0x00
     // Create wake up pulse by sending a slave address 0f 0x00.
     // This slave address is sent to device by using a dummy write command.
-    if (ioctl(f_i2c, I2C_SLAVE, 0x00) < 0)
+    if (ioctl(f_i2c, 0x0703, 0x00) < 0)
     {
         close(f_i2c);
         return ATCA_COMM_FAIL;
@@ -272,7 +271,7 @@ ATCA_STATUS hal_i2c_wake(ATCAIface iface)
     atca_delay_us(cfg->wake_delay); // wait tWHI + tWLO which is configured based on device type and configuration structure
 
     // Set Slave Address
-    if (ioctl(f_i2c, I2C_SLAVE, cfg->atcai2c.slave_address >> 1) < 0)
+    if (ioctl(f_i2c, 0x0703, cfg->atcai2c.slave_address >> 1) < 0)
     {
         close(f_i2c);
         return ATCA_COMM_FAIL;
@@ -309,7 +308,7 @@ ATCA_STATUS hal_i2c_idle(ATCAIface iface)
         return ATCA_COMM_FAIL;
 
     // Set Slave Address
-    if (ioctl(f_i2c, I2C_SLAVE, cfg->atcai2c.slave_address >> 1) < 0)
+    if (ioctl(f_i2c, 0x0703, cfg->atcai2c.slave_address >> 1) < 0)
     {
         close(f_i2c);
         return ATCA_COMM_FAIL;
@@ -342,7 +341,7 @@ ATCA_STATUS hal_i2c_sleep(ATCAIface iface)
         return ATCA_COMM_FAIL;
 
     // Set Slave Address
-    if (ioctl(f_i2c, I2C_SLAVE, cfg->atcai2c.slave_address >> 1) < 0)
+    if (ioctl(f_i2c, 0x0703, cfg->atcai2c.slave_address >> 1) < 0)
     {
         close(f_i2c);
         return ATCA_COMM_FAIL;

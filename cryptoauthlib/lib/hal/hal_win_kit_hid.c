@@ -36,6 +36,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifdef ATCA_HAL_KIT_HID
+
 #include "atca_hal.h"
 #include "hal_win_kit_hid.h"
 #include "kit_protocol.h"
@@ -433,5 +435,7 @@ ATCA_STATUS hal_kit_hid_release(void* hal_data)
     }
     return ATCA_SUCCESS;
 }
+
+#endif
 
 /** @} */

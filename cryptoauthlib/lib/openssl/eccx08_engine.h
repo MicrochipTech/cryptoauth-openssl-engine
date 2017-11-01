@@ -42,7 +42,7 @@
 #include "cryptoauthlib.h"
 
 /** \brief The engine version number. Must be updated for each engine release */
-#define ECCX08_ENGINE_VERSION           "01.00.03"
+#define ECCX08_ENGINE_VERSION           "01.00.10"
 
 /** \brief The engine id - short name for OpenSSL */
 #define ECCX08_ENGINE_ID                "ateccx08"
@@ -75,13 +75,18 @@ security implications */
 #endif
 
 /** \brief Advertize ECDH capabilities to OpenSSL */
-#ifndef ATCA_OPENSSL_ENGINE_ENABLE_ECDH
-#define ATCA_OPENSSL_ENGINE_ENABLE_ECDH         (0)
+#ifndef ATCA_OPENSSL_ENGINE_REGISTER_ECDH
+#define ATCA_OPENSSL_ENGINE_REGISTER_ECDH       (0)
 #endif
 
 /** \brief Advertize ECDSA capabilities to OpenSSL */
-#ifndef ATCA_OPENSSL_ENGINE_ENABLE_ECDSA
-#define ATCA_OPENSSL_ENGINE_ENABLE_ECDSA        (1)
+#ifndef ATCA_OPENSSL_ENGINE_REGISTER_ECDSA
+#define ATCA_OPENSSL_ENGINE_REGISTER_ECDSA      (1)
+#endif
+
+/** \brief Advertize PKEY methods to OpenSSL independent of ECDSA or ECDH */
+#ifndef ATCA_OPENSSL_ENGINE_REGISTER_PKEY
+#define ATCA_OPENSSL_ENGINE_REGISTER_PKEY       (1)
 #endif
 
 /** \brief If advertising ECDSA capability whether or not to use hardware for verification */
@@ -111,21 +116,25 @@ loaded from a file or an application */
 /** \brief OpenSSL Engine Command Numerical Identifiers */
 typedef enum {
     ECCX08_CMD_GET_VERSION = ENGINE_CMD_BASE,
-    ECCX08_CMD_GET_SIGNER_CERT,
-    ECCX08_CMD_GET_PUB_KEY,
+    ECCX08_CMD_GET_KEY,
     ECCX08_CMD_GET_DEVICE_CERT,
-    ECCX08_CMD_VERIFY_SIGNER_CERT,
-    ECCX08_CMD_VERIFY_DEVICE_CERT,
-    ECCX08_CMD_GET_ROOT_CERT,
-    ECCX08_CMD_EXTRACT_ALL_CERTS,
-    ECCX08_CMD_GET_PRIV_KEY,
-    ECCX08_CMD_DEVICE_KEY_SLOT,
+    ECCX08_CMD_GET_SIGNER_CERT,
+    ECCX08_CMD_LOAD_CERT_CTRL,
+    ECCX08_CMD_KEY_SLOT,
+    ECCX08_CMD_TRANSPORT_KEY,
     ECCX08_CMD_ECDH_SLOT,
     ECCX08_CMD_ECDH_SLOTS,
     ECCX08_CMD_DEVICE_CERT,
     ECCX08_CMD_SIGNER_CERT,
     ECCX08_CMD_MAX
 } ECCX08_CMD_LIST;
+
+/* This structure definition isn't from OpenSSL but rather OpenSC/libp11 */
+typedef struct
+{
+    const char *s_slot_cert_id;
+    X509 *cert;
+} cmd_load_cert_params;
 
 int eccx08_cmd_ctrl(ENGINE *e, int cmd, long i, void *p, void(*f)(void));
 

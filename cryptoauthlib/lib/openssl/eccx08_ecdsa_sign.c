@@ -36,9 +36,13 @@
  */
 
 #include "eccx08_engine.h"
-
-#if ATCA_OPENSSL_ENGINE_ENABLE_ECDSA && !defined(OPENSSL_NO_ECDSA)
 #include "eccx08_engine_internal.h"
+
+
+#if ATCA_OPENSSL_OLD_API
+static ECDSA_METHOD * eccx08_ecdsa_default;
+static ECDSA_METHOD * eccx08_ecdsa;
+#endif
 
 /**
  *
@@ -62,7 +66,7 @@
  * \return a pointer to the ECDSA_SIG structure for success,
  *         NULL otherwise
  */
-static ECDSA_SIG* eccx08_ecdsa_do_sign(const unsigned char *dgst, int dgst_len,
+ECDSA_SIG* eccx08_ecdsa_do_sign(const unsigned char *dgst, int dgst_len,
                                        const BIGNUM *inv, const BIGNUM *rp,
                                        EC_KEY *eckey)
 {
@@ -73,7 +77,7 @@ static ECDSA_SIG* eccx08_ecdsa_do_sign(const unsigned char *dgst, int dgst_len,
     DEBUG_ENGINE("Entered\n");
 
     /* Check Inputs */
-    if (!dgst || dgst_len != ATCA_BLOCK_SIZE)
+    if (!dgst || ATCA_BLOCK_SIZE > dgst_len )
     {
         DEBUG_ENGINE("Bad Inputs: %p, %d\n", dgst, dgst_len);
         return NULL;
@@ -140,11 +144,8 @@ static ECDSA_SIG* eccx08_ecdsa_do_sign(const unsigned char *dgst, int dgst_len,
 static int eccx08_ecdsa_sign_setup(EC_KEY *eckey, BN_CTX *ctx, BIGNUM **kinv,
                                    BIGNUM **r)
 {
-//    const ECDSA_METHOD *std_meth = ECDSA_get_default_method();
-
     DEBUG_ENGINE("Entered\n");
-//    std_meth->ecdsa_sign_setup(eckey, ctx, kinv, r);
-    return (1);
+    return ENGINE_OPENSSL_SUCCESS;
 }
 
 /**
@@ -258,14 +259,35 @@ done:
     }
 }
 
-static ECDSA_METHOD * eccx08_ecdsa;
+ECDSA_SIG* eccx08_ecdsa_sign(const unsigned char *dgst, int dgst_len,
+    const BIGNUM *inv, const BIGNUM *rp,
+    EC_KEY *eckey)
+{
+    /* Check if the provided key is a hardware key */
+    if (eccx08_eckey_isx08key(eckey))
+    {
+        return eccx08_ecdsa_do_sign(dgst, dgst_len, inv, rp, eckey);
+    }
+    else
+    {
+        /* Not a hardware key - compute normally */
+        return eccx08_ecdsa_default->ecdsa_do_sign(dgst, dgst_len, inv, rp, eckey);
+    }
+}
+
+#if ATCA_OPENSSL_OLD_API
 
 int eccx08_ecdsa_init(ECDSA_METHOD ** ppMethod)
 {
     DEBUG_ENGINE("Entered\n");
+    if (!eccx08_ecdsa_default)
+    {
+        eccx08_ecdsa_default = ECDSA_get_default_method();
+    }
+
     if (!eccx08_ecdsa)
     {
-        eccx08_ecdsa = ECDSA_METHOD_new(ECDSA_get_default_method());
+        eccx08_ecdsa = ECDSA_METHOD_new(eccx08_ecdsa_default);
     }
         
     if (!eccx08_ecdsa || !ppMethod)
@@ -274,7 +296,7 @@ int eccx08_ecdsa_init(ECDSA_METHOD ** ppMethod)
     }
 
     ECDSA_METHOD_set_name(eccx08_ecdsa, "ATECCX08 ECDSA METHOD");
-    ECDSA_METHOD_set_sign(eccx08_ecdsa, eccx08_ecdsa_do_sign);
+    ECDSA_METHOD_set_sign(eccx08_ecdsa, eccx08_ecdsa_sign);
 
 #if ATCA_OPENSSL_ENGINE_ENABLE_HW_VERIFY
     ECDSA_METHOD_set_verify(eccx08_ecdsa, eccx08_ecdsa_do_verify);

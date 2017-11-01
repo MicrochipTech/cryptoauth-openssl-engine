@@ -54,32 +54,31 @@
 
 #include "atcacert/atcacert_client.h"
 
-
 /* OpenSSL Engine API demands this list be in cmd number order otherwise it'll
 throw an invalid cmd number error*/
 const ENGINE_CMD_DEFN eccx08_cmd_defns[] = {
     { ECCX08_CMD_GET_VERSION,           "VERSION", 
         "Get engine version", ENGINE_CMD_FLAG_NO_INPUT },
+    { ECCX08_CMD_GET_KEY,               "GET_DEVICE_KEY", 
+        "Get engine key structure for DEVICE_KEY_SLOT and stores in the provided file", ENGINE_CMD_FLAG_STRING },
+    { ECCX08_CMD_GET_DEVICE_CERT,       "GET_DEVICE_CERT",
+        "Get device certificate from hardware and stores in the provided filename", ENGINE_CMD_FLAG_STRING },
     { ECCX08_CMD_GET_SIGNER_CERT,       "GET_SIGNER_CERT", 
-        "Get signer certificate from hardware", ENGINE_CMD_FLAG_STRING },
-    // { ECCX08_CMD_GET_PUB_KEY,           "GET_DEVICE_PUBKEY", 
-    //     "Get device public key from hardware", ENGINE_CMD_FLAG_STRING },
-    { ECCX08_CMD_GET_DEVICE_CERT,       "GET_DEVICE_CERT", 
-        "Get device certificate from hardware", ENGINE_CMD_FLAG_STRING },
-    { ECCX08_CMD_GET_DEVICE_CSR,        "GET_DEVICE_CSR",
-        "Generate a device CSR and save it", ENGINE_CMD_FLAG_STRING },
+        "Get signer certificate from hardware and stores in the provided filename", ENGINE_CMD_FLAG_STRING },
     { ECCX08_CMD_LOAD_CERT_CTRL,        "LOAD_CERT_CTRL",
         "Load the device certificate into an OpenSSL cert", ENGINE_CMD_FLAG_INTERNAL },
-    { ECCX08_CMD_DEVICE_KEY_SLOT,       "device_key_slot", 
-        "Where to find the device private key", ENGINE_CMD_FLAG_NUMERIC | ENGINE_CMD_FLAG_INTERNAL },
-    { ECCX08_CMD_ECDH_SLOT,             "ecdh_key_slot",
+    { ECCX08_CMD_KEY_SLOT,              "SET_KEY_SLOT", 
+        "Where to find the device private key", ENGINE_CMD_FLAG_NUMERIC },
+    { ECCX08_CMD_TRANSPORT_KEY,         "set_transport_key",
+        "Binary blob with the transport key secret (32 bytes)", ENGINE_CMD_FLAG_STRING | ENGINE_CMD_FLAG_INTERNAL },
+    { ECCX08_CMD_ECDH_SLOT,             "set_ecdh_slot",
         "Base slot for ecdh key(s)", ENGINE_CMD_FLAG_NUMERIC | ENGINE_CMD_FLAG_INTERNAL },
-    { ECCX08_CMD_ECDH_SLOTS,            "ecdh_slot_count",
+    { ECCX08_CMD_ECDH_SLOTS,            "set_ecdh_count",
         "Number of sequential slots to use for ecdh key(s) - e.g. ecdh_key_slot...ecdh_key_slot+ecdh_slot_count-1", 
         ENGINE_CMD_FLAG_NUMERIC | ENGINE_CMD_FLAG_INTERNAL },
-    { ECCX08_CMD_DEVICE_CERT,           "device_cert",
+    { ECCX08_CMD_DEVICE_CERT,           "set_device_cert_def",
         "Device Cert Configuration Section", ENGINE_CMD_FLAG_STRING | ENGINE_CMD_FLAG_INTERNAL },
-    { ECCX08_CMD_SIGNER_CERT,           "signer_cert",
+    { ECCX08_CMD_SIGNER_CERT,           "set_signer_cert_def",
         "Signer Cert Configuration Section", ENGINE_CMD_FLAG_STRING | ENGINE_CMD_FLAG_INTERNAL },
 
     /* Structure has to end with a null element */
@@ -186,7 +185,6 @@ static int get_cert(char *filename, atcacert_def_t * pCertDef, atcacert_def_t * 
     return status;
 }
 
-
 /**
  *
  * \brief Retrieves pre-programmed certificates from ATECCX08
@@ -202,26 +200,48 @@ static int get_device_cert(char *filename)
     return get_cert(filename, g_cert_def_2_device_ptr, g_cert_def_1_signer_ptr);
 }
 
-// /**
-//  * \brief Retrieves the signer public key from ATECCX08 chip and
-//  *        saves them into a global signerPubkey buffer.
-//  *
-//  * \return ATCA_SUCCESS for success
-//  */
-// static int get_public_key(void)
-// {
-//     ATCA_STATUS status = ATCA_GEN_FAIL;
+/**
+* \brief Retrieves key from ATECCX08 chip and builds a key structure and
+* saves it as as a private key file in PEM format
+*
+* \return ATCA_SUCCESS for success
+*/
+static int get_key(ENGINE* e, uint16_t keyid, char * filename)
+{
+    ATCA_STATUS status = ATCA_GEN_FAIL;
+    char* key_str[32];
+    EVP_PKEY* pkey;
+    
+    DEBUG_ENGINE("Entered\n");
 
-//     DEBUG_ENGINE("eccx08_cmd_ctrl(ECCX08_CMD_GET_PUB_KEY)\n");
-//     // Get the signer public key from the signer certificate
-//     status = atcacert_get_subj_public_key(g_cert_def_1_signer_ptr, signerCert, signerCertSize, signerPubkey);
-//     if (status != ATCA_SUCCESS) {
-//         DEBUG_ENGINE("eccx08_cmd_ctrl(): error in atcacert_get_subj_public_key\n");
-//         goto err;
-//     }
-// err:
-//     return status;
-// }
+    snprintf(key_str, 32, "ATECCx08:%02x:%02x:%02x:%02x", pCfg->iface_type, 
+        pCfg->atcai2c.bus, pCfg->atcai2c.slave_address, keyid);
+    key_str[31] = '\0';
+
+    pkey = eccx08_load_pubkey(e, key_str, NULL, NULL);
+
+    if (pkey)
+    {
+        EC_KEY * ec = EVP_PKEY_get1_EC_KEY(pkey);
+        if (ec)
+        {
+            BIO * bio = BIO_new(BIO_s_file());
+            BIO_write_filename(bio, filename);
+            if (bio)
+            {
+                if (PEM_write_bio_ECPrivateKey(bio, ec, NULL, NULL, 0, NULL, NULL))
+                {
+                    status = ATCA_SUCCESS;
+                }
+                BIO_free(bio);
+            }
+            EC_KEY_free(ec);
+        }
+        EVP_PKEY_free(pkey);
+    }
+
+    return status;
+}
 
 /**
  * \brief Retrieves pre-programmed signer certificate from
@@ -253,8 +273,7 @@ static int load_device_cert(cmd_load_cert_params* p)
     }
 }
 
-
-static ATCA_STATUS set_device_key_slot(i)
+static ATCA_STATUS set_device_key_slot(uint32_t i)
 {
     if (16 > i)
     {
@@ -264,7 +283,7 @@ static ATCA_STATUS set_device_key_slot(i)
     return ATCA_BAD_PARAM;
 }
 
-static ATCA_STATUS set_ecdh_slot(i)
+static ATCA_STATUS set_ecdh_slot(uint32_t i)
 {
     if (16 > i)
     {
@@ -274,11 +293,21 @@ static ATCA_STATUS set_ecdh_slot(i)
     return ATCA_BAD_PARAM;
 }
 
-static ATCA_STATUS set_ecdh_count(i)
+static ATCA_STATUS set_ecdh_count(uint32_t i)
 {
     if (16 > i)
     {
         eccx08_engine_config.ecdh_key_count = i;
+        return ATCA_SUCCESS;
+    }
+    return ATCA_BAD_PARAM;
+}
+
+static ATCA_STATUS set_transport_key(uint8_t * p)
+{
+    if (p)
+    {
+        memcpy(g_eccx08_transport_key, p, sizeof(g_eccx08_transport_key));
         return ATCA_SUCCESS;
     }
     return ATCA_BAD_PARAM;
@@ -338,27 +367,23 @@ int eccx08_cmd_ctrl(ENGINE *e, int cmd, long i, void *p, void (*f)(void))
 
     switch (cmd) {
         case ECCX08_CMD_GET_VERSION:
-//            if (cmd_buf) {
-                //snprintf(cmd_buf, i, "The ateccx08 ENGINE version: %s", ECCX08_ENGINE_VERSION);
             DEBUG_ENGINE("ENGINE Version: %s\n", ECCX08_ENGINE_VERSION);
-//            } else {
-//                ret = 0;
-//            }
             status = ATCA_SUCCESS;
+            break;
+
+         case ECCX08_CMD_GET_KEY:
+            status = get_key(e, eccx08_engine_config.device_key_slot, p);
+            break;
+        case ECCX08_CMD_GET_DEVICE_CERT:
+            status = get_device_cert(p);
             break;
         case ECCX08_CMD_GET_SIGNER_CERT:
             status = get_signer_cert(p);
             break;
-        // case ECCX08_CMD_GET_PUB_KEY:
-        //     status = get_public_key();
-        //     break;
-        case ECCX08_CMD_GET_DEVICE_CERT:
-            status = get_device_cert(p);
-            break;
         case ECCX08_CMD_LOAD_CERT_CTRL:
             status = load_device_cert(p);
             break;
-        case ECCX08_CMD_DEVICE_KEY_SLOT:
+        case ECCX08_CMD_KEY_SLOT:
             status = set_device_key_slot(i);
             break;
         case ECCX08_CMD_ECDH_SLOT:
@@ -372,6 +397,9 @@ int eccx08_cmd_ctrl(ENGINE *e, int cmd, long i, void *p, void (*f)(void))
             break;
         case ECCX08_CMD_SIGNER_CERT:
             status = config_signer_cert(p);
+            break;
+        case ECCX08_CMD_TRANSPORT_KEY:
+            status = set_transport_key(p);
             break;
         default:
             DEBUG_ENGINE("Unknown command: %d with i=%d, p=%s\n", cmd, i, p?p:"");

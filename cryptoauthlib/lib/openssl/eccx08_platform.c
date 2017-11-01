@@ -41,18 +41,72 @@
 /* This is the user defined encryption key */
 uint8_t staticKey[ATCA_KEY_SIZE] = { 0x77 };
 
-/* Get a pointer to the default configuration */
-#ifdef ATCA_HAL_KIT_CDC
-ATCAIfaceCfg* pCfg = &cfg_atecc508a_kitcdc_default;
-#elif ATCA_HAL_KIT_HID
-ATCAIfaceCfg* pCfg = &cfg_atecc508a_kithid_default;
-#elif ATCA_HAL_I2C
-ATCAIfaceCfg* pCfg = &cfg_ateccx08a_i2c_default;
-#endif
+ATCAIfaceCfg* pCfg;
+
+ATCAIfaceCfg* eccx08_get_iface_default(ATCAIfaceType iType)
+{
+    switch (iType)
+    {
+    //case ATCA_I2C_IFACE:
+    //    return &cfg_ateccx08a_i2c_default;
+    //case ATCA_SWI_IFACE:
+    //    return &cfg_ateccx08a_swi_default;
+    case ATCA_UART_IFACE:
+        return &cfg_atecc508a_kitcdc_default;
+    case ATCA_HID_IFACE:
+        return &cfg_atecc508a_kithid_default;
+    default:
+        return NULL;
+    }
+}
+
+/* Get the appropriate interface settings given an input key configuration */
+int eccx08_get_iface_cfg(ATCAIfaceCfg* iface, eccx08_engine_key_t * key)
+{
+    int ret = ENGINE_OPENSSL_FAILURE;
+    
+    if (iface && key)
+    {
+        ATCAIfaceCfg* def = eccx08_get_iface_default(key->bus_type);
+
+        if (def)
+        {
+            /* Copy the default settings */
+            memcpy(iface, def, sizeof(ATCAIfaceCfg));
+
+            /* Replace defaults with the key settings */
+            switch (iface->iface_type)
+            {
+            case ATCA_I2C_IFACE:
+                iface->atcai2c.bus = key->bus_num;
+                iface->atcai2c.slave_address = key->device_num;
+                break;
+            case ATCA_SWI_IFACE:
+                iface->atcaswi.bus = key->bus_num;
+                break;
+            default:
+                break;
+            }
+
+            ret = ENGINE_OPENSSL_SUCCESS;
+        }
+    }
+    return ret;
+}
+
 
 /* Initialize platform defaults */
 int eccx08_platform_init(void)
 {
+    /* Get a pointer to the default configuration */
+#ifdef ATCA_HAL_KIT_CDC
+    pCfg = &cfg_atecc508a_kitcdc_default;
+#elif ATCA_HAL_KIT_HID
+    pCfg = &cfg_atecc508a_kithid_default;
+#elif ATCA_HAL_I2C
+    pCfg = &cfg_ateccx08a_i2c_default;
+#endif
+
     eccx08_engine_config.device_key_slot = 0;
     eccx08_engine_config.ecdh_key_slot = 2;
     eccx08_engine_config.ecdh_key_count = 1;

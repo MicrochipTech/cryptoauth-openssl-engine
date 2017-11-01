@@ -39,83 +39,16 @@
 
 #include <openssl/engine.h>
 #include "eccx08_engine.h"
-
-#if ATCA_OPENSSL_ENGINE_ENABLE_ECDH && !defined(OPENSSL_NO_ECDH)
-#if ATCA_OPENSSL_ENGINE_INTERNAL_HEADERS
-//#include <crypto/ec/ec_lcl.h>
-//#include <crypto/ecdh/ech_locl.h>
-//#include <ssl/ssl_locl.h>
-#endif
-
 #include "eccx08_engine_internal.h"
 
-/**
- *  \brief Generates a 32-byte private key then replaces it with token
- *  data using the eccx08_eckey_encode_in_privkey() call
- *
- *  \param[out] pub_key Pointer to EC_POINT Public Key on success
- *  \param[in] serial_number 9 bytes of ATECCX08 serial number
- *  \param[in] serial_len Size of the ATECCX08 serial number buffer
- *  \return 1 on success, 0 on error
- */
-static int ECDH_eccx08_get_pubkey(EC_POINT *pub_key, uint8_t *serial_number, 
-    int serial_len)
-{
-    int rc = 0;
-    int ret = 0;
-    ATCA_STATUS status = ATCA_GEN_FAIL;
+uint8_t g_eccx08_transport_key[] = {
+    0x44, 0x00, 0x44, 0x01, 0x44, 0x02, 0x44, 0x03, 
+    0x44, 0x04, 0x44, 0x05, 0x44, 0x06, 0x44, 0x07, 
+    0x44, 0x08, 0x44, 0x09, 0x44, 0x0A, 0x44, 0x0B,
+    0x44, 0x0C, 0x44, 0x0D, 0x44, 0x0E, 0x44, 0x0F
+};
 
-    uint8_t slotid = TLS_SLOT_ECDHE_PRIV;
-    uint8_t raw_pubkey[ATCA_BLOCK_SIZE * 2];
-
-    EC_GROUP *ecgroup = NULL;
-    int asn1_flag = OPENSSL_EC_NAMED_CURVE;
-    point_conversion_form_t form = POINT_CONVERSION_UNCOMPRESSED;
-    char tmp_buf[ATCA_BLOCK_SIZE * 2 + 1];
-
-    /* Openssl raw key has a leading byte with conversion form id */
-    tmp_buf[0] = POINT_CONVERSION_UNCOMPRESSED;
-
-    if (!ecgroup) {
-        ecgroup = EC_GROUP_new_by_curve_name(NID_X9_62_prime256v1);
-        if (!ecgroup) goto done;
-        EC_GROUP_set_point_conversion_form(ecgroup, form);
-        EC_GROUP_set_asn1_flag(ecgroup, asn1_flag);
-    }
-
-    DEBUG_ENGINE("ECDH_eccx08_get_pubkey() - hw\n");
-    status = atcab_init_safe(pCfg);
-    if (status != ATCA_SUCCESS) {
-        DEBUG_ENGINE("ECDH_eccx08_get_pubkey() - error in atcatls_init \n");
-        goto done;
-    }
-    //read serial number here
-    status = atcatls_get_sn(serial_number);
-    if (status != ATCA_SUCCESS) {
-        DEBUG_ENGINE("ECDH_eccx08_get_pubkey() - error in atcatls_get_sn \n");
-        goto done;
-    }
-    //Generate private key then get public key
-    status = atcatls_create_key(slotid, raw_pubkey);
-    if (status != ATCA_SUCCESS) {
-        DEBUG_ENGINE("ECDH_eccx08_get_pubkey() - error in atcatls_get_pubkey \n");
-        goto done;
-    }
-    status = atcab_release_safe();
-    if (status != ATCA_SUCCESS) {
-        DEBUG_ENGINE("ECDH_eccx08_get_pubkey() - error in atcatls_finish \n");
-        goto done;
-    }
-    memcpy(&tmp_buf[1], raw_pubkey, ATCA_BLOCK_SIZE * 2);
-    ret = EC_POINT_oct2point(ecgroup, pub_key, tmp_buf, ATCA_BLOCK_SIZE * 2 + 1, NULL);
-    if (!ret) {
-        DEBUG_ENGINE("ECDH_eccx08_get_pubkey() - error in EC_POINT_oct2point \n");
-        goto done;
-    }
-    rc = 1;
-done:
-    return (rc);
-}
+static ECDH_METHOD * eccx08_ecdh_default;
 
 /**
  *  \brief Generates an ephemeral key in TLS_SLOT_ECDHE_PRIV
@@ -133,201 +66,188 @@ done:
  *  \param[in] KDF A pointer to an optional key deriviation function
  *  \return 1 on success, 0 on error
  */
-static int ECDH_eccx08_compute_key(void *out, size_t outlen, 
+static int eccx08_ecdh_compute_key(void *out, size_t outlen, 
     const EC_POINT *pub_key, EC_KEY *ecdh, 
     void* (*KDF)(const void *in, size_t inlen, void *out, size_t *outlen))
 {
-    BN_CTX *ctx;
-    EC_POINT *tmp = NULL;
-    BIGNUM *x = NULL, *y = NULL;
-    const BIGNUM *priv_key;
-    const EC_GROUP *group;
-    int ret = -1;
-    size_t buflen, len;
-    unsigned char *buf = NULL;
+    DEBUG_ENGINE("Entered: outlen %d\n", outlen);
 
-    uint8_t serial_number[ATCA_SERIAL_NUM_SIZE];
-    ATCA_STATUS status = ATCA_GEN_FAIL;
-    uint8_t *raw_key = NULL;
-    uint8_t *shared_secret = NULL;
-    uint8_t slotid = TLS_SLOT_ECDHE_PRIV;
-    point_conversion_form_t form;
-    bool lock = false;
-    uint8_t encKey[ATCA_KEY_SIZE];
-    uint8_t enckeyId = TLS_SLOT_ENC_PARENT;
+    eccx08_eckey_debug(NULL, ecdh);
 
-
-    /* From the old init */
-
-//    DEBUG_ENGINE("ECDH_eccx08_init()\n");
-//    ECDH_eccx08_get_pubkey(ecdh->pub_key, serial_number, ATCA_SERIAL_NUM_SIZE);
-
-
-
-    //if (ecdh->flags & SSL_kECDHe) {
-    //    slotid = TLS_SLOT_AUTH_PRIV;
-    //}
-    if (outlen > INT_MAX) {
-        ECDHerr(ECDH_F_ECDH_COMPUTE_KEY, ERR_R_MALLOC_FAILURE); /* sort of,
-                                                                 * anyway */
-        return -1;
+    /* Check if the provided key is a hardware key */
+    if (!eccx08_eckey_isx08key(ecdh))
+    {
+        /* Not a hardware key - compute normally */
+        return eccx08_ecdh_default->compute_key(out, outlen, pub_key, ecdh, KDF);
     }
+    else
+    {
+        BN_CTX *ctx;
+        EC_POINT *tmp = NULL;
+        BIGNUM *x = NULL, *y = NULL;
+        const EC_GROUP *group;
+        int ret = -1;
+        size_t buflen;
+        size_t len;
+        unsigned char *buf = NULL;
+        int i;
+        ATCA_STATUS status = ATCA_GEN_FAIL;
+        uint8_t *raw_key = NULL;
+        uint8_t *shared_secret = NULL;
+        point_conversion_form_t form;
+        bool lock = false;
 
-    if ((ctx = BN_CTX_new()) == NULL) {
-        goto err;
-    }
-    BN_CTX_start(ctx);
-    x = BN_CTX_get(ctx);
-    y = BN_CTX_get(ctx);
 
-    group = EC_KEY_get0_group(ecdh);
+        if (outlen > INT_MAX) {
+            ECDHerr(ECDH_F_ECDH_COMPUTE_KEY, ERR_R_MALLOC_FAILURE); /* sort of,
+                                                                     * anyway */
+            return -1;
+        }
 
-    DEBUG_ENGINE("ECDH_eccx08_compute_key(): HW \n");
-
-    form = EC_GROUP_get_point_conversion_form(group);
-
-    len = EC_POINT_point2oct(group, pub_key, form, NULL, len, NULL);
-    if (len == 0) {
-        ECerr(EC_F_EC_ASN1_GROUP2PARAMETERS, ERR_R_EC_LIB);
-        goto err;
-    }
-    if ((raw_key = OPENSSL_malloc(len)) == NULL) {
-        ECerr(EC_F_EC_ASN1_GROUP2PARAMETERS, ERR_R_MALLOC_FAILURE);
-        goto err;
-    }
-    if (!EC_POINT_point2oct(group, pub_key, form, raw_key, len, NULL)) {
-        ECerr(EC_F_EC_ASN1_GROUP2PARAMETERS, ERR_R_EC_LIB);
-        goto err;
-    }
-    shared_secret = (uint8_t *)OPENSSL_malloc(ATCA_BLOCK_SIZE);
-    if (shared_secret == NULL) {
-        goto err;
-    }
-
-    buflen = (EC_GROUP_get_degree(group) + 7) / 8;
-    len = ATCA_BLOCK_SIZE;
-    memset(buf, 0, buflen - len);
-
-    //Create new Ephemeral private and public keys just if required
-    if (ecdh->pub_key) {
-        ECDH_eccx08_get_pubkey(ecdh->pub_key, serial_number, ATCA_SERIAL_NUM_SIZE);
-    }
-
-    status = atcab_init_safe(pCfg);
-    if (status != ATCA_SUCCESS) {
-        DEBUG_ENGINE("ECDH_eccx08_compute_key(): error in atcatls_init\n");
-        goto err;
-    }
-    //set encryption key
-    status = atcatlsfn_set_get_enckey(&eccx08_get_enc_key);
-    if (status != ATCA_SUCCESS) {
-        DEBUG_ENGINE("ECDH_eccx08_compute_key() - error in atcatlsfn_set_get_enckey \n");
-        goto err;
-    }
-    status = eccx08_get_enc_key(encKey, ATCA_KEY_SIZE);
-    if (status != ATCA_SUCCESS) {
-        DEBUG_ENGINE("ECDH_eccx08_compute_key() - error in eccx08_get_enc_key \n");
-        goto err;
-    }
-    status = atcatls_set_enckey(encKey, enckeyId, lock);
-    if (status != ATCA_SUCCESS) {
-        DEBUG_ENGINE("ECDH_eccx08_compute_key() - error in atcatls_init_enckey \n");
-        goto err;
-    }
-    //read serial number here
-    status = atcatls_get_sn(serial_number);
-    if (status != ATCA_SUCCESS) {
-        DEBUG_ENGINE("ECDH_eccx08_compute_key() - error in atcatls_get_sn \n");
-        goto err;
-    }
-    status = atcatls_ecdh(slotid, &raw_key[1], shared_secret);
-    if (status != ATCA_SUCCESS) {
-        DEBUG_ENGINE("ECDH_eccx08_compute_key(): error in atcatls_ecdh\n");
-        goto err;
-    }
-    status = atcab_release_safe();
-    if (status != ATCA_SUCCESS) {
-        DEBUG_ENGINE("ECDH_eccx08_compute_key(): error in atcatls_finish\n");
-        goto err;
-    }
-    if ((buf = OPENSSL_malloc(buflen)) == NULL) {
-        ECDHerr(ECDH_F_ECDH_COMPUTE_KEY, ERR_R_MALLOC_FAILURE);
-        goto err;
-    }
-    memcpy(buf + buflen - len, shared_secret, len);
-
-    if (KDF != 0) {
-        if (KDF(buf, buflen, out, &outlen) == NULL) {
-            ECDHerr(ECDH_F_ECDH_COMPUTE_KEY, ECDH_R_KDF_FAILED);
+        if ((ctx = BN_CTX_new()) == NULL) {
             goto err;
         }
-        ret = outlen;
-    }
-    else {
-        /* no KDF, just copy as much as we can */
-        if (outlen > buflen) outlen = buflen;
-        memcpy(out, buf, outlen);
-        ret = outlen;
-    }
+        BN_CTX_start(ctx);
+        x = BN_CTX_get(ctx);
+        y = BN_CTX_get(ctx);
 
-err:
-    if (tmp)
-    {
-        EC_POINT_free(tmp);
-    }
+        group = EC_KEY_get0_group(ecdh);
 
-    if (ctx)
-    {
-        BN_CTX_end(ctx);
-        BN_CTX_free(ctx);
-    }
 
-    if (buf)
-    {
-        OPENSSL_free(buf);
-    }
+        form = EC_GROUP_get_point_conversion_form(group);
 
-    if (raw_key)
-    {
-        OPENSSL_free(raw_key);
-    }
+        len = EC_POINT_point2oct(group, pub_key, form, NULL, 0, NULL);
+        if (len == 0) {
+            ECerr(EC_F_EC_ASN1_GROUP2PARAMETERS, ERR_R_EC_LIB);
+            goto err;
+        }
+        if ((raw_key = OPENSSL_malloc(len)) == NULL) {
+            ECerr(EC_F_EC_ASN1_GROUP2PARAMETERS, ERR_R_MALLOC_FAILURE);
+            goto err;
+        }
+        if (!EC_POINT_point2oct(group, pub_key, form, raw_key, len, NULL)) {
+            ECerr(EC_F_EC_ASN1_GROUP2PARAMETERS, ERR_R_EC_LIB);
+            goto err;
+        }
+        shared_secret = (uint8_t *)OPENSSL_malloc(ATCA_BLOCK_SIZE);
+        if (shared_secret == NULL) {
+            goto err;
+        }
 
-    if (shared_secret)
-    {
-        OPENSSL_free(shared_secret);
+        if (!EC_POINT_point2oct(group, EC_KEY_get0_public_key(ecdh), form, raw_key, len, NULL)) {
+            ECerr(EC_F_EC_ASN1_GROUP2PARAMETERS, ERR_R_EC_LIB);
+            goto err;
+        }
+
+        buflen = (EC_GROUP_get_degree(group) + 7) / 8;
+        len = ATCA_BLOCK_SIZE;
+        memset(buf, 0, buflen - len);
+
+        status = atcab_init_safe(pCfg);
+        if (status != ATCA_SUCCESS) {
+            DEBUG_ENGINE("Error in atcab_init_safe\n");
+            goto err;
+        }
+
+        status = atcab_ecdh_enc(0, &raw_key[1], shared_secret, g_eccx08_transport_key, 4);
+
+        atcab_release_safe();
+
+        printf("ECDH: Computed Key\n");
+        for (i = 0; i < ATCA_BLOCK_SIZE; i++)
+        {
+            printf("%02x ", shared_secret[i]);
+        }
+        printf("\n\n");
+
+        if (status != ATCA_SUCCESS) {
+            DEBUG_ENGINE("Error in atcab_ecdh\n");
+            goto err;
+        }
+
+        if ((buf = OPENSSL_malloc(buflen)) == NULL) {
+            DEBUG_ENGINE("Alloc Failed\n");
+            goto err;
+        }
+        memcpy(buf + buflen - len, shared_secret, len);
+
+        if (KDF != 0) {
+            DEBUG_ENGINE("Running KDF\n");
+            if (KDF(buf, buflen, out, &outlen) == NULL) {
+                DEBUG_ENGINE("KDF Failed\n");
+                goto err;
+            }
+            ret = outlen;
+        }
+        else {
+            DEBUG_ENGINE("No KDF\n");
+            /* no KDF, just copy as much as we can */
+            if (outlen > buflen) outlen = buflen;
+            memcpy(out, buf, outlen);
+            ret = outlen;
+        }
+        DEBUG_ENGINE("Succeded\n");
+
+    err:
+        if (tmp)
+        {
+            EC_POINT_free(tmp);
+        }
+
+        if (ctx)
+        {
+            BN_CTX_end(ctx);
+            BN_CTX_free(ctx);
+        }
+
+        if (buf)
+        {
+            OPENSSL_free(buf);
+        }
+
+        if (raw_key)
+        {
+            OPENSSL_free(raw_key);
+        }
+
+        if (shared_secret)
+        {
+            OPENSSL_free(shared_secret);
+        }
+
+        return (ret);
     }
-    
-    return (ret);
 }
 
-/** \brief eccx08_ecdh is an OpenSSL ECDH_METHOD structure specific to the 
-ateccx08 engine. See the crypto/ecdh/ech_locl.h file for details on 
-the ECDH_METHOD structure. */
-ECDH_METHOD eccx08_ecdh = {
-    "ATECCx08 ECDH",            // name
-    ECDH_eccx08_compute_key,    // compute_key
-    0,                          // flags
-    NULL                        // app_data
+static ECDH_METHOD eccx08_ecdh = {
+    "ATECCX08 ECDH METHOD",
+    eccx08_ecdh_compute_key,
+    0,
+    NULL
 };
 
-/** \brief Initialize the ECDH method for ateccx08 engine
- \return 1 for success */
-int eccx08_ecdh_init(void)
-{
-    const ECDH_METHOD *ecdh_meth = ECDH_get_default_method();
+#if ATCA_OPENSSL_OLD_API
 
+int eccx08_ecdh_init(ECDH_METHOD ** ppMethod)
+{
     DEBUG_ENGINE("Entered\n");
 
-    eccx08_ecdh.flags = ecdh_meth->flags;
-    eccx08_ecdh.app_data = ecdh_meth->app_data;
+    eccx08_ecdh_default = ECDH_get_default_method();
 
-    return 1;
+    if (!ppMethod)
+    {
+        return ENGINE_OPENSSL_FAILURE;
+    }
+
+    *ppMethod = &eccx08_ecdh;
+
+    return ENGINE_OPENSSL_SUCCESS;
 }
 
-#else
-int eccx08_ecdh_init(void)
+int eccx08_ecdh_cleanup(void)
 {
-    return 0;
+    DEBUG_ENGINE("Entered\n");
+    return ENGINE_OPENSSL_SUCCESS;
 }
 
-#endif //ATCA_OPENSSL_ENGINE_ENABLE_ECDH
+#endif

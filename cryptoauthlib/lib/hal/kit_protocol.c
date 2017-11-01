@@ -50,7 +50,23 @@
  *
    @{ */
 
+static ATCA_STATUS kit_fix_send(ATCAIface iface, char *txdata, int txlength)
+{
+    if (!iface || !txdata || !txlength)
+    {
+        return ATCA_BAD_PARAM;
+    }
 
+    if (ATECC508A == atgetifacecfg(iface)->devtype)
+    {
+        if ('s' == txdata[0] && ':' == txdata[1])
+        {
+            txdata[0] = 'e';
+        }
+    }
+
+    return kit_phy_send(iface, txdata, txlength);
+}
 
 /** \brief HAL implementation of kit protocol init.  This function calls back to the physical protocol to send the bytes
  *  \param[in] iface  instance
@@ -101,7 +117,7 @@ ATCA_STATUS kit_init(ATCAIface iface)
     copysize = (sizeof(selectaddresspre) + rxsize);
     memcpy(&selectaddress[(copysize - 1)], selectaddresspost, sizeof(selectaddresspost));
     copysize = (sizeof(selectaddresspre) + rxsize + sizeof(selectaddresspost));
-    status = kit_phy_send(iface, selectaddress, copysize);
+    status = kit_fix_send(iface, selectaddress, copysize);
 
     // Receive the reply to select address "00()\n"
     memset(reply, 0, replysize);
@@ -136,8 +152,9 @@ ATCA_STATUS kit_send(ATCAIface iface, const uint8_t* txdata, int txlength)
         free(pkitbuf);
         return ATCA_GEN_FAIL;
     }
+
     // Send the bytes
-    status = kit_phy_send(iface, pkitbuf, nkitbuf);
+    status = kit_fix_send(iface, pkitbuf, nkitbuf);
 
 #ifdef KIT_DEBUG
     // Print the bytes
@@ -214,7 +231,7 @@ ATCA_STATUS kit_wake(ATCAIface iface)
     int rxsize = sizeof(rxdata);
 
     // Send the bytes
-    status = kit_phy_send(iface, wake, wakesize);
+    status = kit_fix_send(iface, wake, wakesize);
 
 #ifdef KIT_DEBUG
     // Print the bytes
@@ -255,7 +272,7 @@ ATCA_STATUS kit_idle(ATCAIface iface)
     int rxsize = sizeof(rxdata);
 
     // Send the bytes
-    status = kit_phy_send(iface, idle, idlesize);
+    status = kit_fix_send(iface, idle, idlesize);
 
 #ifdef KIT_DEBUG
     // Print the bytes
@@ -297,7 +314,7 @@ ATCA_STATUS kit_sleep(ATCAIface iface)
     int rxsize = sizeof(rxdata);
 
     // Send the bytes
-    status = kit_phy_send(iface, sleep, sleepsize);
+    status = kit_fix_send(iface, sleep, sleepsize);
 
 #ifdef KIT_DEBUG
     // Print the bytes

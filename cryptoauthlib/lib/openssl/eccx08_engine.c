@@ -170,8 +170,8 @@ static int eccx08_init(ENGINE *e)
     }
 
     /* Perform basic library initialization */
-    eccx08_cert_init();
     eccx08_platform_init();
+    eccx08_cert_init();
 #if ATCA_OPENSSL_ENGINE_ENABLE_RAND
     eccx08_rand_init();
 #endif
@@ -207,7 +207,6 @@ static int eccx08_finish(ENGINE *e)
 static int bind_helper(ENGINE *e, const char *id)
 {
     int rv = ENGINE_OPENSSL_FAILURE;
-    int step = 0;
 
     DEBUG_ENGINE("Entered\n");
     if (id && (strcmp(id, engine_eccx08_id) != 0)) {
@@ -220,50 +219,40 @@ static int bind_helper(ENGINE *e, const char *id)
         if (!ENGINE_set_id(e, engine_eccx08_id))
             break;
 
-        step++;
         if (!ENGINE_set_name(e, engine_eccx08_name))
             break;
 
-        step++;
         if (!ENGINE_set_init_function(e, eccx08_init))
             break;
 
-        step++;
         if (!ENGINE_set_destroy_function(e, eccx08_destroy))
             break;
 
-        step++;
         if (!ENGINE_set_finish_function(e, eccx08_finish))
             break;
 
-        step++;
         if (!ENGINE_set_ctrl_function(e, eccx08_cmd_ctrl))
             break;
 
-        step++;
         if (!ENGINE_set_cmd_defns(e, eccx08_cmd_defns))
             break;
 
         /* Hardware Support Interfaces */
-        step++;
 #if ATCA_OPENSSL_ENGINE_ENABLE_RAND
         if (!ENGINE_set_RAND(e, &eccx08_rand))
             break;
 #endif
 
-        step++;
 #if ATCA_OPENSSL_ENGINE_ENABLE_SHA256
         if (!ENGINE_set_digests(e, eccx08_sha256_selector))
             break;
 #endif
 
-        step++;
 #if ATCA_OPENSSL_ENGINE_ENABLE_CERTS
         if (!ENGINE_set_load_ssl_client_cert_function(e, eccx08_cert_load_client))
             break;
 #endif
 
-        step++;
 #if ATCA_OPENSSL_ENGINE_ENABLE_CIPHERS
         if (!eccx08_cipher_init())
             break;
@@ -271,8 +260,8 @@ static int bind_helper(ENGINE *e, const char *id)
             break;
 #endif
 
-        step++;
-#if ATCA_OPENSSL_ENGINE_ENABLE_ECDH && !defined(OPENSSL_NO_ECDH)
+#if ATCA_OPENSSL_OLD_API && ATCA_OPENSSL_ENGINE_ECDH
+        /* Use the 1.0.2x Defined API for ECDH */
         {
             ECDH_METHOD * ecdh_method_ptr = NULL;
             if (!eccx08_ecdh_init(&ecdh_method_ptr))
@@ -282,8 +271,8 @@ static int bind_helper(ENGINE *e, const char *id)
         }
 #endif
 
-        step++;
-#if ATCA_OPENSSL_ENGINE_ENABLE_ECDSA && !defined(OPENSSL_NO_ECDSA)
+#if ATCA_OPENSSL_OLD_API && ATCA_OPENSSL_ENGINE_ECDSA
+        /* Use the 1.0.2x Defined API for ECDSA */
         {
             ECDSA_METHOD * ecdsa_meth_ptr = NULL;
             if (!eccx08_ecdsa_init(&ecdsa_meth_ptr))
@@ -293,15 +282,29 @@ static int bind_helper(ENGINE *e, const char *id)
         }
 #endif
 
-        step++;
+#if !ATCA_OPENSSL_OLD_API && (ATCA_OPENSSL_ENGINE_ECDH || ATCA_OPENSSL_ENGINE_ECDSA)
+        /* Use the 1.1.x Defined API for ECDSA and ECDH */
+        {
+            EC_METHOD * ec_meth_ptr = NULL;
+            if (!eccx08_ec_init(&ec_meth_ptr))
+                break;
+            if (!ENGINE_set_EC(e, ec_meth_ptr))
+                break;
+        }
+#endif
+
         if (!ENGINE_set_load_pubkey_function(e, eccx08_load_pubkey))
             break;
 
-        step++;
+        if (!ENGINE_set_load_privkey_function(e, eccx08_load_privkey))
+            break;
+
+#if ATCA_OPENSSL_ENGINE_REGISTER_PKEY
         if (!eccx08_pkey_meth_init())
             break;
         if (!ENGINE_set_pkey_meths(e, eccx08_pmeth_selector))
             break;
+#endif
 
         rv = ENGINE_OPENSSL_SUCCESS;
     } while (0);
@@ -312,7 +315,7 @@ static int bind_helper(ENGINE *e, const char *id)
     }
     else
     {
-        DEBUG_ENGINE("FAILED on Step: %d, Error: %d\n", step, ERR_peek_error());
+        DEBUG_ENGINE("FAILED, Error: %d\n", ERR_peek_error());
     }
 
     return rv;
@@ -360,4 +363,3 @@ void ENGINE_load_ateccx08(void)
     ENGINE_free(toadd);
     ERR_clear_error();
 }
-
