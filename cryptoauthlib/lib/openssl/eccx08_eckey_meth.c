@@ -169,6 +169,12 @@ static EVP_PKEY* eccx08_eckey_new_key(ENGINE *e, char* key_id)
 
         /* Connect the basics */
         pkey->type = EVP_PKEY_EC;
+        
+        /* Update the reference counter */
+        if(!ENGINE_init(e))
+        {
+            break;
+        }
         pkey->engine = e;
         pkey->ameth = EVP_PKEY_asn1_find(&e, EVP_PKEY_EC);
 
