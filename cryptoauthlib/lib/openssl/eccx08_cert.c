@@ -109,7 +109,7 @@ int eccx08_cert_free(void* cert)
 
         if (pCert->cert_elements)
         {
-            OPENSSL_cleanse(pCert->cert_elements, 
+            OPENSSL_cleanse(pCert->cert_elements,
                 sizeof(atcacert_cert_element_t) * pCert->cert_elements_count);
             OPENSSL_free(pCert->cert_elements);
         }
@@ -132,7 +132,7 @@ atcacert_def_t * eccx08_cert_copy(atcacert_def_t * pCertOrig)
         return NULL;
     }
 
-    pCertCopy = eccx08_cert_new(pCertOrig->cert_template_size, 
+    pCertCopy = eccx08_cert_new(pCertOrig->cert_template_size,
         pCertOrig->cert_elements_count);
 
     if (pCertCopy)
@@ -202,8 +202,8 @@ ATCA_STATUS eccx08_cert_load_pubkey(const atcacert_def_t* def, const uint8_t key
 
     for(i=0; 3 > i && ATCA_SUCCESS == status; i++)
     {
-        status = atcab_read_zone(def->public_key_dev_loc.zone, 
-                                 def->public_key_dev_loc.slot, 
+        status = atcab_read_zone(def->public_key_dev_loc.zone,
+                                 def->public_key_dev_loc.slot,
                                  i, 0, &pKeyTmp[i * 32], 32);
     }
 
@@ -217,13 +217,13 @@ ATCA_STATUS eccx08_cert_load_pubkey(const atcacert_def_t* def, const uint8_t key
     return status;
 }
 
-int eccx08_cert_load_client(ENGINE *e, 
+int eccx08_cert_load_client(ENGINE *e,
     SSL *ssl,                       /**< Session */
     STACK_OF(X509_NAME) *ca_dn,     /**< Client CA Lists */
     X509 **ppCert,                  /**< Output Cert */
     EVP_PKEY **ppKey,               /**< Output Private Key - We'll try to ignore it rather than faking one */
     STACK_OF(X509) **ppOther,       /**< Intermediate CAs - I.e. our signer cert */
-    UI_METHOD *ui_method, 
+    UI_METHOD *ui_method,
     void *callback_data)
 {
     uint8_t *       pCertRaw = NULL;
@@ -244,7 +244,20 @@ int eccx08_cert_load_client(ENGINE *e,
         DEBUG_ENGINE("*ppKey: %p\n", *ppKey);
     }
 
-    if (!ppCert || !ppKey || !g_cert_def_2_device_ptr)
+    /*
+        This part doesn't match the test function in "test_engine.c":
+            if (!ENGINE_load_ssl_client_cert(ateccx08_engine, NULL, NULL, &pCert, NULL, NULL, NULL, NULL))
+            {
+                ENGINE_TEST_FAIL("Failed to load device certificate");
+            }
+
+        Here the fifth parameter "ppKey" is NULL which leads to return "ENGINE_OPENSSL_FAILURE" during the test:
+            Failed to load public key.
+
+        So I did some modifications which check cert and public key seperately.
+    */
+    // checking client cert is available or not
+    if (!ppCert || !g_cert_def_2_device_ptr || !g_cert_def_1_signer_ptr)
     {
         return ENGINE_OPENSSL_FAILURE;
     }
@@ -276,12 +289,20 @@ int eccx08_cert_load_client(ENGINE *e,
 
 //        /* Extract/Reconstruct the signer certificate */
 //        status = atcacert_read_cert(g_cert_def_1_signer_ptr, g_signer_1_ca_public_key, pCertRaw, &certRawSize);
-        status = eccx08_cert_load_pubkey(g_cert_def_1_signer_ptr, g_signer_1_ca_public_key);
+        /*
+            Function eccx08_cert_load_pubkey is going to load signer cert public key, which would be used to extract client cert.
+            So we need to creat a char array to keep signer cert public key.
+        **/
+        // status = eccx08_cert_load_pubkey(g_cert_def_1_signer_ptr, g_signer_1_ca_public_key);
+
+        // char array to keep signer cert public key - Jim
+        uint8_t signer_public_key[64];
+        status = eccx08_cert_load_pubkey(g_cert_def_1_signer_ptr, signer_public_key);
 
         if(ATCA_SUCCESS == status)
         {
             /* Extract/Reconstruct the device certificate */
-            status = atcacert_read_cert(g_cert_def_2_device_ptr, g_signer_1_ca_public_key, pCertRaw, &certRawSize);
+            status = (ATCA_STATUS)atcacert_read_cert(g_cert_def_2_device_ptr, signer_public_key, pCertRaw, &certRawSize);
         }
 
         /* Make sure we release the device before checking if the operation succeeded */
@@ -307,7 +328,7 @@ int eccx08_cert_load_client(ENGINE *e,
             per the TLS specification */
 
         /** \todo Return intermediate cert list. If ppOther is specified we should return our intermediate certificate
-            however since OpenSSL core doesn't use it this feature is only if an application made the call so 
+            however since OpenSSL core doesn't use it this feature is only if an application made the call so
             we'll put a todo here */
 
         /* Return the newly reconstructed cert in OpenSSL's internal format */
@@ -315,6 +336,11 @@ int eccx08_cert_load_client(ENGINE *e,
 
         /* OpenSSL requires a matching "private" key but it luckily only compares the public key
         parameters which would normally be generated when the private key is loaded from a file */
+        // The other check for ppKey
+        if (ppKey == NULL)
+        {
+            break;
+        }
         *ppKey = X509_get_pubkey(pCert);
     } while (0);
 
