@@ -416,7 +416,7 @@ TEST(atca_engine, cert)
     }
     else if(ENGINE_OPENSSL_FAILURE == sslerr)
     {
-        TEST_FAIL_MESSAGE("Certificate is invalid")
+        TEST_FAIL_MESSAGE("Certificate is invalid");
     }
     else
     {
