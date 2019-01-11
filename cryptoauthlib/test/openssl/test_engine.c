@@ -17,7 +17,7 @@
 #define TEST_ENGINE_CERT        1
 
 /* This option registers all configured engine functionality with OpenSSL
- this means some operations can be slow - certificate validation could end up 
+ this means some operations can be slow - certificate validation could end up
  using the device for SHA256 & ECDSA verify operations */
 #define TEST_REGISTER_ALL       1
 
@@ -39,11 +39,11 @@ TEST_SETUP(atca_engine)
     ERR_load_crypto_strings();
 //    ERR_print_errors_fp(stderr);
 
-    /* An Application can call this function - but if the library is unloaded 
-        and cleaned up the config file won't be reloaded since this function 
+    /* An Application can call this function - but if the library is unloaded
+        and cleaned up the config file won't be reloaded since this function
         is only allowed to run once */
     //OPENSSL_config(NULL);
-        
+
     /* For applications loading and unloading the library this is the way to load the configuration
         Also it will alert when the config file can not be found */
     ENGINE_load_dynamic();
@@ -80,7 +80,7 @@ TEST_TEAR_DOWN(atca_engine)
         case scenario for removing library resources */
     snprintf(fail_msg_buf, sizeof(fail_msg_buf), "\r\n");
 
-    
+
 
 //    printf("Call FIPS_mode_set\n");
     FIPS_mode_set(0);
@@ -332,7 +332,7 @@ TEST(atca_engine, ecdsa)
 #endif
 }
 
-/** \brief Test loading/reconstructing the device certificate - will fail if 
+/** \brief Test loading/reconstructing the device certificate - will fail if
     the engine was built with ATCA_OPENSSL_ENGINE_STATIC_CONFIG set to 0 */
 TEST(atca_engine, cert)
 {
@@ -370,8 +370,17 @@ TEST(atca_engine, cert)
     //    }
     //    printf("\n");
     //}
-
-    pubKey = X509_get_pubkey(pCert);
+    // We need to read signer cert public key instead of client cert public key.
+    uint8_t g_signer_cert[1024];
+    size_t  g_signer_cert_size = sizeof(g_signer_cert);
+    int ret = atcacert_read_cert(&g_cert_def_1_signer, g_signer_1_ca_public_key, g_signer_cert, &g_signer_cert_size);
+    if (ret != ATCACERT_E_SUCCESS) {
+        PRINTF("error in atcacert_read_cert: signer cert, ret = %d\n", ret);
+        return ret;
+    }
+    const unsigned char *q = g_signer_cert;
+    X509 *signer_cert = d2i_X509(NULL, &q, sizeof(g_signer_cert));
+    pubKey = X509_get_pubkey(signer_cert);
     if (!pubKey)
     {
         ENGINE_TEST_FAIL("Failed to load public key");
@@ -407,7 +416,7 @@ TEST(atca_engine, cert)
     }
     else if(ENGINE_OPENSSL_FAILURE == sslerr)
     {
-        TEST_FAIL_MESSAGE("Certificate is invalid")
+        TEST_FAIL_MESSAGE("Certificate is invalid");
     }
     else
     {
